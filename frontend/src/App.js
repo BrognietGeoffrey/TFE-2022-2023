@@ -1,25 +1,152 @@
-import React from 'react'
-import "bootstrap/dist/css/bootstrap.min.css"
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Router, Switch, Route, Link } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./App.css";
+
+import Login from "./components/login.component";
+
+import Home from "./components/home.component";
+import Profile from "./components/profile.component";
+import BoardUser from "./components/userPage.component";
+import BoardModerator from "./components/moderatorPage.component";
+import BoardAdmin from "./components/adminPage.component";
+
+import { logout } from "./actions/auth";
+import { clearMessage } from "./actions/message";
+
+import { history } from './helpers/history';
+
+import sideBar from "./components/sidebar.js";
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.logOut = this.logOut.bind(this);
+
+    this.state = {
+      showModeratorBoard: false,
+      showAdminBoard: false,
+      currentUser: undefined,
+    };
+
+    history.listen((location) => {
+      props.dispatch(clearMessage()); // clear message when changing location
+    });
+  }
+
+  componentDidMount() {
+    const user = this.props.user;
+
+    if (user) {
+      this.setState({
+        currentUser: user,
+        showModeratorBoard: user.roles.includes("comptable"),
+        showAdminBoard: user.roles.includes("président"),
+      });
+    }
+  }
+
+  logOut() {
+    this.props.dispatch(logout());
+  }
+
+  render() {
+    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+
+    return (
+      
+      <Router history={history}>
+        <div>
+        {/* <sideBar/> */}
+          {/* <nav className="navbar navbar-expand navbar-dark bg-primary">
+            <Link to={"/"} className="navbar-brand">
+              Jean-Vives 10 ACP
+            </Link>
+            
+            <div className="navbar-nav mr-auto">
+              <li className="nav-item">
+                <Link to={"/home"} className="nav-link">
+                  Accueil
+                </Link>
+              </li>
+
+              {showModeratorBoard && (
+                <li className="nav-item">
+                  <Link to={"/mod"} className="nav-link">
+                    Page Comptable
+                  </Link>
+                </li>
+              )}
+
+              {showAdminBoard && (
+                <li className="nav-item">
+                  <Link to={"/admin"} className="nav-link">
+                    Page Président
+                  </Link>
+                </li>
+              )}
+
+              {currentUser && (
+                <li className="nav-item">
+                  <Link to={"/user"} className="nav-link">
+                    Page utilisateur
+                  </Link>
+                </li>
+              )}
+            </div>
+
+            {currentUser ? (
+              <div className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <Link to={"/profile"} className="nav-link">
+                    {currentUser.username}
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <a href="/login" className="nav-link" onClick={this.logOut}>
+                    Se déconnecter
+                  </a>
+                </li>
+              </div>
+            ) : (
+              <div className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <Link to={"/login"} className="nav-link">
+                    Se connecter
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link to={"/register"} className="nav-link">
+                    Sign Up
+                  </Link>
+                </li>
+              </div>
+            )}
+          </nav> */}
+
+          <div className="container mt-3">
+            <Switch>
+              <Route exact path={["/", "/home"]} component={Home} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/profile" component={Profile} />
+              <Route path="/user" component={BoardUser} />
+              <Route path="/mod" component={BoardModerator} />
+              <Route path="/admin" component={BoardAdmin} />
+            </Switch>
+          </div>
+        </div>
+      </Router>
+    );
+  }
+}
+
+function mapStateToProps(state) {
+  const { user } = state.auth;
+  return {
+    user,
+  };
+}
 
 
-import Navbar from './components/Navbar/index'
-import Home from './components/Home/Home'
-import Login from './components/LogIn/LogIn'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
- 
-function App() {  
-     
-  return (  
-    <Router>  
-      <Navbar />
-      <Routes>
-        <Route path='/' exact element={<Home/>} />
-        <Route path='/login' exact element={<Login/>} />
-
-      </Routes>
-
-    </Router>  
-  );  
-}  
- 
-export default App;
+export default connect(mapStateToProps)(App);
