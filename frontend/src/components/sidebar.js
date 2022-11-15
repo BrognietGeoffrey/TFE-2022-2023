@@ -1,77 +1,45 @@
-// //import useState hook to create menu collapse state
-// import React, { useState } from "react";
+import React, {useState} from "react";
+import { Link } from "react-router-dom";
+import sideData from "./sideData";
+import "./sidebar.css";
+import "../App.css";
 
-// //import react pro sidebar components
-// import {
-//   ProSidebar,
-//   Menu,
-//   MenuItem,
-//   SidebarHeader,
-//   SidebarFooter,
-//   SidebarContent,
-// } from "react-pro-sidebar";
+function SideBar() {
+    const [sidebar, setSidebar] = useState(false); 
+    const showSideBar = () => setSidebar(!sidebar);
 
-// //import icons from react icons
-// import { FaList, FaRegHeart } from "react-icons/fa";
-// import { FiHome, FiLogOut, FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
-// import { RiPencilLine } from "react-icons/ri";
-// import { BiCog } from "react-icons/bi";
+    return (    
+        <>
+        <div className="navbar">
+            
+            <Link to="#" className="menu-bars" onClick={showSideBar}>
+                <span className="fa-solid fa-bars"></span>
+            </Link>
+            
+            </div>
+        <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
+            
+            <ul className="nav-menu-items" onClick={showSideBar}> 
+                <li className="navbar-toggle">
+                    
+                    <Link to="#" className="menu-bars">
+                        <h2 className="fa-solid fa-building"> ACP JV10</h2>
+                    </Link>
+                </li>
+                {sideData.map((item, index) => {   
 
+                    return (
+                        <li key={index} className={item.cName}>
+                            <Link to={item.path}>
+                                <span className={item.icon}></span>
+                                <span>{item.title}</span>
+                            </Link>
+                        </li>
+                    );
+                })};
+            </ul>
+        </nav>
+        </>
+    )};
 
-// //import sidebar css from react-pro-sidebar module and our custom css 
-// import "./sidebar.css";
-
-
-// const Header = () => {
-  
-//     //create initial menuCollapse state using useState hook
-//     const [menuCollapse, setMenuCollapse] = useState(false)
-
-//     //create a custom function that will change menucollapse state from false to true and true to false
-//   const menuIconClick = () => {
-//     //condition checking to change state from true to false and vice versa
-//     menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
-//   };
-
-//   return (
-//     <>
-//       <div id="header">
-//           {/* collapsed props to change menu size using menucollapse state */}
-//         <ProSidebar collapsed={menuCollapse}>
-//           <SidebarHeader>
-//           <div className="logotext">
-//               {/* small and big change using menucollapse state */}
-//               <p>{menuCollapse ? "Logo" : "Big Logo"}</p>
-//             </div>
-//             <div className="closemenu" onClick={menuIconClick}>
-//                 {/* changing menu collapse icon on click */}
-//               {menuCollapse ? (
-//                 <FiArrowRightCircle/>
-//               ) : (
-//                 <FiArrowLeftCircle/>
-//               )}
-//             </div>
-//           </SidebarHeader>
-//           <SidebarContent>
-//             <Menu iconShape="square">
-//               <MenuItem active={true} icon={<FiHome />}>
-//                 Home
-//               </MenuItem>
-//               <MenuItem icon={<FaList />}>Category</MenuItem>
-//               <MenuItem icon={<FaRegHeart />}>Favourite</MenuItem>
-//               <MenuItem icon={<RiPencilLine />}>Author</MenuItem>
-//               <MenuItem icon={<BiCog />}>Settings</MenuItem>
-//             </Menu>
-//           </SidebarContent>
-//           <SidebarFooter>
-//             <Menu iconShape="square">
-//               <MenuItem icon={<FiLogOut />}>Logout</MenuItem>
-//             </Menu>
-//           </SidebarFooter>
-//         </ProSidebar>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Header;
+export default SideBar;

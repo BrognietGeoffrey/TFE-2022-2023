@@ -11,14 +11,15 @@ import Profile from "./components/profile.component";
 import BoardUser from "./components/userPage.component";
 import BoardModerator from "./components/moderatorPage.component";
 import BoardAdmin from "./components/adminPage.component";
-
+import SideBar from "./components/sidebar";
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
 import { history } from './helpers/history';
 
-import sideBar from "./components/sidebar.js";
+
 class App extends Component {
+  
   constructor(props) {
     super(props);
     this.logOut = this.logOut.bind(this);
@@ -43,6 +44,8 @@ class App extends Component {
         showModeratorBoard: user.roles.includes("comptable"),
         showAdminBoard: user.roles.includes("président"),
       });
+      
+
     }
   }
 
@@ -51,17 +54,21 @@ class App extends Component {
   }
 
   render() {
+    
+    
     const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
 
     return (
       
       <Router history={history}>
+        
         <div>
+        
+       
         {/* <sideBar/> */}
-          {/* <nav className="navbar navbar-expand navbar-dark bg-primary">
-            <Link to={"/"} className="navbar-brand">
-              Jean-Vives 10 ACP
-            </Link>
+          <nav className="navbar navbar-expand navbar-dark bg-primary">
+          <SideBar />
+            
             
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
@@ -123,9 +130,10 @@ class App extends Component {
                 </li>
               </div>
             )}
-          </nav> */}
+          </nav>
 
           <div className="container mt-3">
+            
             <Switch>
               <Route exact path={["/", "/home"]} component={Home} />
               <Route exact path="/login" component={Login} />
@@ -146,6 +154,7 @@ function mapStateToProps(state) {
   return {
     user,
   };
+  
 }
 
 
