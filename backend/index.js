@@ -13,7 +13,7 @@ const app = express()
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://localhost:3000"
 };
 
 app.use(cors(corsOptions));
@@ -31,6 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // database
 const db = require("./models");
+const { accessAdmin } = require('./controllers/user.controller');
 const Role = db.role;
 
 // db.sequelize.sync();
@@ -52,23 +53,9 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
 
-function initial() {
-  Role.create({
-    id: 1,
-    name: "user"
-  });
- 
-  Role.create({
-    id: 2,
-    name: "moderator"
-  });
- 
-  Role.create({
-    id: 3,
-    name: "admin"
-  });
-}
 
+// // call functio initial
+// initial();
 
 // API endpoints for users
 // app.get('/users')

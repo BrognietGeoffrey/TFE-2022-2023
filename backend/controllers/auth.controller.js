@@ -15,19 +15,27 @@ exports.signup = (req, res) => {
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8)
   })
+  
     .then(user => {
+      
       if (req.body.roles) {
+        
         Role.findAll({
           where: {
             name: {
               [Op.or]: req.body.roles
+              
             }
+            
           }
+          
         }).then(roles => {
           user.setRoles(roles).then(() => {
             res.send({ message: "User registered successfully!" });
           });
         });
+        
+
       } else {
         // user role = 1
         user.setRoles([1]).then(() => {
@@ -39,6 +47,7 @@ exports.signup = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
 
 exports.signin = (req, res) => {
   User.findOne({
@@ -71,6 +80,7 @@ exports.signin = (req, res) => {
       user.getRoles().then(roles => {
         for (let i = 0; i < roles.length; i++) {
           authorities.push(roles[i].name);
+          
         }
         res.status(200).send({
           id: user.id,

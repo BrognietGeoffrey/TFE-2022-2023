@@ -1,3 +1,19 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* add background image to the id body */
+/* #body {
+  background-image: url("../public/logojv10.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  opacity: 0.2;
+} */
+
+
+
 label {
     display: block;
     margin-top: 10px;
@@ -30,3 +46,4 @@ label {
     -webkit-border-radius: 50%;
     border-radius: 50%;
   }
+  

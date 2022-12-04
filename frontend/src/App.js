@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Router, Switch, Route, Link } from "react-router-dom";
+import { Router, Switch, Route , Redirect} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
 
@@ -9,8 +9,11 @@ import Login from "./components/login.component";
 import Home from "./components/home.component";
 import Profile from "./components/profile.component";
 import BoardUser from "./components/userPage.component";
+import Register from "./components/register.component";
 import BoardModerator from "./components/moderatorPage.component";
 import BoardAdmin from "./components/adminPage.component";
+import RedirectPage from "./components/redirectPage";
+import AddFacture from "./components/ajoutFacture.component";
 import SideBar from "./components/sidebar";
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
@@ -18,33 +21,37 @@ import { clearMessage } from "./actions/message";
 import { history } from './helpers/history';
 
 
+
 class App extends Component {
-  
   constructor(props) {
     super(props);
     this.logOut = this.logOut.bind(this);
+    console.log(this.logOut, "logout");
 
     this.state = {
       showModeratorBoard: false,
       showAdminBoard: false,
       currentUser: undefined,
+      openSidebar: false
     };
 
     history.listen((location) => {
       props.dispatch(clearMessage()); // clear message when changing location
     });
   }
-
+  handleOpenSidebar = () => {
+    this.setState({ openSidebar : !this.state.openSidebar });
+  }
   componentDidMount() {
     const user = this.props.user;
 
     if (user) {
       this.setState({
-        currentUser: user,
-        showModeratorBoard: user.roles.includes("comptable"),
-        showAdminBoard: user.roles.includes("président"),
+        currentUser: user.roles.includes("user"),
+        showModeratorBoard: user.roles.includes("moderator"),
+        showAdminBoard: user.roles.includes("admin")
       });
-      
+      console.log(user.roles, "roles");
 
     }
   }
@@ -54,96 +61,43 @@ class App extends Component {
   }
 
   render() {
-    
-    
     const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
-
+    // console.log(this.props.user.roles, "user");
     return (
-      
-      <Router history={history}>
-        
-        <div>
-        
+      <Router history={history}>  
+         <div className="flex">
+          
+          
+          
+          {/* Check if the user is logged in then display the sidebar */}
+          {this.logOut && (
+            <SideBar
+              openSidebar={this.state.openSidebar}
+              handleOpenSidebar={this.handleOpenSidebar}
+            />
+          )}
+
+
+        <div id="body" className="flex-1">
        
-        {/* <sideBar/> */}
-          <nav className="navbar navbar-expand navbar-dark bg-primary">
-          <SideBar />
-            
-            
-            <div className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link to={"/home"} className="nav-link">
-                  Accueil
-                </Link>
-              </li>
 
-              {showModeratorBoard && (
-                <li className="nav-item">
-                  <Link to={"/mod"} className="nav-link">
-                    Page Comptable
-                  </Link>
-                </li>
-              )}
 
-              {showAdminBoard && (
-                <li className="nav-item">
-                  <Link to={"/admin"} className="nav-link">
-                    Page Président
-                  </Link>
-                </li>
-              )}
 
-              {currentUser && (
-                <li className="nav-item">
-                  <Link to={"/user"} className="nav-link">
-                    Page utilisateur
-                  </Link>
-                </li>
-              )}
-            </div>
-
-            {currentUser ? (
-              <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <Link to={"/profile"} className="nav-link">
-                    {currentUser.username}
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <a href="/login" className="nav-link" onClick={this.logOut}>
-                    Se déconnecter
-                  </a>
-                </li>
-              </div>
-            ) : (
-              <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <Link to={"/login"} className="nav-link">
-                    Se connecter
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link to={"/register"} className="nav-link">
-                    Sign Up
-                  </Link>
-                </li>
-              </div>
-            )}
-          </nav>
-
-          <div className="container mt-3">
-            
-            <Switch>
-              <Route exact path={["/", "/home"]} component={Home} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/profile" component={Profile} />
+          <Switch>
+          <Route exact path="/profile" component={Profile} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path={["/", "/home"]} component={ Home}  />
+              <Route exact path="/register" component={Register} />
               <Route path="/user" component={BoardUser} />
-              <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
+              <Route path="/mod" component={BoardModerator} />
+              <Route path="/redirect" component={RedirectPage} />
+              <Route path="/addFacture" component={AddFacture} />
             </Switch>
+            
           </div>
-        </div>
+
+          </div>
       </Router>
     );
   }

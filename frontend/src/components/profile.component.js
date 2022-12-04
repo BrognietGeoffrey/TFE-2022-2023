@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
-import Card from "react-bootstrap/Card";
 
 class Profile extends Component {
 
   render() {
-    
     const { user: currentUser } = this.props;
 
     if (!currentUser) {
@@ -15,32 +13,26 @@ class Profile extends Component {
 
     return (
       
-      
       <div className="container">
         
-      <Card style={{ width: '18rem' }}>
-        <Card.Body>
-        <i  style={{display: 'flex',justifyContent: 'center' }} class="fa-solid fa-circle-user fa-4x"></i>          
-        <Card.Title style={{ marginTop: '0.5em',textAlign: 'center' }}>{currentUser.username}  </Card.Title>
-          <Card.Text>
-          <p>
-          <strong>Email:</strong> {currentUser.email}
-        </p>
-        <strong>Authorities:</strong>
-        <ul>
-          {console.log(currentUser)}
-          {currentUser.roles &&
-            currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
-        </ul>
-          </Card.Text>
-        </Card.Body>
-      </Card>
-
-
-        
-        
-      </div>
+        {/* Boostrap Card with the user profile */}
+        <div className="card card-container">
+          <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="profile-img" className="profile-img-card" />
+          <p id="profile-name" className="profile-name-card">Profil de {currentUser.username}</p>
+          <p id="profile-name" className="profile-name-card">Adresse email : {currentUser.email}</p>
+          <p id="profile-name" className="profile-name-card">Votre rôle : {currentUser.roles}</p>
+          {
+            currentUser.roles.includes("admin") ? (
+            <a href="/register" className="btn btn-primary btn-block">Ajouter un utilisateur</a>
+            ) : (
+              <div></div>
+            )
+          }
+          
+          
+        </div>
       
+      </div>
     );
   }
 }
