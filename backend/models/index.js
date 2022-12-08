@@ -42,4 +42,17 @@ db.user.belongsToMany(db.role, {
 db.ROLES = ["user", "admin", "moderator"];
 console.log("db.ROLES = " + db.ROLES);
 
+db.facture = require("../models/facture.model.js")(sequelize, Sequelize);
+db.compteFournisseur = require("../models/compteFournisseur.js")(sequelize, Sequelize);
+db.banque = require("../models/banque.js")(sequelize, Sequelize);
+db.infoFournisseur = require("../models/infoFournisseurs.model.js")(sequelize, Sequelize);
+db.client = require("../models/client.model.js")(sequelize, Sequelize);
+db.compteClient = require("../models/compteClient.model.js")(sequelize, Sequelize);
+
+
+
+
+
+
+
 module.exports = db
