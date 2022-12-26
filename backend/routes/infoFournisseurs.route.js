@@ -12,14 +12,14 @@ module.exports = function(app) {
         next();
     });
 
-    app.get("/api/infosFournisseurs", controller.findAll);
+    app.get("/api/fournisseurs", controller.findAll);
 
-    app.get("/api/infosFournisseurs/:id", controller.findOne);
+    app.get("/api/fournisseurs/:id", controller.findOne);
 
-    app.post("/api/infosFournisseurs", controller.create);
+    app.post("/api/fournisseurs", controller.create);
 
-    app.put("/api/infosFournisseurs/:id", controller.update);
+    app.put("/api/fournisseurs/:id", controller.update);
 
-    app.delete("/api/infosFournisseurs/:id",[authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], controller.delete);
+    app.delete("/api/fournisseurs/:id",[authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], controller.delete);
 
     }

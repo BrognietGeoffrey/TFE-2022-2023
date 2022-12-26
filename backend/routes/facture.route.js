@@ -13,7 +13,7 @@ module.exports = function(app) {
     
     app.get("/api/factures", controller.findAll);
     
-    app.get("/api/factures/:id",[authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], controller.findOne);
+    app.get("/api/factures/:id", controller.findOne);
     
     app.post("/api/factures", controller.create);
     
