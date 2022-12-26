@@ -18,9 +18,11 @@ exports.create = (req, res) => {
     const facture = {
         num_facture: req.body.num_facture,
         facture_date: req.body.facture_date,
-        montantfacture: req.body.montantfacture,
+        montant: req.body.montant,
         description: req.body.description,
-        estpaye: req.body.estpaye ? req.body.estpaye : false
+        estpaye: req.body.estpaye,
+        objet_id: req.body.objet_id,
+        libelle_id: req.body.libelle_id
     };
     
     // Save Facture in the database
@@ -55,18 +57,20 @@ exports.findAll = (req, res) => {
 
 // Find a single Facture with an id
 exports.findOne = (req, res) => {
-    const id = req.params.facture_id;
-    
+    const id = req.params.id;
+
     Facture.findByPk(id)
         .then(data => {
         res.send(data);
         })
         .catch(err => {
-        res.send({
+        res.status(200).send({
             message: "Error retrieving Facture with id=" + id
         });
         });
     }
+
+    
 
 // Update a Facture by the id in the request
 exports.update = (req, res) => {

@@ -2,7 +2,7 @@
 
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const Fournisseur = db.infoFournisseur;
+const Fournisseur = db.fournisseurs;
 
 // Get all the fournisseurs
 exports.findAll = (req, res) => {

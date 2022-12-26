@@ -73,7 +73,7 @@ exports.update = (req, res) => {
     const id = req.params.id;
     
     CompteFournisseur.update(req.body, {
-        where: { id: id }
+        where: { compte_fournisseur_id: id }
         })
         .then(num => {
         if (num == 1) {
