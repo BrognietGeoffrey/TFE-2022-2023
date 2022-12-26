@@ -21,6 +21,10 @@ class Profile extends Component {
           <p id="profile-name" className="profile-name-card">Profil de {currentUser.username}</p>
           <p id="profile-name" className="profile-name-card">Adresse email : {currentUser.email}</p>
           <p id="profile-name" className="profile-name-card">Votre rôle : {currentUser.roles}</p>
+          <p id="profile-name" className="profile-name-card">Votre ID : {currentUser.id}</p>
+        
+          <p id="profile-name" className="profile-name-card">Votre token : {currentUser.accessToken}</p>
+        
           {
             currentUser.roles.includes("admin") ? (
             <a href="/register" className="btn btn-primary btn-block">Ajouter un utilisateur</a>

@@ -3,7 +3,9 @@ import { connect } from "react-redux";
 import { Router, Switch, Route , Redirect} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.css";
-
+import 'primeicons/primeicons.css';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primereact/resources/primereact.css';
 import Login from "./components/login.component";
 
 import Home from "./components/home.component";
@@ -13,13 +15,15 @@ import Register from "./components/register.component";
 import BoardModerator from "./components/moderatorPage.component";
 import BoardAdmin from "./components/adminPage.component";
 import RedirectPage from "./components/redirectPage";
-import AddFacture from "./components/ajoutFacture.component";
+import Facturier from "./components/Facturier.component";
+import ListFacture from "./components/listFacture.component";
 import SideBar from "./components/sidebar";
+import Dashboard from "./components/analyse.component";
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
 import { history } from './helpers/history';
-
+require('bootstrap')
 
 
 class App extends Component {
@@ -65,17 +69,18 @@ class App extends Component {
     // console.log(this.props.user.roles, "user");
     return (
       <Router history={history}>  
-         <div className="flex">
-          
-          
-          
-          {/* Check if the user is logged in then display the sidebar */}
-          {this.logOut && (
+      {this.logOut && (
             <SideBar
               openSidebar={this.state.openSidebar}
               handleOpenSidebar={this.handleOpenSidebar}
             />
           )}
+         <div className="flex">
+          
+          
+          
+          {/* Check if the user is logged in then display the sidebar */}
+          
 
 
         <div id="body" className="flex-1">
@@ -92,7 +97,9 @@ class App extends Component {
               <Route path="/admin" component={BoardAdmin} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/redirect" component={RedirectPage} />
-              <Route path="/addFacture" component={AddFacture} />
+              <Route path="/factures" component={ListFacture} />
+              <Route path="/dashboard" component={Dashboard} />
+              <Route path="/facturier" component={Facturier} />
             </Switch>
             
           </div>
