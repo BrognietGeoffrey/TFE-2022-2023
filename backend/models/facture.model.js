@@ -14,19 +14,27 @@ module.exports
         facture_date: {
             type: Sequelize.DATE
         },
-        montantfacture: {
+        montant: {
             type: Sequelize.INTEGER
-        },
-        description : {
-            type: Sequelize.STRING
         },
         estpaye : {
             type: Sequelize.BOOLEAN,
             defaultValue: false
         },
+        objet_id : {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        libelle_id : {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+
 
     
     });
+
     return Factures;
+
 }
 

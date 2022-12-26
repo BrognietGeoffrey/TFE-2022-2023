@@ -7,12 +7,12 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
-        name_client: {
+        name: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: true
         },
-        prenom_client : {
+        firstname : {
             type: Sequelize.STRING,
             allowNull: false,
             unique: true

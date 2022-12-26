@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
-        name_fournisseur: {
+        name: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: true
@@ -24,6 +24,11 @@ module.exports = (sequelize, Sequelize) => {
         description : {
             type: Sequelize.STRING
         },
+        num_fournisseur: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            unique: true
+        }
 
 
         
