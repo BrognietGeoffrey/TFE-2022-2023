@@ -38,6 +38,22 @@ db.user.belongsToMany(db.role, {
   otherKey: "roleId"
 });
 
-db.ROLES = ["user", "admin", "moderator"];
 
-module.exports = db;
+
+// Roles are created automatically when the server starts not in the array
+db.ROLES = ["user", "admin", "moderator"];
+console.log("db.ROLES = " + db.ROLES);
+
+db.facture = require("../models/facture.model.js")(sequelize, Sequelize);
+db.compteFournisseur = require("../models/compteFournisseur.js")(sequelize, Sequelize);
+db.banque = require("../models/banque.js")(sequelize, Sequelize);
+db.fournisseurs = require("../models/infoFournisseurs.model.js")(sequelize, Sequelize);
+db.client = require("../models/client.model.js")(sequelize, Sequelize);
+db.compteClient = require("../models/compteClient.model.js")(sequelize, Sequelize);
+db.extraits = require("../models/extrait.model.js")(sequelize, Sequelize);
+db.decompte = require("../models/decompte.model.js")(sequelize, Sequelize);
+db.facturier = require("../models/facturier.model.js")(sequelize, Sequelize);
+db.objet = require("../models/factureObjet.model.js")(sequelize, Sequelize);
+db.libelle = require("../models/factureLibelle.model.js")(sequelize, Sequelize);
+
+module.exports = db
