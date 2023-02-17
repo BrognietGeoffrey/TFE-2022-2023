@@ -12,11 +12,11 @@ module.exports = (sequelize, Sequelize) => {
         }
     });
     factureLibelle.associate = function(models) {
-        factureLibelle.hasMany(models.factures, {
+        factureLibelle.belongsTo(models.factures, {
             foreignKey: 'libelle_id',
             as: 'factures'
         });
-    }
+    };
 
     return factureLibelle;
 }

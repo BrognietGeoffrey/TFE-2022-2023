@@ -18,7 +18,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: {
-                model: 'infoFournisseurs',
+                model: 'fournisseurs',
                 key: 'fournisseur_id'
             }
         },
@@ -26,7 +26,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
             references: {
-                model: 'banque',
+                model: 'banques',
                 key: 'banque_id'
             }
         },
@@ -46,9 +46,9 @@ module.exports = (sequelize, Sequelize) => {
 
 
     compteFournisseurs.associate = function(models) {
-        compteFournisseurs.belongsTo(models.infoFournisseurs, {
+        compteFournisseurs.belongsTo(models.fournisseurs, {
             foreignKey: 'fournisseur_id',
-            as: 'infoFournisseurs'
+            as: 'fournisseurs'
         });
     };
     

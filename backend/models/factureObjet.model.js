@@ -15,6 +15,11 @@ module.exports = (sequelize, Sequelize) => {
             unique: true
         }
     });
-  
+    factureObjet.associate = function(models) {
+        factureObjet.belongsTo(models.factures, {
+            foreignKey: 'objet_id',
+            as: 'factures'
+        });
+    };
     return factureObjet;
 }
