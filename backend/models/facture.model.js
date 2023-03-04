@@ -11,6 +11,11 @@ module.exports
             allowNull: false,
 
         },
+        num_facture_lamy: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            unique: true
+        },
         facture_date: {
             type: Sequelize.DATE
         },
@@ -23,7 +28,7 @@ module.exports
         },
         objet_id : {
             type: Sequelize.INTEGER,
-            allowNull: false, 
+            allowNull: true, 
             references: {
                 model: 'objets',
                 key: 'id'
@@ -31,10 +36,18 @@ module.exports
         },
         libelle_id : {
             type: Sequelize.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: 'libelles',
                 key: 'id'
+            }
+        },
+        tva_id : {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'tvas',
+                key: 'tva_id'
             }
         },
 
@@ -55,6 +68,13 @@ module.exports
         Factures.belongsTo(models.libelles, {
             foreignKey: 'libelle_id',
             as: 'libelles'
+        });
+    };
+
+    Factures.associate = function(models) {
+        Factures.belongsTo(models.tvas, {
+            foreignKey: 'tva_id',
+            as: 'tvas'
         });
     };
 

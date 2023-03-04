@@ -1,6 +1,7 @@
 const controller = require("../controllers/facture.controller");
 const { authJwt } = require("../middleware");
-
+const db = require("../models");
+const Facture = db.facture;
 
 module.exports = function(app) {
     app.use(function(req, res, next) {
@@ -14,6 +15,21 @@ module.exports = function(app) {
     app.get("/api/factures", controller.findAll);
     
     app.get("/api/factures/:id", controller.findOne);
+
+        // Get the last facture ID
+    app.get('/api/facture/lastId', (req, res) => {
+        Facture.findOne({ order: [ [ 'facture_id', 'DESC' ]] })
+          .then(facture => {
+            res.send(facture.facture_id.toString());
+          })
+          .catch(err => {
+            res.status(500).send({
+              message:
+                err.message || "Some error occurred while retrieving last facture ID."
+            });
+          });
+      });
+  
     
     app.post("/api/factures", controller.create);
     

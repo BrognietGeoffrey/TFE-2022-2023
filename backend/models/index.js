@@ -55,5 +55,6 @@ db.decompte = require("../models/decompte.model.js")(sequelize, Sequelize);
 db.facturier = require("../models/facturier.model.js")(sequelize, Sequelize);
 db.objet = require("../models/factureObjet.model.js")(sequelize, Sequelize);
 db.libelle = require("../models/factureLibelle.model.js")(sequelize, Sequelize);
+db.tva = require("../models/tva.model.js")(sequelize, Sequelize);
 
 module.exports = db

@@ -9,14 +9,16 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
 import { ProgressBar } from 'primereact/progressbar';
 import { Calendar } from 'primereact/calendar';
-
+import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 
 import {Card} from 'primereact/card';
 import {TabView, TabPanel} from 'primereact/tabview';
 
-import {AddFacturier} from './addFacturier.component';
+import AddFacturier from './addFacturier.component';
 import FacturierDataService from "../services/facturierService";
+import FournisseurService from '../services/fournisseurService';
+
 
 
 
@@ -27,44 +29,33 @@ const Facturier = () => {
     const [loading, setLoading] = useState(true)
     const [facturiers, setFacturiers] = useState([]);
     const [selectedCustomers, setSelectedCustomers] = useState(null);
-    const [filters, setFilters] = useState({
-        'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
-        'client.name_client': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
 
-        'facture.num_facture': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.COMMENCE_AVEC }] },
-        'date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
-        'facture.montant': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-        'extrait.montant': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-
-        'facture.estpaye': { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-        'decompte.num_decompte': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-    });
     const [globalFilterValue, setGlobalFilterValue] = useState('');
-    const statuses = ['Paid', 'Unpaid '];
+    const statuses = ['payée', 'non payée '];
 
 
 
-     // get all facturiers from the database
-     const getFacturiers = () => {
-        setLoading(true);
-        FacturierDataService.getAll()
-            .then(response => {
-                setFacturiers(response);
-                console.log (response);
-            })
-            .catch(e => {
-                console.log(e);
-            });
-        setLoading(false);
-    };
+  
 
-   // run once when the component is mounted
+  
+
+
+    const getFacturiers = () => {
+        async function fetchData() {
+            const facturiers = await FacturierDataService.getAll();
+            setFacturiers(facturiers);
+            // si pas toutes les données sont chargées, on met le loading à false
+            if (facturiers.length !== 0) {
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }
+
     useEffect(() => {
+        setLoading(true);
         getFacturiers();
-        setLoading(false);
     }, []);
-
-
 
 
 
@@ -77,39 +68,48 @@ const Facturier = () => {
     }
 
     const formatCurrency = (value) => {
-        console.log(value);
         return value
         // return value.toLocaleString('fr-BE', { style: 'currency', currency: 'EUR' });
     }
 
-    const onGlobalFilterChange = (e) => {
-        const value = e.target.value;
-        let _filters = { ...filters };
-        _filters['global'].value = value;
 
-        setFilters(_filters);
-        setGlobalFilterValue(value);
+
+    const refreshTable = () => {
+        setLoading(true);
+        FacturierDataService.getAll().then(data => { setFacturiers(data); setLoading(false); });
     }
-
     const renderHeader = () => {
+        
+    
         return (
             <div className="flex justify-content-between align-items-center">
                 <h5 className="m-0">Facturiers</h5>
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
+                <span className='p-input-icon-left ml-9'>
+                    <Button icon="pi pi-refresh" onClick={refreshTable} />
                 </span>
+              
             </div>
         )
     }
+
+
+
 
     const numfactureBodyTemplate = (rowData) => {
         return "23/" + rowData.facture.num_facture;
 
     }
+    const numfactureLamyBodyTemplate = (rowData) => {
+        return "23/" + rowData.facture.num_facture_lamy;
+
+    }
     const numdecompteBodyTemplate = (rowData) => {
         return "N°" + rowData.decompte.num_decompte;
 
+    }
+
+    const objetBodyTemplate = (rowData) => {
+        return rowData.objetTitle;
     }
 
     const dateBodyTemplate = (rowData) => {
@@ -132,8 +132,14 @@ const Facturier = () => {
         return formatCurrency(rowData.facture.montant);
     }
 
+    const tvaBalanceBodyTemplate = (rowData) => {
+        const tva = rowData.tva
+        console.log(tva, 'tva');
+        const montanttva = rowData.facture.montant * tva.tva_value/100;
+        return formatCurrency(montanttva);
+    }
     const balanceFilterTemplate = (options) => {
-        return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="EUR" locale="fr-BE" />
+        return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="USD" locale="en-US" />
     }
 
     
@@ -144,7 +150,7 @@ const Facturier = () => {
             return <ProgressBar mode="indeterminate" style={{ height: '6px' }} />
         }
         else {
-        if (rowData.facture.estpaye === "paid") {
+        if (rowData.facture.estpaye === true) {
             return <span className={`customer-badge status-${rowData.facture.estpaye}`}><Badge value="Payée" severity="success"></Badge></span>;
         }
         else {
@@ -152,7 +158,21 @@ const Facturier = () => {
         }
     }
     }
+
+    const tvaBodyTemplate = (rowData) => {
+        const tva = rowData.facture.montant + rowData.tva.tva_value / 100;
+        return formatCurrency(tva) + ' €';
+    }
     
+    const numextraitBodyTemplate = (rowData) => {
+        if (rowData.extrait_id === null) {
+            return 'Pas d"extrait';
+        }
+        else {
+            return "N°" + rowData.extrait.num_extrait + " / " + rowData.extrait.num_extrait;
+        }
+    }
+      
     
        
 
@@ -163,30 +183,7 @@ const Facturier = () => {
     const statusItemTemplate = (option) => {
         return <span className={`customer-badge status-${option}`}>{option}</span>;
     }
-    // const clientOrFournisseurTemplate = (rowData) => {
-    //     // if data.length > 1 then it's a client and a fournisseur
-    //     // if the rowData is not loaded yet, wait for it to load
-    //     if (loading) {
-    //         return <ProgressBar mode="indeterminate" style={{ height: '6px' }} />
-    //     }
-    //     else {
-            
-            
-    //         if (rowData.co_client_id !== null && rowData.co_fournisseur_id !== null) {
-    //                     return <span className="customer-badge status-client"><Badge value={rowData.info[0].name} severity="success"></Badge></span>,
-    //                             <span className="customer-badge status-fournisseur"><Badge value="Fournisseur" severity="success"></Badge></span>;
-    //                 }
-    //                 if (rowData.co_client_id !== null) {
-    //                     return <span className="customer-badge status-client"><Badge value="Client" severity="success"></Badge></span>;
-    //                 }
-    //                 if (rowData.co_fournisseur_id !== null) {
-    //                     return <span className="customer-badge status-fournisseur"><Badge value="Fournisseur" severity="success"></Badge></span>;
-    //                 }
-    //                 else {
-    //                     return <span className="customer-badge status-client"><Badge value="Rien" severity="danger"></Badge></span>;
-    //                 }
-    //             }
-    //         }
+
         
     
     
@@ -200,48 +197,63 @@ const Facturier = () => {
     }
     else {
         return (
-            <div className="" style={{width: 'auto'}}>
-                <div className="" style={{width: 'auto'}}>
-                <div className="card">
+  
+
+         
+                <div className="card"  >
                 <h5></h5>
-                <TabView>
-                    <TabPanel header="Ajout ">
-                    <AddFacturier />
-                    </TabPanel>
-                    <TabPanel header="Facturier" onClick={getFacturiers}>
-                    <Card title="Facturiers" subTitle="Liste des facturiers" style={{width: 'auto'}}>
+                <TabView >
+                    
+                    <TabPanel header="Facturier" onChange={getFacturiers}>
+  
+                          
+         
+
+                        
+                    <Card title="Facturiers" subTitle="Liste des facturiers" className='card-body'  >
+                        // button to refresh the table
+                        
                     <DataTable  value={facturiers} paginator className="p-datatable-customers" header={header} rows={10}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" rowsPerPageOptions={[10,25,50]}
-                    dataKey="id" rowHover selection={selectedCustomers} onSelectionChange={e => setSelectedCustomers(e.value)}
-                    filters={filters} filterDisplay="menu" loading={loading}  scrollable scrollHeight="70vh" scrollWidth="10vw"
-                    globalFilterFields={['facture.num_facture', 'facture.facture_date', 'balance', 'status']} emptyMessage="Aucunes données trouvées."
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" style={{width:'100%'}}>
-                    <Column selectionMode="multiple" selectionAriaLabel="name" headerStyle={{ width: '1em' }}></Column>
-                    <Column field="facture.num_facture" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numfactureBodyTemplate}/>
-                    <Column field="facture.facture_date" header="Date" sortable filterField="date" dataType="date" style={{ minWidth: '8rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                    <Column field="facture.montant" header="A payé" sortable dataType="numeric" style={{ minWidth: '8rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
-                    <Column field="facture.description" header="Description" sortable filter filterPlaceholder="Rechercher par description" style={{ minWidth: '14rem' }} />
-                    <Column field="extrait.montant" header="Montant extrait" sortable dataType="numeric" style={{ minWidth: '8rem' }} body={extraitBodyTemplate} filter filterElement={extraitFilterTemplate} />
+                    dataKey="id" rowHover filterDisplay="menu" loading={loading}
+                    emptyMessage="Aucunes données trouvées." scrollable 
+                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll">
+                    
+                    <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ minWidth: '14rem' }}/>
+                    <Column field='fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom" style={{ minWidth: '14rem' }} />
+                         
+                    <Column field='fournisseur.num_fournisseur' header="N° de fournisseur" sortable  filter filterPlaceholder='Rechercher par N°' style={{ minWidth: '14rem' }}></Column>
+                    <Column field='objetTitle' header="Objet" sortable filter filterPlaceholder='Rechercher par objet...' style={{ minWidth: '14rem' }} ></Column>
+                    <Column field="facture.facture_date" header="Date de la facture" sortable filterField="date" dataType="date"  body={dateBodyTemplate} filter filterElement={dateFilterTemplate} style={{ minWidth: '14rem' }}/>
+                    <Column field="facture.num_facture" header="N° de facture" sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numfactureBodyTemplate}/>
+                    <Column field="libelleTitle" header="Libellé" sortable filter filterPlaceholder="Rechercher par libellé" style={{ minWidth: '14rem' }} />
                     <Column field="decompte.num_decompte" header="N° de décompte " sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numdecompteBodyTemplate}/>
+                    <Column field="facture.montant" header="Montant de la facture" sortable dataType="numeric" style={{ minWidth: '8rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
+                    <Column header="Montant avec TVA"  sortable dataType="numeric" style={{ minWidth: '8rem' }} body={tvaBalanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
+                    {/* <Column field="extrait.montant" header="Montant extrait" sortable dataType="numeric" style={{ minWidth: '8rem' }} body={extraitBodyTemplate} filter filterElement={extraitFilterTemplate} /> */}
+                    {/* <Column field="decompte.num_decompte" header="N° de décompte " sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numdecompteBodyTemplate}/> */}
                     <Column field="facture.estpaye" header="Status" sortable filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '10rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
+                    <Column  header="N° extrait" sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numextraitBodyTemplate}/>
                     <Column field="extrait.date_extrait" header="Date extrait" sortable filterField="date" dataType="date" style={{ minWidth: '8rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} /> 
                 </DataTable>
                     </Card>
                     </TabPanel>
+                    <TabPanel header="Ajout ">
+                    <AddFacturier />
+                    </TabPanel>
 
                 </TabView>
-            </div>
-                    
-
-                 
-                </div>
-            </div>
+                {/* Dialog pour ajouter une facture
+                 */}
+              
+                 </div>
         );
-    }
 
-    
+    }
 }
 
+           
+         
 
 
 

@@ -19,12 +19,16 @@ import Facturier from "./components/Facturier.component";
 import ListFacture from "./components/listFacture.component";
 import SideBar from "./components/sidebar";
 import Dashboard from "./components/analyse.component";
+import Analyse from "./components/analyse.component";
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
 import { history } from './helpers/history';
 require('bootstrap')
 
+function canAccessFacturier(currentUser, showModeratorBoard, showAdminBoard) {
+  return currentUser && (showModeratorBoard || showAdminBoard);
+}
 
 class App extends Component {
   constructor(props) {
@@ -65,7 +69,18 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+    const { currentUser, showModeratorBoard, showAdminBoard, user } = this.state;
+    console.log(this.props.user, "user");
+  
+            
+
+    // const userPermission = this.props.user.roles.includes("user");
+
+    // console.log(userPermission, "userPermission");
+    // const moderatorPermission = this.props.user.roles.includes("moderator");
+    // console.log(moderatorPermission, "moderatorPermission");
+    // const adminPermission = this.props.user.roles.includes("admin");
+    // console.log(adminPermission, "adminPermission");
     // console.log(this.props.user.roles, "user");
     return (
       <Router history={history}>  
@@ -83,7 +98,7 @@ class App extends Component {
           
 
 
-        <div id="body" className="flex-1">
+        <div id="body" className="flex-1" style={{maxWidth: "100%"}}>
        
 
 
@@ -99,7 +114,10 @@ class App extends Component {
               <Route path="/redirect" component={RedirectPage} />
               <Route path="/factures" component={ListFacture} />
               <Route path="/dashboard" component={Dashboard} />
-              <Route path="/facturier" component={Facturier} />
+              <Route path="/facturier" component={Facturier} />              
+              <Route path="/analyse" component={Analyse} />
+              
+              
             </Switch>
             
           </div>

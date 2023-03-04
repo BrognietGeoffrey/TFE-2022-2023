@@ -57,9 +57,12 @@ exports.findAll = (req, res) => {
         res.send(data);
         })
         .catch(err => {
+        // send a null array if there is an error
+        
         res.status(200).send({
             message:
             err.message || "Some error occurred while retrieving extrait."
+            
         });
         });
 }

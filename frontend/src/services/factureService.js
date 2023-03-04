@@ -1,11 +1,13 @@
 import axios from "axios"
 
 const API_URL = "/api/factures/"; 
+const API_URL2 = "/api/facture/";
+const API_URL_OBJET = "/api/objet/";
+const API_URL_LIBELLE = "/api/libelle/";
 
 class factureService {
     getFactures() {
         return axios.get(API_URL);
-        
     }
     getFactureById(id) {
         return axios.get(API_URL + id);
@@ -27,15 +29,21 @@ class factureService {
         return axios.delete(API_URL + id);
     }
 
-    // get status of facture
-    getFactureStatus(id) {
-        return axios.get(API_URL + id + "/status");
+
+
+
+    // get the last facture ID
+    getLastFactureId() {
+        async function getLastFactureId() {
+            const data = await axios.get(API_URL);
+            const lastFactureId = data.data[data.data.length - 1].facture_id;
+            console.log(lastFactureId);
+            return lastFactureId;
+        }
+        return getLastFactureId();
+
     }
 
-    // get facture where num_facture and montant are the same as the one in the database
-    getFactureByNumFactureAndMontant(num_facture, montant) {
-        return axios.get(API_URL + "?num_facture=" + num_facture + "&montant=" + montant);
-    }
     
     
     

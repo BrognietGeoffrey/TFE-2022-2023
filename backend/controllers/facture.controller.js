@@ -18,11 +18,13 @@ exports.create = (req, res) => {
     const facture = {
         num_facture: req.body.num_facture,
         facture_date: req.body.facture_date,
+        num_facture_lamy: req.body.num_facture_lamy,
         montant: req.body.montant,
         description: req.body.description,
         estpaye: req.body.estpaye,
         objet_id: req.body.objet_id,
-        libelle_id: req.body.libelle_id
+        libelle_id: req.body.libelle_id,
+        tva_id : req.body.tva_id
     };
     
     // Save Facture in the database
@@ -121,6 +123,22 @@ exports.delete = (req, res) => {
         });
         });
     }
+
+
+//get the last id of facture
+exports.getLastId = (req, res) => {
+    Facture.max('facture_id')
+        .then(lastId => {
+            res.send({ lastId });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error getting the last facture ID"
+            });
+        });
+}
+
+
 
 
 

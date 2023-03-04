@@ -60,11 +60,11 @@ require("./routes/decompte.route.js")(app);
 require("./routes/facturier.route.js")(app);
 require("./routes/infoFournisseurs.route.js")(app);
 require("./routes/factureDetails.route.js")(app);
+require("./routes/tva.routes.js")(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
-
 
 
