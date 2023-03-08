@@ -227,6 +227,14 @@ const Side_bar = () => {
                 { label: 'Les données', icon:'pi pi-fw pi-redo'}
             ]
         },
+        {
+            label: 'Analyse',
+            icon: 'pi-chart-line',
+            items: [
+                { label: 'Analyse sur le facturiers', icon: 'pi-wallet', url : '/analyse' },
+                
+            ]
+        },
 
     ];
     const menuUser = [
