@@ -2,11 +2,11 @@
 
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const Fournisseur = db.fournisseurs;
+const { Fournisseurs } = require("../models");
 
 // Get all the fournisseurs
 exports.findAll = (req, res) => {
-    Fournisseur.findAll()
+    Fournisseurs.findAll()
         .then(data => {
         res.send(data);
         })
@@ -22,7 +22,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Fournisseur.findByPk(id)
+    Fournisseurs.findByPk(id)
         .then(data => {
         res.send(data);
         })
@@ -37,7 +37,7 @@ exports.findOne = (req, res) => {
 
 exports.create = (req, res) => {
     // If the name_fournisseur is already in the database, return an error
-    Fournisseur.findOne({
+    Fournisseurs.findOne({
         where: {
         name_fournisseur: req.body.name_fournisseur
         }
@@ -84,7 +84,7 @@ exports.create = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Fournisseur.update(req.body, {
+    Fournisseurs.update(req.body, {
         where: { id: id }
     })
         .then(num => {
@@ -109,7 +109,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Fournisseur.destroy({
+    Fournisseurs.destroy({
         where: { id: id }
     })
         .then(num => {

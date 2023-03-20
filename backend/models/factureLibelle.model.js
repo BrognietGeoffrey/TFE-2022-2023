@@ -11,12 +11,12 @@ module.exports = (sequelize, Sequelize) => {
             unique: true
         }
     });
-    factureLibelle.associate = function(models) {
-        factureLibelle.belongsTo(models.factures, {
-            foreignKey: 'libelle_id',
-            as: 'factures'
-        });
-    };
+    // factureLibelle.associate = function(models) {
+    //     factureLibelle.belongsTo(models.factures, {
+    //         foreignKey: 'libelle_id',
+    //         as: 'factures'
+    //     });
+    // };
 
     return factureLibelle;
 }

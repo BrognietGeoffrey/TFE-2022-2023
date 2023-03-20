@@ -1,12 +1,12 @@
 // Controllers for compteClient
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const CompteClient = db.compteClient;
+const { CoClients } = require("../models");
 
 // Create and Save a new CompteClient
 exports.create = (req, res) => {
     // If the numCompteClient is already in the database, return an error
-    CompteClient.findOne({
+    CoClients.findOne({
         where: {
         numCompteClient: req.body.numCompteClient
         }
@@ -52,7 +52,7 @@ exports.create = (req, res) => {
 
 // Retrieve all compteClients from the database.
 exports.findAll = (req, res) => {
-    CompteClient.findAll()
+    CoClients.findAll()
         .then(data => {
         res.send(data);
         })
@@ -68,7 +68,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    CompteClient.findByPk(id)
+    CoClients.findByPk(id)
         .then(data => {
         res.send(data);
         })
@@ -83,7 +83,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    CompteClient.update(req.body, {
+    CoClients.update(req.body, {
         where: { compteClient_id: id }
     })
     .then(num => {
@@ -109,7 +109,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    CompteClient.destroy({
+    CoClients.destroy({
         where: { compteClient_id: id }
     })
     .then(num => {

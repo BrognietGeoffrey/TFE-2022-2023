@@ -1,7 +1,7 @@
 // Middleware pour les factures
 
 const db = require("../models");
-const Facture = db.facture;
+const {Factures } = require("../models");
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Facture
@@ -28,7 +28,7 @@ exports.create = (req, res) => {
     };
     
     // Save Facture in the database
-    Facture.create(facture)
+    Factures.create(facture)
         .then(data => {
         res.send(data);
         })
@@ -45,7 +45,7 @@ exports.findAll = (req, res) => {
     const num_facture = req.query.num_facture;
     var condition = num_facture ? { num_facture: { [Op.like]: `%${num_facture}%` } } : null;
     
-    Facture.findAll({ where: condition })
+    Factures.findAll({ where: condition })
         .then(data => {
         res.send(data);
         })
@@ -61,7 +61,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Facture.findByPk(id)
+    Factures.findByPk(id)
         .then(data => {
         res.send(data);
         })
@@ -78,7 +78,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
     
-    Facture.update(req.body, {
+    Factures.update(req.body, {
         where: { facture_id: id }
         })
         .then(num => {
@@ -103,7 +103,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
     
-    Facture.destroy({
+    Factures.destroy({
         where: { facture_id: id }
         })
         .then(num => {
@@ -127,7 +127,7 @@ exports.delete = (req, res) => {
 
 //get the last id of facture
 exports.getLastId = (req, res) => {
-    Facture.max('facture_id')
+    Factures.max('facture_id')
         .then(lastId => {
             res.send({ lastId });
         })

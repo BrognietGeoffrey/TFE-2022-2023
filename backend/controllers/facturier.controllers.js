@@ -1,12 +1,11 @@
 // controllers for the facturier
 const db = require("../models");
-const Op = db.Sequelize.Op;
-const Facturier = db.facturier;
-
+const { Op } = require("sequelize");
+const { Facturiers, Factures, CoClients, CoFournisseurs } = require("../models");
 // Create and Save a new Facturier
 exports.create = (req, res) => {
     // If the numFacturier is already in the database, return an error
-    Facturier.findOne({
+    Facturiers.findOne({
         where: {
         facture_id: req.body.facture_id
         }
@@ -29,7 +28,7 @@ exports.create = (req, res) => {
         };
 
         // Save facturier in the database
-        Facturier.create(facturier)
+        Facturiers.create(facturier)
             .then(data => {
             res.send(data);
             })
@@ -50,38 +49,42 @@ exports.create = (req, res) => {
     );
 }
 
-// Retrieve all facturier from the database.
-exports.findAll = (req, res) => {
-    Facturier.findAll()
-        .then(data => {
-        // get all factures and add them to the facturier
-        const facturiersWithFactures = data.map(facturier => {
-            return db.facture.findByPk(facturier.facture_id)
-            .then(facture => {
-                facturier.facture = facture;
-                return facturier;
-            })
-        })
-        return Promise.all(facturiersWithFactures);
-        })
-        .then(data => {
-        res.send(data)
-        })
-        .catch(err => {
-        res.status(200).send({
-            message:
-            err.message || "Some error occurred while retrieving facturier."
+
+// Retrieve all facturiers from the database with include for the foreign keys
+
+exports.getFacturiers = async (req, res) => {
+    try {
+        const facturiers = await Facturiers.findAll({
+            include: [
+                {
+                    model: Factures,
+
+                },
+                {
+                    model: CoClients,
+
+                },
+                {
+                    model: CoFournisseurs,
+
+                }
+            ]
         });
-        });
-}
-    
+        res.status(200).send(facturiers);
+    } catch (error) {
+        
+
+
+
+
+
 
 
 // Find a single facturier with an id
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Facturier.findByPk(id)
+    Facturiers.findByPk(id)
     .then(data => {
         res.send(data);
     })
@@ -98,7 +101,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Facturier.update(req.body, {
+    Facturiers.update(req.body, {
         where: { facturier_id: id }
     })
     .then(num => {
@@ -125,7 +128,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Facturier.destroy({
+    Facturiers.destroy({
         where: { facturier_id: id }
     })
     .then(num => {

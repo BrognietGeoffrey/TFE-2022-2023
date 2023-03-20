@@ -20,14 +20,7 @@ module.exports = (sequelize, Sequelize) => {
                 key: 'client_id'
             }
         },
-        banque_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'banque',
-                key: 'banque_id'
-            }
-        },
+      
         description   : {   
             type: Sequelize.STRING
         },
@@ -37,20 +30,6 @@ module.exports = (sequelize, Sequelize) => {
 
         
     });
-    compteClients.associate = function(models) {
-        compteClients.belongsTo(models.banque, {
-            foreignKey: 'banque_id',
-            as: 'banque'
-        });
-    };
-
-
-
-    compteClients.associate = function(models) {
-        compteClients.belongsTo(models.infoFournisseurs, {
-            foreignKey: 'fournisseur_id',
-            as: 'infoFournisseurs'
-        });
-    };
+    
     return compteClients;
 }

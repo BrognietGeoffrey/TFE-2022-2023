@@ -1,12 +1,11 @@
 // controllers for the decompte
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const Decompte = db.decompte;
-
+const { Decomptes } = require("../models");
 // Create and Save a new Decompte
 exports.create = (req, res) => {
     // If the numDecompte is already in the database, return an error
-    Decompte.findOne({
+    Decomptes.findOne({
         where: {
         num_decompte: req.body.num_decompte
         }
@@ -51,7 +50,7 @@ exports.create = (req, res) => {
 
 // Retrieve all decompte from the database.
 exports.findAll = (req, res) => {
-    Decompte.findAll()
+    Decomptes.findAll()
         .then(data => {
         res.send(data);
         })
@@ -67,7 +66,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Decompte.findByPk(id)
+    Decomptes.findByPk(id)
         .then(data => {
         res.send(data);
         })
@@ -82,7 +81,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Decompte.update(req.body, {
+    Decomptes.update(req.body, {
         where: { decompte_id: id }
     })
         .then(num => {
@@ -107,7 +106,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Decompte.destroy({
+    Decomptes.destroy({
         where: { decompte_id: id }
     })
         .then(num => {

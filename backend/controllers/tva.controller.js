@@ -1,6 +1,6 @@
 // controller for tva
 const db = require("../models");
-const Tva = db.tva;
+const { Tva } = require("../models");
 
 
 exports.findAll = (req, res) => {

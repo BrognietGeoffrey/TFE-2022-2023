@@ -1,7 +1,6 @@
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const factureObjet = db.objet;
-const factureLibelle = db.libelle;
+const { Objets, Libelles } = require("../models");
 
 // Create and Save a new factureObjet
 exports.createObjet = (req, res) => {
@@ -19,7 +18,7 @@ exports.createObjet = (req, res) => {
     };
     
     // Save factureObjet in the database
-    factureObjet.create(objet)
+    Objets.create(objet)
         .then(data => {
         res.send(data);
         })
@@ -36,7 +35,7 @@ exports.findObjet = (req, res) => {
     const title = req.query.title;
     var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
     
-    factureObjet.findAll({ where: condition })
+    Objets.findAll({ where: condition })
         .then(data => {
         res.send(data);
         })
@@ -52,7 +51,7 @@ exports.findObjet = (req, res) => {
 exports.findObjetById = (req, res) => {
     const id = req.params.id;
 
-    factureObjet.findByPk(id)
+    Objets.findByPk(id)
     .then(data => {
         res.send(data);
     })
@@ -79,7 +78,7 @@ exports.createLibelle = (req, res) => {
     };
     
     // Save factureLibelle in the database
-    factureLibelle.create(libelle)
+    Libelles.create(libelle)
         .then(data => {
         res.send(data);
         })
@@ -96,7 +95,7 @@ exports.findLibelle = (req, res) => {
     const title = req.query.title;
     var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
     
-    factureLibelle.findAll({ where: condition })
+    Libelles.findAll({ where: condition })
         .then(data => {
         res.send(data);
         })
@@ -112,7 +111,7 @@ exports.findLibelle = (req, res) => {
 exports.findLibelleById = (req, res) => {
     const id = req.params.id;
 
-    factureLibelle.findByPk(id)
+    Libelles.findByPk(id)
     .then(data => {
         res.send(data);
     })

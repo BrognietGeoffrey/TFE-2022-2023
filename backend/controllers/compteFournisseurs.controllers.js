@@ -3,7 +3,7 @@
 
 const db = require('../models');
 const Op = db.Sequelize.Op;
-const CompteFournisseur = db.compteFournisseur;
+const { CoFournisseurs } = require('../models');
 
 // Create and Save a new CompteFournisseur
 exports.create = (req, res) => {
@@ -23,7 +23,7 @@ exports.create = (req, res) => {
     };
     
     // Save CompteFournisseur in the database
-    CompteFournisseur.create(compteFournisseur)
+    CoFournisseurs.create(compteFournisseur)
         .then(data => {
         res.send(data);
         })
@@ -41,7 +41,7 @@ exports.findAll = (req, res) => {
     const numCompteFournisseur = req.query.numCompteFournisseur;
     var condition = numCompteFournisseur ? { numCompteFournisseur: { [Op.like]: `%${numCompteFournisseur}%` } } : null;
     
-    CompteFournisseur.findAll({ where: condition })
+    CoFournisseurs.findAll({ where: condition })
         .then(data => {
         res.send(data);
         })
@@ -57,7 +57,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
     
-    CompteFournisseur.findByPk(id)
+    CoFournisseurs.findByPk(id)
         .then(data => {
         res.send(data);
         })
@@ -72,7 +72,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
     
-    CompteFournisseur.update(req.body, {
+    CoFournisseurs.update(req.body, {
         where: { compte_fournisseur_id: id }
         })
         .then(num => {
@@ -97,7 +97,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.compte_fournisseur_id;
     
-    CompteFournisseur.destroy({
+    CoFournisseurs.destroy({
         where: { compte_fournisseur_id: id }
         })
         .then(num => {
