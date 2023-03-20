@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import './Facturiers.css';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
@@ -29,6 +30,7 @@ const Facturier = () => {
     const [loading, setLoading] = useState(true)
     const [facturiers, setFacturiers] = useState([]);
     const [selectedCustomers, setSelectedCustomers] = useState(null);
+    const [customers, setCustomers] = useState(null);
 
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const statuses = ['payée', 'non payée '];
@@ -37,25 +39,23 @@ const Facturier = () => {
 
   
 
-  
-
-
-    const getFacturiers = () => {
-        async function fetchData() {
-            const facturiers = await FacturierDataService.getAll();
-            setFacturiers(facturiers);
-            // si pas toutes les données sont chargées, on met le loading à false
-            if (facturiers.length !== 0) {
-                setLoading(false);
-            }
-        }
-        fetchData();
-    }
-
     useEffect(() => {
-        setLoading(true);
-        getFacturiers();
-    }, []);
+        async function fetchFacturiers() {
+          try {
+            const response = await axios.get('/api/facturiers');
+            setFacturiers(response.data);
+            setLoading(false);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+    
+        fetchFacturiers();
+      }, []);
+    
+    
+
+   
 
 
 
@@ -63,6 +63,7 @@ const Facturier = () => {
     
 
     const formatDate = (value) => {
+   
         let date = new Date(value);
         return date.toLocaleDateString()
     }
@@ -133,9 +134,11 @@ const Facturier = () => {
     }
 
     const tvaBalanceBodyTemplate = (rowData) => {
-        const tva = rowData.tva
+       
+        const tva = rowData.facture.tva 
         console.log(tva, 'tva');
-        const montanttva = rowData.facture.montant * tva.tva_value/100;
+        const montanttva = rowData.facture.montant + (rowData.facture.montant * tva.tva_value/100);
+        
         return formatCurrency(montanttva);
     }
     const balanceFilterTemplate = (options) => {
@@ -204,7 +207,7 @@ const Facturier = () => {
                 <h5></h5>
                 <TabView >
                     
-                    <TabPanel header="Facturier" onChange={getFacturiers}>
+                    <TabPanel header="Facturier"  onChange={refreshTable}>
   
                           
          
@@ -220,13 +223,13 @@ const Facturier = () => {
                     currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll">
                     
                     <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ minWidth: '14rem' }}/>
-                    <Column field='fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom" style={{ minWidth: '14rem' }} />
+                    <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom" style={{ minWidth: '14rem' }} />
                          
-                    <Column field='fournisseur.num_fournisseur' header="N° de fournisseur" sortable  filter filterPlaceholder='Rechercher par N°' style={{ minWidth: '14rem' }}></Column>
-                    <Column field='objetTitle' header="Objet" sortable filter filterPlaceholder='Rechercher par objet...' style={{ minWidth: '14rem' }} ></Column>
+                    <Column field='compte_fournisseur.fournisseur.num_fournisseur' header="N° de fournisseur" sortable  filter filterPlaceholder='Rechercher par N°' style={{ minWidth: '14rem' }}></Column>
+                    <Column field='facture.objet.title' header="Objet" sortable filter filterPlaceholder='Rechercher par objet...' style={{ minWidth: '14rem' }} ></Column>
                     <Column field="facture.facture_date" header="Date de la facture" sortable filterField="date" dataType="date"  body={dateBodyTemplate} filter filterElement={dateFilterTemplate} style={{ minWidth: '14rem' }}/>
                     <Column field="facture.num_facture" header="N° de facture" sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numfactureBodyTemplate}/>
-                    <Column field="libelleTitle" header="Libellé" sortable filter filterPlaceholder="Rechercher par libellé" style={{ minWidth: '14rem' }} />
+                    <Column field="facture.libelle.title" header="Libellé" sortable filter filterPlaceholder="Rechercher par libellé" style={{ minWidth: '14rem' }} />
                     <Column field="decompte.num_decompte" header="N° de décompte " sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numdecompteBodyTemplate}/>
                     <Column field="facture.montant" header="Montant de la facture" sortable dataType="numeric" style={{ minWidth: '8rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
                     <Column header="Montant avec TVA"  sortable dataType="numeric" style={{ minWidth: '8rem' }} body={tvaBalanceBodyTemplate} filter filterElement={balanceFilterTemplate} />

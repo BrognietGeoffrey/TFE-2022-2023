@@ -33,11 +33,11 @@ module.exports = (sequelize, Sequelize) => {
 
         
     });
-    fournisseurs.associate = function(models) {
-        fournisseurs.belongsTo(models.compteFournisseurs, {
-            foreignKey: 'compte_fournisseur_id',
-            as: 'compteFournisseurs'
-        });
-    };
+    // fournisseurs.associate = function(models) {
+    //     fournisseurs.belongsTo(models.compteFournisseurs, {
+    //         foreignKey: 'compte_fournisseur_id',
+    //         as: 'compteFournisseurs'
+    //     });
+    // };
     return fournisseurs;
 }

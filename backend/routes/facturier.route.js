@@ -12,13 +12,13 @@ module.exports = function(app) {
         next();
     });
     
-    app.get("/api/facturiers", controllers.findAll);
+    app.get("/api/facturiers", controllers.getFacturiers);
     
     app.get("/api/facturiers/:id", controllers.findOne);
     
     app.post("/api/facturiers", controllers.create);
     
-    // app.put("/api/facturiers/:id", controllers.update);
+    app.put("/api/facturiers/:id", controllers.update);
     
     // app.delete("/api/facturiers/:id",[authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], controllers.delete);
     

@@ -1,12 +1,12 @@
 // Controllers for client 
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const Client = db.client;
+const { Clients } = require("../models");
 
 // Create and Save a new Client
 exports.create = (req, res) => {
     // If the name_client is already in the database, return an error
-    Client.findOne({
+    Clients.findOne({
         where: {
         name_client: req.body.name_client
         }
@@ -52,7 +52,7 @@ exports.create = (req, res) => {
 
 // Retrieve all clients from the database.
 exports.findAll = (req, res) => {
-    Client.findAll()
+    Clients.findAll()
         .then(data => {
         res.send(data);
         })
@@ -68,7 +68,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Client.findByPk(id)
+    Clients.findByPk(id)
         .then(data => {
         res.send(data);
         })
@@ -83,7 +83,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Client.update(req.body, {
+    Clients.update(req.body, {
         where: { client_id: id }
     })
         .then(num => {
@@ -108,7 +108,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Client.destroy({
+    Clients.destroy({
         where: { client_id: id }
     })
         .then(num => {

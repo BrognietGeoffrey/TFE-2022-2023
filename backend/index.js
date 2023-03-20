@@ -13,7 +13,7 @@ const app = express()
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 var corsOptions = {
-  origin: "http://localhost:3000"
+  origin: "http://localhost:4000"
 };
 
 app.use(cors(corsOptions));
@@ -30,15 +30,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // database
-const db = require("./models");
+const db = require('./models');
+// db.sequelize.sync();
 
 
-db.sequelize.sync();
 // force: true will drop the table if it already exists
-// db.sequelize.sync({force: false}).then(() => {
-//   console.log('Drop and Resync Database with { force: true }');
-//   initial();
-// });
+db.sequelize.sync({force: false}).then(() => {
+  console.log('Drop and Resync Database with { force: true }');
+ 
+});
 
 
 
@@ -62,9 +62,9 @@ require("./routes/infoFournisseurs.route.js")(app);
 require("./routes/factureDetails.route.js")(app);
 require("./routes/tva.routes.js")(app);
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
-
+const port = 4000
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`)
+    }
+)
 

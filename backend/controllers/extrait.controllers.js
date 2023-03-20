@@ -1,12 +1,11 @@
 // Controllers for extrait
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const Extrait = db.extraits;
-
+const { Extraits } = require("../models");
 // Create and Save a new Extrait
 exports.create = (req, res) => {
     // If the numExtrait is already in the database, return an error
-    Extrait.findOne({
+    Extraits.findOne({
         where: {
         num_extrait: req.body.num_extrait
         }
@@ -30,7 +29,7 @@ exports.create = (req, res) => {
         };
 
         // Save extrait in the database
-        Extrait.create(extrait)
+        Extraits.create(extrait)
             .then(data => {
             res.send(data);
             })
@@ -52,7 +51,7 @@ exports.create = (req, res) => {
 
 // Retrieve all extrait from the database.
 exports.findAll = (req, res) => {
-    Extrait.findAll()
+    Extraits.findAll()
         .then(data => {
         res.send(data);
         })
@@ -71,7 +70,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Extrait.findByPk(id)
+    Extraits.findByPk(id)
         .then(data => {
         res.send(data);
         })
@@ -86,7 +85,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Extrait.update(req.body, {
+    Extraits.update(req.body, {
         where: { extrait_id: id }
     })
         .then(num => {
@@ -111,7 +110,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Extrait.destroy({
+    Extraits.destroy({
         where: { extrait_id: id }
     })
         .then(num => {

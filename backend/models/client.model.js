@@ -33,11 +33,11 @@ module.exports = (sequelize, Sequelize) => {
 
         
     });
-    clients.associate = function(models) {
-        clients.belongsTo(models.compteClient, {
-            foreignKey: 'compte_client_id',
-            as: 'compteClient'
-        });
-    };
+    // clients.associate = function(models) {
+    //     clients.belongsTo(models.compteClient, {
+    //         foreignKey: 'compte_client_id',
+    //         as: 'compteClient'
+    //     });
+    // };
     return clients;
 }
