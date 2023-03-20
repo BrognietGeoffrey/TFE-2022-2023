@@ -28,16 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
 
-  Facturiers.associate = function (models) {
-    // associations can be defined here
-    Facturiers.hasOne(models.Factures, {
-      foreignKey: 'facture_id'
-    })
-    };
-
-
-  return Facturiers;
-};
+  return Facturiers
+}
 
 
 

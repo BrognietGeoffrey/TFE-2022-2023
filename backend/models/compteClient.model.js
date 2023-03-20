@@ -1,35 +1,42 @@
 // model for compteClient
-
-module.exports = (sequelize, Sequelize) => {
+'use strict';
+const {
+  Model, Sequelize
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
     const compteClients = sequelize.define("compte_clients", {
-        compte_client_id : {
-            type: Sequelize.INTEGER,
+        co_client_id : {
+            type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
         numCompteClient: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             unique: true
         },
         client_id: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
-            references: {
-                model: 'clients',
-                key: 'client_id'
-            }
+           
         },
       
         description   : {   
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         },
-        
-        // The client_id is link to compte_client_id in the table compte_clients
-        // The banque_id is link to banque_id in the table banque
 
-        
-    });
+    }
+    );
+
     
     return compteClients;
-}
+};
+
+
+    
+
+
+
+        
+    
+

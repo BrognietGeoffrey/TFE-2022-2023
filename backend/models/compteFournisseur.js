@@ -4,7 +4,7 @@
 module.exports = (sequelize, Sequelize) => {
     const compteFournisseurs = sequelize.define("compte_fournisseurs", {
 
-        compte_fournisseur_id : {
+        co_fournisseur_id : {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
@@ -17,10 +17,7 @@ module.exports = (sequelize, Sequelize) => {
         fournisseur_id: {
             type: Sequelize.INTEGER,
             allowNull: false,
-            references: {
-                model: 'fournisseurs',
-                key: 'fournisseur_id'
-            }
+           
         },
  
 

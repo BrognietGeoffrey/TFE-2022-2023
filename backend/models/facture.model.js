@@ -52,14 +52,6 @@ module.exports = (sequelize, DataTypes) => {
 
  
 
-    // associations can be defined here
-    Factures.associate = function (models) {
-        // associations can be defined here
-        Factures.hasOne(models.Facturiers, {
-          foreignKey: 'facture_id',
-        })
-      };
-
 
 
   return Factures;

@@ -1,7 +1,7 @@
 // controllers for the facturier
 const db = require("../models");
 const { Op } = require("sequelize");
-const { Facturiers, Factures, CoClients, CoFournisseurs } = require("../models");
+const { Facturiers, Factures, compteFournisseurs, compteClients, Tva, Clients, Fournisseurs, Decomptes, Objets, Libelles } = require("../models");
 // Create and Save a new Facturier
 exports.create = (req, res) => {
     // If the numFacturier is already in the database, return an error
@@ -55,23 +55,56 @@ exports.create = (req, res) => {
 exports.getFacturiers = async (req, res) => {
     try {
         const facturiers = await Facturiers.findAll({
+        include: [
+            {
+            model: Factures,
             include: [
                 {
-                    model: Factures,
-
-                },
+                    model : Tva,
+                }, 
                 {
-                    model: CoClients,
-
-                },
+                    model : Objets,
+                }, 
                 {
-                    model: CoFournisseurs,
-
+                    model : Libelles
                 }
             ]
+            },
+            {
+            model: compteClients,
+            include : {
+                model : Clients
+            }
+          
+            },
+            {
+                model : compteFournisseurs,
+                include : {
+                    model : Fournisseurs
+                }, 
+            }, 
+            {
+                model : Decomptes
+            }
+
+            
+        
+            
+        ],
         });
-        res.status(200).send(facturiers);
-    } catch (error) {
+        res.send(facturiers);
+    } catch (err) {
+        res.status(200).send({
+        message:
+            err.message || "Some error occurred while retrieving facturiers."
+        });
+    }
+};
+
+
+    
+        
+
         
 
 

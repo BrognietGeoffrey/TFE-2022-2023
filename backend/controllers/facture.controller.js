@@ -1,7 +1,7 @@
 // Middleware pour les factures
 
 const db = require("../models");
-const {Factures } = require("../models");
+const {Factures, Tva } = require("../models");
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Facture
@@ -41,21 +41,28 @@ exports.create = (req, res) => {
     }
 
 // Retrieve all Factures from the database.
-exports.findAll = (req, res) => {
-    const num_facture = req.query.num_facture;
-    var condition = num_facture ? { num_facture: { [Op.like]: `%${num_facture}%` } } : null;
-    
-    Factures.findAll({ where: condition })
-        .then(data => {
-        res.send(data);
-        })
-        .catch(err => {
+exports.findAll = async (req, res) => {
+    try {
+        const factures = await Factures.findAll({
+        include: [
+            {
+            model: Tva,
+     
+            
+            },
+            
+        
+            
+        ],
+        });
+        res.send(factures);
+    } catch (err) {
         res.status(200).send({
-            message:
+        message:
             err.message || "Some error occurred while retrieving factures."
         });
-        });
     }
+};
 
 // Find a single Facture with an id
 exports.findOne = (req, res) => {

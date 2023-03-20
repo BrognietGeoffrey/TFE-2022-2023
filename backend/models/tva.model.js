@@ -1,6 +1,6 @@
 // table for the tva 
 module.exports = (sequelize, Sequelize) => {
-    const tva = sequelize.define("tva", {
+    const Tva = sequelize.define("tva", {
         tva_id : {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -17,6 +17,6 @@ module.exports = (sequelize, Sequelize) => {
             unique: true
         },
     });
-    return tva;
+    return Tva;
 }
 

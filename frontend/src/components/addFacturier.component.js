@@ -341,11 +341,6 @@ const AddFacturier = () => {
                     {/* selectButton estPaye */}
                     <label htmlFor="estpaye">Est payé</label>
                     <SelectButton id="estpaye" value={factures.estpaye } options={options} optionLabel="name"  onChange={(e) => setFactures({ ...factures, estpaye: e.value })} />
-                
-                    {/* tva  */}
-                    <label htmlFor="tva">TVA</label>
-                    <Dropdown id="tva" value={factures.tva} options={tvaList} onChange={(e) => setFactures({ ...factures, tva: e.value })} placeholder="Select a tva" />
-                   {/* si oui est choisit, afficher la section pour les extraits */}
                     {factures.estpaye === true ? (
                         <div>
                             {/* extrait */}
@@ -356,6 +351,11 @@ const AddFacturier = () => {
                     ) : (
                         <div></div>
                     )}
+                    {/* tva  */}
+                    <label htmlFor="tva">TVA</label>
+                    <Dropdown id="tva" value={factures.tva} options={tvaList} onChange={(e) => setFactures({ ...factures, tva: e.value })} placeholder="Select a tva" />
+                   {/* si oui est choisit, afficher la section pour les extraits */}
+                    
 
                     
  
