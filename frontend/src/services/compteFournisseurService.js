@@ -15,6 +15,10 @@ class compteFournisseurService {
         return Promise.all(compteFournisseursWithFournisseurs);
     }
 
+    async create(compteFournisseur) {
+        return axios.post(API_URL, compteFournisseur);
+    }
+
 
     
     

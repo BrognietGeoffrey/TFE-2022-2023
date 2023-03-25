@@ -17,6 +17,12 @@ class compteClientService {
     getCompteClientById(id) {
         return axios.get(API_URL + id);
     }
+
+    create(compteClient) {
+        return axios.post(API_URL, compteClient);
+    }
+    
 }
+
 
 export default new compteClientService();

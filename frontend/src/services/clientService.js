@@ -14,6 +14,22 @@ class clientService {
     getClientById(id) {
         return axios.get(API_URL + id);
     }
+
+    create(client) {
+        return axios.post(API_URL, client);
+    }
+
+    getLastClientId() {
+        async function getLastClientId() {
+            const data = await axios.get(API_URL);
+            const lastClientId = data.data[data.data.length - 1].client_id;
+            console.log(lastClientId);
+            return lastClientId;
+        }
+        return getLastClientId();
+
+    }
+
 }
 export default new clientService();
 

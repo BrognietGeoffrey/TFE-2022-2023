@@ -8,6 +8,11 @@ class objetService {
         return axios.get(API_URL);
     }
 
+    create(data) {
+        return axios.post(API_URL, data, { headers: authHeader() });
+    }
+    
+
     getObjetById(id) {
         return axios.get(API_URL + id);
     }
