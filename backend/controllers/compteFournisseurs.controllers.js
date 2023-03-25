@@ -3,7 +3,7 @@
 
 const db = require('../models');
 const Op = db.Sequelize.Op;
-const { CoFournisseurs } = require('../models');
+const { compteFournisseurs } = require('../models');
 
 // Create and Save a new CompteFournisseur
 exports.create = (req, res) => {
@@ -23,12 +23,12 @@ exports.create = (req, res) => {
     };
     
     // Save CompteFournisseur in the database
-    CoFournisseurs.create(compteFournisseur)
+    compteFournisseurs.create(compteFournisseur)
         .then(data => {
         res.send(data);
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
             err.message || "Some error occurred while creating the CompteFournisseur."
         });
@@ -41,7 +41,7 @@ exports.findAll = (req, res) => {
     const numCompteFournisseur = req.query.numCompteFournisseur;
     var condition = numCompteFournisseur ? { numCompteFournisseur: { [Op.like]: `%${numCompteFournisseur}%` } } : null;
     
-    CoFournisseurs.findAll({ where: condition })
+    compteFournisseurs.findAll({ where: condition })
         .then(data => {
         res.send(data);
         })
@@ -57,7 +57,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
     
-    CoFournisseurs.findByPk(id)
+    compteFournisseurs.findByPk(id)
         .then(data => {
         res.send(data);
         })
@@ -72,7 +72,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
     
-    CoFournisseurs.update(req.body, {
+    compteFournisseurs.update(req.body, {
         where: { compte_fournisseur_id: id }
         })
         .then(num => {
@@ -97,7 +97,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.compte_fournisseur_id;
     
-    CoFournisseurs.destroy({
+    compteFournisseurs.destroy({
         where: { compte_fournisseur_id: id }
         })
         .then(num => {

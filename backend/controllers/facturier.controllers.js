@@ -1,7 +1,7 @@
 // controllers for the facturier
 const db = require("../models");
 const { Op } = require("sequelize");
-const { Facturiers, Factures, compteFournisseurs, compteClients, Tva, Clients, Fournisseurs, Decomptes, Objets, Libelles } = require("../models");
+const { Facturiers, Factures, compteFournisseurs, compteClients, Tva, Clients, Fournisseurs, Decomptes, Objets, Libelles, Extraits } = require("../models");
 // Create and Save a new Facturier
 exports.create = (req, res) => {
     // If the numFacturier is already in the database, return an error
@@ -85,6 +85,9 @@ exports.getFacturiers = async (req, res) => {
             }, 
             {
                 model : Decomptes
+            },
+            {
+                model : Extraits
             }
 
             

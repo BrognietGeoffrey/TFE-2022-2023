@@ -1,12 +1,12 @@
 // Controllers for compteClient
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const { CoClients } = require("../models");
+const { compteClients } = require("../models");
 
 // Create and Save a new CompteClient
 exports.create = (req, res) => {
     // If the numCompteClient is already in the database, return an error
-    CoClients.findOne({
+    compteClients.findOne({
         where: {
         numCompteClient: req.body.numCompteClient
         }
@@ -14,7 +14,7 @@ exports.create = (req, res) => {
 
     .then(data => {
         if (data) {
-        res.status(200).send({
+        res.status(409).send({
             message: "This compteClient already exists"
         });
         return;
@@ -22,19 +22,19 @@ exports.create = (req, res) => {
         // Create a compteClient
         const compteClient = {
             numCompteClient: req.body.numCompteClient,
-
+            num_compte_banque : req.body.num_compte_banque,
             client_id: req.body.client_id,
             banque_id: req.body.banque_id,
             description : req.body.description
         };
 
         // Save compteClient in the database
-        CompteClient.create(compteClient)
+        compteClients.create(compteClient)
             .then(data => {
             res.send(data);
             })
             .catch(err => {
-            res.status(200).send({
+            res.status(409).send({
                 message:
                 err.message || "Some error occurred while creating the compteClient."
             });
@@ -42,7 +42,7 @@ exports.create = (req, res) => {
         }
     })
     .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
             err.message || "Some error occurred while creating the compteClient."
         });
@@ -52,7 +52,7 @@ exports.create = (req, res) => {
 
 // Retrieve all compteClients from the database.
 exports.findAll = (req, res) => {
-    CoClients.findAll()
+    compteClients.findAll()
         .then(data => {
         res.send(data);
         })
@@ -68,7 +68,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    CoClients.findByPk(id)
+    compteClients.findByPk(id)
         .then(data => {
         res.send(data);
         })
@@ -83,7 +83,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    CoClients.update(req.body, {
+    compteClients.update(req.body, {
         where: { compteClient_id: id }
     })
     .then(num => {
@@ -109,7 +109,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    CoClients.destroy({
+    compteClients.destroy({
         where: { compteClient_id: id }
     })
     .then(num => {

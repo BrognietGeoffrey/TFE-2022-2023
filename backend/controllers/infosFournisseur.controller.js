@@ -33,26 +33,24 @@ exports.findOne = (req, res) => {
         });
     }
 
-// Create and Save a new fournisseur
-
 exports.create = (req, res) => {
     // If the name_fournisseur is already in the database, return an error
     Fournisseurs.findOne({
         where: {
-        name_fournisseur: req.body.name_fournisseur
+        name: req.body.name
         }
     })
 
     .then(data => {
         if (data) {
-        res.status(200).send({
+        res.status(409).send({
             message: "This fournisseur already exists"
         });
         return;
         } else {
         // Create a fournisseur
         const fournisseur = {
-            name_fournisseur: req.body.name_fournisseur,
+            name: req.body.name,
             adresse_fournisseur: req.body.adresse_fournisseur,
             telephone_fournisseur: req.body.telephone_fournisseur,
             email_fournisseur: req.body.email_fournisseur,
@@ -60,7 +58,7 @@ exports.create = (req, res) => {
         };
         
         // Save fournisseur in the database
-        Fournisseur.create(fournisseur)
+        Fournisseurs.create(fournisseur)
             .then(data => {
             res.send(data);
             })
@@ -73,7 +71,7 @@ exports.create = (req, res) => {
         }
     })
     .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
             err.message || "Some error occurred while creating the fournisseur."
         });
@@ -129,3 +127,4 @@ exports.delete = (req, res) => {
         });
         });
     }
+

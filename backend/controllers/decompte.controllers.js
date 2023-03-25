@@ -27,7 +27,7 @@ exports.create = (req, res) => {
         };
 
         // Save decompte in the database
-        Decompte.create(decompte)
+        Decomptes.create(decompte)
             .then(data => {
             res.send(data);
             })

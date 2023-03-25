@@ -25,7 +25,14 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         telephone_client: {
-            type: Sequelize.STRING
+            type: Sequelize.BIGINT, 
+            allowNull: false,
+            unique: true, 
+            validate: {
+                isNumeric: true,
+                len: [8, 15]
+            }
+
         },
         description : {
             type: Sequelize.STRING

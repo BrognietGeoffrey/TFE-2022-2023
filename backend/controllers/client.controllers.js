@@ -8,21 +8,21 @@ exports.create = (req, res) => {
     // If the name_client is already in the database, return an error
     Clients.findOne({
         where: {
-        name_client: req.body.name_client
+        name: req.body.name
         }
     })
 
     .then(data => {
         if (data) {
-        res.status(200).send({
+        res.status(409).send({
             message: "This client already exists"
         });
         return;
         } else {
         // Create a client
         const client = {
-            name_client: req.body.name_client,
-            prenom_client : req.body.prenom_client,
+            name: req.body.name,
+            firstname : req.body.firstname,
             adresse_client: req.body.adresse_client,
             telephone_client: req.body.telephone_client,
             email_client: req.body.email_client,
@@ -30,12 +30,12 @@ exports.create = (req, res) => {
         };
 
         // Save client in the database
-        Client.create(client)
+        Clients.create(client)
             .then(data => {
             res.send(data);
             })
             .catch(err => {
-            res.status(200).send({
+            res.status(409).send({
                 message:
                 err.message || "Some error occurred while creating the client."
             });
@@ -43,7 +43,7 @@ exports.create = (req, res) => {
         }
     })
     .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
             err.message || "Some error occurred while creating the client."
         });
