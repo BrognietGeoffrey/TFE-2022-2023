@@ -15,6 +15,8 @@ module.exports = function(app) {
     app.get("/api/tva", controller.findAll);
     
     app.get("/api/tva/:id", controller.findOne);
+
+    app.post("/api/tva", controller.create);
     
 
     

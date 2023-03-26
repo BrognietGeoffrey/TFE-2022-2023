@@ -205,9 +205,9 @@ const Facturier = () => {
          
                 <div className="card"  >
                 <h5></h5>
-                <TabView >
+                <TabView style={{borderRadius: '10px'}}>
                     
-                    <TabPanel header="Facturier"  onChange={refreshTable}>
+                    <TabPanel header="Facturier"  onChange={refreshTable} >
   
                           
          
@@ -241,8 +241,8 @@ const Facturier = () => {
                 </DataTable>
                     </Card>
                     </TabPanel>
-                    <TabPanel header="Ajout ">
-                    <AddFacturier />
+                    <TabPanel header="Ajout " style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <AddFacturier style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}/>
                     </TabPanel>
 
                 </TabView>

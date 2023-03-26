@@ -1,0 +1,41 @@
+.facture-section {
+    display: flex;
+    flex-direction: column;
+    flex-flow : row wrap;
+    /* center */
+    justify-content: center;
+    width : 100%;
+}
+
+.section-three {
+    display: flex center;
+    flex-direction: column;
+    flex-flow : row wrap;
+    flex-grow: 1;
+    margin-top: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+
+}
+
+.section-two {
+    display: flex ;
+    /* contents */
+    flex-direction: column;
+    flex-flow : row wrap;
+    flex-grow: 1;
+    margin-top: 2em;
+    margin-left: 1em;
+    margin-right: 1em;
+
+}
+
+.style-section-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

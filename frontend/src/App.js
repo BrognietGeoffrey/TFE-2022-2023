@@ -90,7 +90,7 @@ class App extends Component {
               handleOpenSidebar={this.handleOpenSidebar}
             />
           )}
-         <div className="flex">
+         <div className="flex" class="allBody">
           
           
           

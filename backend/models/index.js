@@ -39,7 +39,7 @@ db.compteFournisseurs.belongsTo(db.Fournisseurs, {foreignKey : 'fournisseur_id'}
 db.Facturiers.belongsTo(db.Decomptes, {foreignKey : 'decompte_id'})
 db.Factures.belongsTo(db.Objets, {foreignKey : 'objet_id'})
 db.Factures.belongsTo(db.Libelles, {foreignKey : 'libelle_id'})
-
+db.Facturiers.belongsTo(db.Extraits, {foreignKey : 'extrait_id'})
 
 module.exports = db;
 
