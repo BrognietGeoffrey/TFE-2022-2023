@@ -1,90 +1,90 @@
-// Simple page who show the number of facture payed and not payed
+import React, { useState, useEffect } from "react";
+import { Card } from 'primereact/card';
+import { classNames } from 'primereact/utils';
+import FactureDataService from "../services/factureService";
+import axios from 'axios';
+import './analyse.css';
+import ViewAnalyse from './ViewAnalyse.component';
+const Analyse = () => {
+  const [facture, setFacture] = useState([]);
+  const [facturePayed, setFacturePayed] = useState(0);
+  const [factureNotPayed, setFactureNotPayed] = useState(0);
+    const [montantPaye, setMontantPaye] = useState(0);
+    const [montantRestant, setMontantRestant] = useState(0);
 
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import FactureDataService from '../services/factureService';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
-ChartJS.register(ArcElement, Tooltip, Legend);
-class Analyse extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-        facturesList: [],
-        facturesPayed: [],
-        facturesNotPayed: [],
-        };
+  const retrieveFacture = async () => {
+    try {
+      const response = await FactureDataService.getFactures();
+      setFacture(response.data);
+    } catch (error) {
+      console.log(error);
     }
-    retrieveFactures() {
-        FactureDataService.getFactures()
-        .then(response => {
-            this.setState({
-            facturesList: response.data
-            });
-            console.log(response.data, "data");
-        })
-        .catch(e => {
-            console.log(e);
-        });
-    }
-    componentDidMount() {
-        this.retrieveFactures();
-    }
-   
-    render() {
-        const { facturesList } = this.state;
-        const facturesPayed = facturesList.filter((facture) => facture.estpaye === true);
-        const facturesNotPayed = facturesList.filter((facture) => facture.estpaye === false);
-        return (
-        <div className="container">
-            <div className="row">
-            <div className="col-md-12">
-                <div className="card">
-                <div className="card-header">Analyse</div>
-                <div className="card-body">
-                    <div className="row">
-                    <div className="col-md-6">
-                        <div className="card">
-                        <div className="card-header">Status des factures</div>
-                        <div className="card-body">
-                            {/* // Display react chart here */}
+  };
 
-                            <Doughnut data={{ 
-                                labels: ['Factures payées', 'Factures non payées'],
-                                datasets: [{
-                                    
-                                    data: [facturesPayed.length, facturesNotPayed.length],
-                                    backgroundColor: [
-                                        // not rgba
-                                        '#FF6384',
-                                        '#36A2EB',
-                                        
-                                    ],
-                                    borderColor: [
-                                        '#FF6384',
-                                        '#36A2EB',
-                                        
-                                    ],
-                                    borderWidth: 1
-                                }]
-                            }} />
+  const getInfosFacture = () => {
+    let facturePayedCount = 0;
+    let factureNotPayedCount = 0;
+    let montantPaye = 0;
+    let montantRestant = 0;
+    console.log(facture);
+    // trouver toutes les factures payées et non payées et les compter pour les afficher dans le dashboard. Calculer le montant payé et le montant restant à payer
+    facture.forEach((facture) => {
+        if (facture.estpaye === true) {
+            facturePayedCount++;
+            montantPaye += facture.montant;
+        } else {
+            factureNotPayedCount++;
+            montantRestant += facture.montant;
+        }
+    });
+    setFacturePayed(facturePayedCount);
+    setFactureNotPayed(factureNotPayedCount);
+    setMontantPaye(montantPaye);
+    setMontantRestant(montantRestant);
+    };
 
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                        </div>
-                    
-        
-                
 
-            </div>
+  useEffect(() => {
+    retrieveFacture();
+  }, []);
+
+  useEffect(() => {
+    getInfosFacture();
+  }, [facture]);
+
+
+  return (
+    <div>
+
+        <h3 class="title-section">Informations de base </h3>
+        <div class="section-informations">
+            <div class="section-three">
+                <Card style={{ width: '18rem' }}>
+                    <div>
+                        <h1>Factures payées</h1>
+                        <h2>{facturePayed}</h2>
+                        <h3 style={{color : 'green'}}>{montantPaye}</h3>
+
+
+                    </div>
+                </Card>
+
+                <Card style={{ width: '18rem' }} >
+                    <div>
+                        <h1>Factures non payées</h1>
+                        <h2>{factureNotPayed}</h2>
+                        <h3 style={{ color: 'red' }}>{montantRestant}</h3>
+                    </div>
+                </Card>
             </div>
         </div>
-        );
-    }
-    }
+        <h3 class="title-section">Informations qui vont changer </h3>
+        <ViewAnalyse/>
+  
+    </div>
+    );
+};
 
 export default Analyse;
+
+

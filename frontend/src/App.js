@@ -64,6 +64,7 @@ class App extends Component {
     }
   }
 
+
   logOut() {
     this.props.dispatch(logout());
   }

@@ -711,6 +711,10 @@ const AddFacturier = () => {
                             </span>
                             <Button onClick={(e) => onClick('displayLibelles', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             <Dialog header="Ajout d'un libéllé" className="libelleDialog" visible={displayLibelles} footer={renderFooter} onHide={() => onHide('displayLibelles')}>
+                                <Button onClick={(e) => onClick('displayLibellesList', 'center', e)}  className="p-button-info" tooltip="Liste des libéllés existants" tooltipOptions={{ position: 'right' }} badge={libelleList.length}>
+                                    Liste des libélles existants
+                                </Button>
+
                                 <div class="section-three">
 
                                     <div className="p-inputgroup" style={{ marginTop: '2em' }}>
@@ -723,7 +727,6 @@ const AddFacturier = () => {
                                             <label htmlFor="libelle">Titre du libéllé</label>
                                         </span>
                                         {/* Button to see a list of libelle */}
-                                        <Button onClick={(e) => onClick('displayLibellesList', 'center', e)} icon="pi pi-list" className="p-button-success" tooltip="Liste des libéllés existants" tooltipOptions={{ position: 'right' }} />
                                         <Dialog header="Liste des libéllés" className="libelleListDialog" visible={displayLibellesList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayLibellesList')} maximizable filter={true} filterPlaceholder="Chercher par objet" filterBy="label">
                                             <DataTable value={libelleList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive maximizable filter={true} filterPlaceholder="Chercher par libéllé" filterBy="label">
                                                 <Column field="label" header="Libéllés" sortable filter filterPlaceholder="Rechercher" />
@@ -749,7 +752,11 @@ const AddFacturier = () => {
                                 <label htmlFor="inputgroup">Décompte de la facture</label>
                             </span>
                             <Button onClick={(e) => onClick('displayDecompte', 'center', e)} icon="pi pi-plus" className="p-button-success" />
+                            
                             <Dialog header="Ajout d'un décompte" className="decompteDialog" visible={displayDecompte} footer={renderFooter} onHide={() => onHide('displayDecompte')}>
+                            <Button onClick={(e) => onClick('displayDecompteList', 'center', e)} className="p-button-info" tooltip="Liste des décomptes existants" tooltipOptions={{ position: 'right' }} badge={decompteList.length}>
+                                            List des décomptes existants 
+                                        </Button>
                                 <div class="section-three">
 
                                     <div className="p-inputgroup" style={{ marginTop: '2em' }}>
@@ -762,7 +769,7 @@ const AddFacturier = () => {
                                             <label htmlFor="decompte">Titre du décompte</label>
                                         </span>
                                         {/* Button to see a list of libelle */}
-                                        <Button onClick={(e) => onClick('displayDecompteList', 'center', e)} icon="pi pi-list" className="p-button-success" tooltip="Liste des décomptes existants" tooltipOptions={{ position: 'right' }} />
+                                       
                                         <Dialog header="Liste des décomptes" className="decompteListDialog" visible={displayDecompteList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayDecompteList')}>
                                             <DataTable value={decompteList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive maximizable filter={true} filterPlaceholder="Chercher par décompte" filterBy="label" >
                                                 <Column field="label" header="Décompte" sortable filter filterPlaceholder="Rechercher" />
@@ -788,7 +795,11 @@ const AddFacturier = () => {
                                 <label htmlFor="inputgroup">Objet de la facture</label>
                             </span>
                             <Button onClick={(e) => onClick('displayObjets', 'center', e)} icon="pi pi-plus" className="p-button-success" />
+                            
                             <Dialog header="Ajout d'un objet" className="objetDialog" visible={displayObjets} footer={renderFooter} onHide={() => onHide('displayObjets')}>
+                            <Button onClick={(e) => onClick('displayObjetList', 'center', e)} className="p-button-info" tooltip="Liste des objets existants" tooltipOptions={{ position: 'right' }} badge={objetList.length}>
+                                            List des objets existants
+                                        </Button>
                                 <div class="section-three">
 
                                     <div className="p-inputgroup" style={{ marginTop: '2em' }}>
@@ -800,7 +811,7 @@ const AddFacturier = () => {
                                         <label htmlFor="objet">Objet</label>
                                         </span>
                                         {/* Button to see a list of objet */}
-                                        <Button onClick={(e) => onClick('displayObjetList', 'center', e)} icon="pi pi-list" className="p-button-success" tooltip="Liste des objets existants" tooltipOptions={{ position: 'right' }} />
+                                        
                                         <Dialog header="Liste des objets" className="objetListDialog" visible={displayObjetList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayObjetList')}>
                                             <DataTable value={objetList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive stripedRows resizableColumns columnResizeMode="expand">
                                                 <Column field="label" header="Objets" sortable filter filterPlaceholder="Rechercher" />
