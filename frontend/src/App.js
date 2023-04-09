@@ -73,16 +73,7 @@ class App extends Component {
     const { currentUser, showModeratorBoard, showAdminBoard, user } = this.state;
     console.log(this.props.user, "user");
   
-            
 
-    // const userPermission = this.props.user.roles.includes("user");
-
-    // console.log(userPermission, "userPermission");
-    // const moderatorPermission = this.props.user.roles.includes("moderator");
-    // console.log(moderatorPermission, "moderatorPermission");
-    // const adminPermission = this.props.user.roles.includes("admin");
-    // console.log(adminPermission, "adminPermission");
-    // console.log(this.props.user.roles, "user");
     return (
       <Router history={history}>  
       {this.logOut && (

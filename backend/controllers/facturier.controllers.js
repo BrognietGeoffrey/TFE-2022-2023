@@ -120,7 +120,47 @@ exports.getFacturiers = async (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Facturiers.findByPk(id)
+    Facturiers.findByPk(id, {
+        include: [
+            {
+            model: Factures,
+            include: [
+                {
+                    model : Tva,
+                }, 
+                {
+                    model : Objets,
+                }, 
+                {
+                    model : Libelles
+                }
+            ]
+            },
+            {
+            model: compteClients,
+            include : {
+                model : Clients
+            }
+          
+            },
+            {
+                model : compteFournisseurs,
+                include : {
+                    model : Fournisseurs
+                }, 
+            }, 
+            {
+                model : Decomptes
+            },
+            {
+                model : Extraits
+            }
+
+            
+        
+            
+        ],
+    })
     .then(data => {
         res.send(data);
     })
@@ -128,9 +168,9 @@ exports.findOne = (req, res) => {
         res.status(200).send({
         message: "Error retrieving facturier with id=" + id
         });
-    }
-    );
-}
+    });
+};
+
 
 
 // Update a facturier by the id in the request

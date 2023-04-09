@@ -12,11 +12,4 @@
   opacity: 0.2;
 } */
 /* tout descendre  et mettre une taile maximale de 90% */
-.allBody {
-  margin-top: 5%;
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: grey 0px 0px 10px 0px;
-  border-radius: 10px;
-}
+

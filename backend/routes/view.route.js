@@ -12,5 +12,6 @@ module.exports = function(app) {
     
     app.post("/api/view/createView", controllers.createCustomView);
     
+    app.get("/api/view/getViews", controllers.getAllView);
 
     }

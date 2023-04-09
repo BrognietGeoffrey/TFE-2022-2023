@@ -1,7 +1,7 @@
 // Middleware pour les factures
 
 const db = require("../models");
-const {Factures, Tva } = require("../models");
+const {Factures, Tva, Objets, Libelles } = require("../models");
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Facture
@@ -50,6 +50,12 @@ exports.findAll = async (req, res) => {
      
             
             },
+            {
+                model: Objets,
+            },
+            {
+                model: Libelles,
+            }
             
         
             
