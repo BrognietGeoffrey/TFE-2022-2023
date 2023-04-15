@@ -303,7 +303,7 @@ const Side_bar = () => {
            
             {user ? (
                 <div>
-                    <Menubar model={user.roles.includes("admin") ? menuAdmin : user.roles.includes("moderator") ? menuModerator : menuUser} end={<Button label="Déconnexion" icon="pi pi-power-off" onClick={logout} />} />
+                    <Menubar model={user.roles.includes("ROLE_ADMIN") ? menuAdmin : user.roles.includes("ROLE_MODERATOR") ? menuModerator : menuUser} end={<Button label="Déconnexion" icon="pi pi-power-off" onClick={logout} />} />
                     </div>
             ) : (
                 <div></div>

@@ -9,7 +9,7 @@ const { compteFournisseurs } = require('../models');
 exports.create = (req, res) => {
     // Validate request
     if (!req.body.numCompteFournisseur) {
-        res.status(400).send({
+        res.status(409).send({
         message: "Content can not be empty!"
         });
         return;

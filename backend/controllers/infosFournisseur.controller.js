@@ -11,7 +11,7 @@ exports.findAll = (req, res) => {
         res.send(data);
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
             err.message || "Some error occurred while retrieving fournisseurs."
         });
@@ -27,7 +27,7 @@ exports.findOne = (req, res) => {
         res.send(data);
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message: "Error retrieving fournisseur with id=" + id
         });
         });
@@ -63,7 +63,7 @@ exports.create = (req, res) => {
             res.send(data);
             })
             .catch(err => {
-            res.status(200).send({
+            res.status(409).send({
                 message:
                 err.message || "Some error occurred while creating the fournisseur."
             });

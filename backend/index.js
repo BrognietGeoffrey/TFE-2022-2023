@@ -1,7 +1,7 @@
 // File recup for Swagger
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('./swagger_output.json')
-
+const keys = require('./config/db.config')
 
 // File recup for Express
 const express = require("express");
@@ -9,6 +9,18 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express()
 
+
+// Postgres connection
+const { Pool } = require('pg')
+const pgClient = new Pool({
+  user : keys.pgUser,
+  host : keys.pgHost,
+  database : keys.pgDatabase,
+  password : keys.pgPassword,
+  port : keys.pgPort,
+  dialect : keys.dialect,
+})
+pgClient.on('error', () => console.log('Lost PG connection'))
 // Call for swager
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
@@ -36,10 +48,10 @@ const db = require('./models');
 
 
 // force: true will drop the table if it already exists
-db.sequelize.sync({force: false}).then(() => {
-  console.log('Drop and Resync Database with { force: true }');
- 
+db.sequelize.sync({ force: false }).then(() => {
+    console.log("Drop and re-sync db.");
 });
+
 
 
 
@@ -47,7 +59,7 @@ db.sequelize.sync({force: false}).then(() => {
 // routes
 // require all files for routes
 
-
+require("./routes/logs.routes")(app);
 require("./routes/view.route.js")(app);
 require("./routes/auth.routes")(app);
 require('./routes/user.routes')(app);
@@ -62,6 +74,7 @@ require("./routes/facturier.route.js")(app);
 require("./routes/infoFournisseurs.route.js")(app);
 require("./routes/factureDetails.route.js")(app);
 require("./routes/tva.routes.js")(app);
+
 
 
 

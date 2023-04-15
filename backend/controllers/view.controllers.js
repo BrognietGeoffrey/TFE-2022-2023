@@ -54,7 +54,7 @@ exports.createCustomView = async (req, res) => {
           joinClause = "";
         } else {
           // Ajouter l'opérateur logique "AND" entre les clauses de filtrage
-          joinClause += `${join.type} JOIN ${join.table} ON ${join.condition} `;
+          joinClause += `${join.type} JOIN ${ join.table} ON ${join.condition} `;
         }
       });
     }
@@ -102,8 +102,9 @@ exports.getAllView = async (req, res) => {
     console.log(view);
     // trouver le nom de la table associée à la vue
     for (let i = 0; i < view.length; i++) {
-      // chercher le FROM dans la requête
+      // chercher le premier FROM dans la requête
       const from = view[i].definition.indexOf('FROM');
+      console.log(from, 'from')
       // et indiquer le nom de la table après le FROM
       const table = view[i].definition.substring(from + 5, view[i].definition.indexOf(' ', from + 5))
       // enlever les deux derniers caractères

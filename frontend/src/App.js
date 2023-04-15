@@ -15,11 +15,10 @@ import Register from "./components/register.component";
 import BoardModerator from "./components/moderatorPage.component";
 import BoardAdmin from "./components/adminPage.component";
 import RedirectPage from "./components/redirectPage";
-import Facturier from "./components/Facturier.component";
+import Facturier from "./components/Facturier/Facturier.component";
 import ListFacture from "./components/listFacture.component";
 import SideBar from "./components/sidebar";
-import Dashboard from "./components/analyse.component";
-import Analyse from "./components/analyse.component";
+import Analyse from "./components/Analyse/analyse.component";
 import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
@@ -105,7 +104,6 @@ class App extends Component {
               <Route path="/mod" component={BoardModerator} />
               <Route path="/redirect" component={RedirectPage} />
               <Route path="/factures" component={ListFacture} />
-              <Route path="/dashboard" component={Dashboard} />
               <Route path="/facturier" component={Facturier} />              
               <Route path="/analyse" component={Analyse} />
               

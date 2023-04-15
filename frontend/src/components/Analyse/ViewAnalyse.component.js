@@ -7,9 +7,8 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { Dialog } from 'primereact/dialog';
-import createViewService from '../services/createViewService';
-import viewServices from '../services/viewServices';
-import { Col } from 'react-bootstrap';
+import createViewService from '../../services/createViewService';
+import viewServices from '../../services/viewServices';
 export const CustomViewForm = () => {
     const [table, setTable] = useState(null);
     const [tables, setTables] = useState([
@@ -45,15 +44,8 @@ export const CustomViewForm = () => {
     const [allViews, setAllViews] = useState([]);
     const [displayAllViews, setDisplayAllViews] = useState(false);
     const [position, setPosition] = useState('center');
-    const [checked1, setChecked1] = useState(false);
-    const [expandedRows, setExpandedRows] = useState([]);
-
-
-
-
     const dialogFuncMap = {
         'displayAllViews': setDisplayAllViews,
-
     };
 
     const onClick = (name, position, e) => {
@@ -166,6 +158,7 @@ export const CustomViewForm = () => {
                 setResponseView(response.data.view);
                 // vider les champs
                 resetForm();
+                retrieveAllViews();
 
             })
             .catch((error) => {
@@ -348,6 +341,14 @@ export const CustomViewForm = () => {
                                     <DataTable value={rowData.data}>
                                         <Column field="name" header="Nom"></Column>
                                         <Column field="firstname" header="Prénom"></Column>
+                                    </DataTable>
+                                );
+                            }
+                            else if (rowData.table === '(facturiers') {
+                                return (
+                                    <DataTable value={rowData.data}>
+                                        <Column field="facturier_id" header="Id du facturier"></Column>
+                                        <Column field="facture_id" header="ID de la facture"></Column>
                                     </DataTable>
                                 );
                             }

@@ -17,14 +17,14 @@ import {Card} from 'primereact/card';
 import {TabView, TabPanel} from 'primereact/tabview';
 
 import AddFacturier from './addFacturier.component';
-import FacturierDataService from "../services/facturierService";
-import FournisseurService from '../services/fournisseurService';
+import FacturierDataService from "../../services/facturierService";
+import FournisseurService from '../../services/fournisseurService';
 
 
 
 
 
-const Facturier = () => {
+const FacturierDatatable = () => {
 
 
     const [loading, setLoading] = useState(true)
@@ -37,31 +37,16 @@ const Facturier = () => {
 
 
 
-  
-
-    useEffect(() => {
-        async function fetchFacturiers() {
-          try {
-            const response = await axios.get('/api/facturiers');
-            setFacturiers(response.data);
-            setLoading(false);
-          } catch (error) {
-            console.error(error);
-          }
-        }
+    const fetchData = async () => {
+        const response = await FacturierDataService.getAll();
+        setFacturiers(response.data);
+        setLoading(false);
+      };
     
-        fetchFacturiers();
+      useEffect(() => {
+        fetchData();
       }, []);
     
-    
-
-   
-
-
-
-    
-    
-
     const formatDate = (value) => {
    
         let date = new Date(value);
@@ -75,10 +60,6 @@ const Facturier = () => {
 
 
 
-    const refreshTable = () => {
-        setLoading(true);
-        FacturierDataService.getAll().then(data => { setFacturiers(data); setLoading(false); });
-    }
     const renderHeader = () => {
         
     
@@ -86,7 +67,6 @@ const Facturier = () => {
             <div className="flex justify-content-between align-items-center">
                 <h5 className="m-0">Facturiers</h5>
                 <span className='p-input-icon-left ml-9'>
-                    <Button icon="pi pi-refresh" onClick={refreshTable} />
                 </span>
               
             </div>
@@ -109,25 +89,27 @@ const Facturier = () => {
 
     }
 
-    const objetBodyTemplate = (rowData) => {
-        return rowData.objetTitle;
-    }
-
-    const dateBodyTemplate = (rowData) => {
+    const dateBodyFactureTemplate = (rowData) => {
         return formatDate(rowData.facture.facture_date);
+    }
+    const dateBodyExtraitTemplate = (rowData) => {
+        if (rowData.extrait === null) {
+            return 'Pas d"extrait';
+        }
+        
+        const pathDate = rowData.extrait
+        console.log(rowData.extrait, 'extrait')
+        console.log(pathDate.extrait_date, 'date extrait');
+        // Invert date
+        const date = pathDate.date_extrait.split('-').reverse().join('/');
+
+        return (date);
     }
 
     const dateFilterTemplate = (options) => {
         return <Calendar value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" mask="99/99/9999" />
     }
 
-    const extraitBodyTemplate = (rowData) => {
-        return formatCurrency(rowData.extrait.montant);
-    }
-
-    const extraitFilterTemplate = (options) => {
-        return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="EUR" locale="fr-BE" />
-    }
 
     const balanceBodyTemplate = (rowData) => {
         return formatCurrency(rowData.facture.montant);
@@ -142,8 +124,14 @@ const Facturier = () => {
         return formatCurrency(montanttva);
     }
     const balanceFilterTemplate = (options) => {
-        return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="USD" locale="en-US" />
+        return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="EUR" locale="fr-BE" />
     }
+    const sortTVA = (value1, value2) => {
+        const tva1 = value1.facture.tva.tva_value;
+        const tva2 = value2.facture.tva.tva_value;
+        return tva1.localeCompare(tva2);
+    }
+    
 
     
     
@@ -168,17 +156,14 @@ const Facturier = () => {
     }
     
     const numextraitBodyTemplate = (rowData) => {
-        if (rowData.extrait_id === null) {
+        if (rowData.extrait === null) {
             return 'Pas d"extrait';
         }
         else {
-            return "N°" + rowData.extrait.num_extrait + " / " + rowData.extrait.num_extrait;
+            return "N°" + rowData.extrait.num_extrait 
         }
     }
       
-    
-       
-
     const statusFilterTemplate = (options) => {
         return <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select a Status" className="p-column-filter" showClear />;
     }
@@ -186,11 +171,6 @@ const Facturier = () => {
     const statusItemTemplate = (option) => {
         return <span className={`customer-badge status-${option}`}>{option}</span>;
     }
-
-        
-    
-    
-    const header = renderHeader();
 
 
 
@@ -201,55 +181,29 @@ const Facturier = () => {
     else {
         return (
   
-
-         
-                <div className="card"  >
-                <h5></h5>
-                <TabView style={{borderRadius: '10px'}}>
-                    
-                    <TabPanel header="Facturier"  onChange={refreshTable} >
-  
-                          
-         
-
-                        
-                    <Card title="Facturiers" subTitle="Liste des facturiers" className='card-body'  >
-                        // button to refresh the table
-                        
-                    <DataTable  value={facturiers} paginator className="p-datatable-customers" header={header} rows={10}
+                    <DataTable  value={facturiers} paginator className="p-datatable-customers" rows={10}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" rowsPerPageOptions={[10,25,50]}
                     dataKey="id" rowHover filterDisplay="menu" loading={loading}
                     emptyMessage="Aucunes données trouvées." scrollable 
-                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll">
+                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}>
                     
                     <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ minWidth: '14rem' }}/>
                     <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom" style={{ minWidth: '14rem' }} />
                          
                     <Column field='compte_fournisseur.fournisseur.num_fournisseur' header="N° de fournisseur" sortable  filter filterPlaceholder='Rechercher par N°' style={{ minWidth: '14rem' }}></Column>
                     <Column field='facture.objet.title' header="Objet" sortable filter filterPlaceholder='Rechercher par objet...' style={{ minWidth: '14rem' }} ></Column>
-                    <Column field="facture.facture_date" header="Date de la facture" sortable filterField="date" dataType="date"  body={dateBodyTemplate} filter filterElement={dateFilterTemplate} style={{ minWidth: '14rem' }}/>
+                    <Column field="facture.facture_date" header="Date de la facture" sortable filterField="date" dataType="date"  body={dateBodyFactureTemplate} filter filterElement={dateFilterTemplate} style={{ minWidth: '14rem' }}/>
                     <Column field="facture.num_facture" header="N° de facture" sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numfactureBodyTemplate}/>
                     <Column field="facture.libelle.title" header="Libellé" sortable filter filterPlaceholder="Rechercher par libellé" style={{ minWidth: '14rem' }} />
                     <Column field="decompte.num_decompte" header="N° de décompte " sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numdecompteBodyTemplate}/>
                     <Column field="facture.montant" header="Montant de la facture" sortable dataType="numeric" style={{ minWidth: '8rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
-                    <Column header="Montant avec TVA"  sortable dataType="numeric" style={{ minWidth: '8rem' }} body={tvaBalanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
-                    {/* <Column field="extrait.montant" header="Montant extrait" sortable dataType="numeric" style={{ minWidth: '8rem' }} body={extraitBodyTemplate} filter filterElement={extraitFilterTemplate} /> */}
-                    {/* <Column field="decompte.num_decompte" header="N° de décompte " sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numdecompteBodyTemplate}/> */}
+                    <Column header="Montant avec TVA"  sortable dataType="numeric" style={{ minWidth: '8rem' }} body={tvaBalanceBodyTemplate} filter filterElement={balanceFilterTemplate} sortField="facture.montant" />
                     <Column field="facture.estpaye" header="Status" sortable filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '10rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
                     <Column  header="N° extrait" sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numextraitBodyTemplate}/>
-                    <Column field="extrait.date_extrait" header="Date extrait" sortable filterField="date" dataType="date" style={{ minWidth: '8rem' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} /> 
+                    <Column field="extrait.date_extrait" header="Date extrait" sortable filterField="date" dataType="date" style={{ minWidth: '8rem' }} body={dateBodyExtraitTemplate} filter filterElement={dateFilterTemplate} /> 
                 </DataTable>
-                    </Card>
-                    </TabPanel>
-                    <TabPanel header="Ajout " style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                    <AddFacturier style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}/>
-                    </TabPanel>
-
-                </TabView>
-                {/* Dialog pour ajouter une facture
-                 */}
+                    
               
-                 </div>
         );
 
     }
@@ -263,7 +217,7 @@ const Facturier = () => {
 
 
 
-export default Facturier
+export default FacturierDatatable
 
 
     

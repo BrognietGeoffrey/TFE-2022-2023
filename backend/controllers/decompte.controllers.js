@@ -11,9 +11,15 @@ exports.create = (req, res) => {
         }
     })
 
+    // vérifier si le le décompte existe déjà
+    Decomptes.findOne({
+        where: {
+        num_decompte: req.body.num_decompte
+        }
+    })
     .then(data => {
         if (data) {
-        res.status(200).send({
+        res.status(409).send({
             message: "This decompte already exists"
         });
         return;
@@ -32,7 +38,7 @@ exports.create = (req, res) => {
             res.send(data);
             })
             .catch(err => {
-            res.status(200).send({
+            res.status(409).send({
                 message:
                 err.message || "Some error occurred while creating the decompte."
             });
@@ -40,7 +46,7 @@ exports.create = (req, res) => {
         }
     })
     .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
             err.message || "Some error occurred while creating the decompte."
         });

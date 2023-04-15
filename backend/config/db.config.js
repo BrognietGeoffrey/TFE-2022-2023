@@ -1,8 +1,9 @@
 module.exports = {
-    HOST : "localhost",
-    USER : "tfedb",
-    PASSWORD : "tfedb",
-    DB : "jv10", 
+    pgUser : process.env.PGUSER,
+    pgHost : process.env.PGHOST,
+    pgDatabase : process.env.PGDATABASE,
+    pgPassword : process.env.PGPASSWORD,
+    pgPort : process.env.PGPORT,
     dialect : "postgres",
     pool : {
         max : 5,

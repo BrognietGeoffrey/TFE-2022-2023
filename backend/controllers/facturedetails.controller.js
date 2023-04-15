@@ -11,24 +11,48 @@ exports.createObjet = (req, res) => {
         });
         return;
     }
-    
-    // Create a factureObjet
-    const objet = {
+    // vérifier si le l'objet existe déjà
+    Objets.findOne({
+        where: {
         title: req.body.title
-    };
-    
-    // Save factureObjet in the database
-    Objets.create(objet)
-        .then(data => {
-        res.send(data);
-        })
-        .catch(err => {
-        res.status(200).send({
-            message:
-            err.message || "Some error occurred while creating the factureObjet."
+        }
+    })
+    .then(data => {
+        if (data) {
+        res.status(409).send({
+            message: "This objet already exists"
         });
+        return;
+        } else {
+        // Create a factureObjet
+        const objet = {
+            title: req.body.title,
+            description: req.body.description,
+        };
+
+        // Save factureObjet in the database
+        Objets.create(objet)
+            .then(data => {
+            res.send(data);
+            })
+            .catch(err => {
+            res.status(409).send({
+                message:
+                err.message || "Some error occurred while creating the objet."
+            });
+            });
+        }
+    })
+    .catch(err => {
+        res.status(409).send({
+            message:
+            err.message || "Some error occurred while creating the objet."
         });
     }
+    );
+    };
+    
+
 
 // Retrieve all factureObjets from the database.
 exports.findObjet = (req, res) => {
@@ -71,24 +95,45 @@ exports.createLibelle = (req, res) => {
         });
         return;
     }
-    
-    // Create a factureLibelle
-    const libelle = {
+    // vérifier si le libelle existe déjà
+    Libelles.findOne({
+        where: {
         title: req.body.title
-    };
-    
-    // Save factureLibelle in the database
-    Libelles.create(libelle)
-        .then(data => {
-        res.send(data);
-        })
-        .catch(err => {
-        res.status(200).send({
-            message:
+        }
+    })
+    .then(data => {
+        if (data) {
+        res.status(409).send({
+            message: "This libelle already exists"
+        });
+        return;
+        } else {
+        // Create a factureLibelle
+        const libelle = {
+            title: req.body.title
+        };
+
+        // Save factureLibelle in the database
+        Libelles.create(libelle)
+            .then(data => {
+            res.send(data);
+            })
+            .catch(err => {
+            res.status(409).send({
+                message:
+                err.message || "Some error occurred while creating the factureLibelle."
+            });
+            });
+        }
+    })
+    .catch(err => {
+        res.status(409).send({
+        message:
             err.message || "Some error occurred while creating the factureLibelle."
         });
-        });
+    });
     }
+
 
 // Retrieve all factureLibelles from the database.
 exports.findLibelle = (req, res) => {
