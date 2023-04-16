@@ -1,27 +1,30 @@
+const env = process.env.NODE_ENV || 'development';
+const config = require("../config/config.js")[env];
+console.log(config, env, 'config' )
 
 
-const { Sequelize } = require('sequelize');
-const keys = require('../config/db.config');
+const Sequelize = require("sequelize");
+const sequelize = new Sequelize(
+  config.DB,
+  config.USER,
+  config.PASSWORD,
+  {
+    host: config.HOST,
+    dialect: config.dialect,
+    operatorsAliases: 1,
 
-const sequelize = new Sequelize(keys.database, keys.username, keys.password, {
-  host: keys.pgHost,
-  dialect: keys.dialect,
-  operatorsAliases: 0,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
+    pool: {
+      max: config.pool.max,
+      min: config.pool.min,
+      acquire: config.pool.acquire,
+      idle: config.pool.idle
     }
-  },
-  pool: {
-    max: keys.pool.max,
-    min: keys.pool.min,
-    acquire: keys.pool.acquire,
-    idle: keys.pool.idle
   }
-});
+
+);
 
 const db = {};
+
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 

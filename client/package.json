@@ -64,7 +64,7 @@
   },
   "proxy": "http://localhost:4000/",
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.2.0",
+    "@fortawesome/fontawesome-free": "^6.4.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.19",
     "redux-devtools-extension": "^2.13.9",
