@@ -3,7 +3,7 @@ const db = require("../models");
 const Op = db.Sequelize.Op;
 const { Extraits } = require("../models");
 // Create and Save a new Extrait
-exports.create = (req, res) => {
+const createExtrait = (req, res) => {
     // If the numExtrait is already in the database, return an error
     Extraits.findOne({
         where: {
@@ -50,7 +50,7 @@ exports.create = (req, res) => {
 }
 
 // Retrieve all extrait from the database.
-exports.findAll = (req, res) => {
+const findAllExtrait = (req, res) => {
     Extraits.findAll()
         .then(data => {
         res.send(data);
@@ -67,7 +67,7 @@ exports.findAll = (req, res) => {
 }
 
 // Find a single extrait with an id
-exports.findOne = (req, res) => {
+const findOneExtrait = (req, res) => {
     const id = req.params.id;
 
     Extraits.findByPk(id)
@@ -82,7 +82,7 @@ exports.findOne = (req, res) => {
 }
 
 // Update a extrait by the id in the request
-exports.update = (req, res) => {
+const updateExtrait = (req, res) => {
     const id = req.params.id;
 
     Extraits.update(req.body, {
@@ -107,7 +107,7 @@ exports.update = (req, res) => {
 }
 
 // Delete a extrait with the specified id in the request
-exports.delete = (req, res) => {
+const deleteExtrait = (req, res) => {
     const id = req.params.id;
 
     Extraits.destroy({
@@ -130,3 +130,12 @@ exports.delete = (req, res) => {
         });
         });
 }
+
+module.exports = {
+    createExtrait,
+    findAllExtrait,
+    findOneExtrait,
+    updateExtrait,
+    deleteExtrait
+};
+

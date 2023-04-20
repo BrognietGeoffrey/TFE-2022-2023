@@ -18,8 +18,8 @@ export
 
     useEffect(() => {
       retrieveFacturier();
-      retrieveView();
-      getDataAnalyse();
+      // retrieveView();
+      // getDataAnalyse();
     }, []);
 
     const retrieveFacturier = async () => {

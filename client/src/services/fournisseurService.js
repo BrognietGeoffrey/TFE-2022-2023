@@ -1,10 +1,13 @@
 import axios from 'axios';
 const API_URL = '/api/fournisseurs/';
-
+const BASIC_HEADERS = {
+    'Content-Type': 'application/json',
+    'Authorization': "Bearer " + token
+}
 
 class fournisseurService {
     getAll() {
-        return axios.get(API_URL);
+        return axios.get(API_URL, { headers: BASIC_HEADERS });
     }
 
     getFournisseurById(id) {

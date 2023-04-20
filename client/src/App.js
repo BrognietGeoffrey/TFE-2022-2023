@@ -1,130 +1,69 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Router, Switch, Route , Redirect} from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import "./App.css";
-import 'primeicons/primeicons.css';
-import 'primereact/resources/themes/lara-light-indigo/theme.css';
-import 'primereact/resources/primereact.css';
-import Login from "./components/login.component";
 
-import Home from "./components/home.component";
-import Profile from "./components/profile.component";
-import BoardUser from "./components/userPage.component";
-import Register from "./components/register.component";
-import BoardModerator from "./components/moderatorPage.component";
-import BoardAdmin from "./components/adminPage.component";
-import RedirectPage from "./components/redirectPage";
-import Facturier from "./components/Facturier/Facturier.component";
-import ListFacture from "./components/listFacture.component";
-import SideBar from "./components/sidebar";
-import Analyse from "./components/Analyse/analyse.component";
-import { logout } from "./actions/auth";
-import { clearMessage } from "./actions/message";
 
-import { history } from './helpers/history';
-require('bootstrap')
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Switch, Redirect, Route, NavLink } from 'react-router-dom';
+import { faTools, faUsers,faAddressBook, faCalendar,faHome, faBook, faFileContract, faHardHat, faFileSignature } from "@fortawesome/free-solid-svg-icons";
+import './App.css';
+import { isLoggedIn } from './reducers/auth';
 
-function canAccessFacturier(currentUser, showModeratorBoard, showAdminBoard) {
-  return currentUser && (showModeratorBoard || showAdminBoard);
-}
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.logOut = this.logOut.bind(this);
-    console.log(this.logOut, "logout");
+import Home from './components/Analyse/Analyse';
+import Login from './components/Login/login.component';
 
-    this.state = {
-      showModeratorBoard: false,
-      showAdminBoard: false,
-      currentUser: undefined,
-      openSidebar: false
-    };
 
-    history.listen((location) => {
-      props.dispatch(clearMessage()); // clear message when changing location
-    });
-  }
-  handleOpenSidebar = () => {
-    this.setState({ openSidebar : !this.state.openSidebar });
-  }
-  componentDidMount() {
-    const user = this.props.user;
+const App = () => {
 
-    if (user) {
-      this.setState({
-        currentUser: user.roles.includes("user"),
-        showModeratorBoard: user.roles.includes("moderator"),
-        showAdminBoard: user.roles.includes("admin")
-      });
-      console.log(user.roles, "roles");
+    const [menuIsVisible, setMenuIsVisible] = useState(false);
 
+    const menu = [
+      
+    ];
+
+
+    const onToggleMenu = () => {
+        setMenuIsVisible(!menuIsVisible);
     }
-  }
+    const forcedCloseMenu = () => {
+        setMenuIsVisible(false)
+    }
+
+    if (isLoggedIn()) {
+        console.log(localStorage.getItem('role'))
+        console.log(localStorage.getItem('access_token'))
+
+        let role = localStorage.getItem('role')
+        if(role === 'admin'){
+            menu.pop()
+        }
+        return (<Router>
+            <div className="main-window">
 
 
-  logOut() {
-    this.props.dispatch(logout());
-  }
+                <div className='main-section'>
+                    <div className={`side-menu ${menuIsVisible ? "menu-is-visible" : "menu-is-hidden"}`}>
+                    </div>
+                    
+                    <div className={`main-content ${menuIsVisible ? "" : "menu-is-hidden-content"}`}>
+                    <Switch>
+                        <Route path='/analyse' exact component={Home} />
+                        </Switch>
+                    </div>
+                   
+                </div>
 
-  render() {
-    const { currentUser, showModeratorBoard, showAdminBoard, user } = this.state;
-    console.log(this.props.user, "user");
-  
-
-    return (
-      <Router history={history}>  
-      {this.logOut && (
-            <SideBar
-              openSidebar={this.state.openSidebar}
-              handleOpenSidebar={this.handleOpenSidebar}
-            />
-          )}
-         <div className="flex" class="allBody">
-          
-          
-          
-          {/* Check if the user is logged in then display the sidebar */}
-          
-
-
-        <div id="body" className="flex-1" style={{maxWidth: "100%"}}>
-       
-
-
-
-          <Switch>
-          <Route exact path="/profile" component={Profile} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path={["/", "/home"]} component={ Home}  />
-              <Route exact path="/register" component={Register} />
-              <Route path="/user" component={BoardUser} />
-              <Route path="/admin" component={BoardAdmin} />
-              <Route path="/mod" component={BoardModerator} />
-              <Route path="/redirect" component={RedirectPage} />
-              <Route path="/factures" component={ListFacture} />
-              <Route path="/facturier" component={Facturier} />              
-              <Route path="/analyse" component={Analyse} />
-              
-              
-            </Switch>
-            
-          </div>
-
-          </div>
-      </Router>
-    );
-  }
+            </div>
+        </Router>);
+    } else {
+        return (
+            <Router>
+                <Switch>
+                    <Route path='/login' exact component={Login} />
+                    <Route>
+                        <Redirect to="/login" exact component={Login} />
+                    </Route>
+                </Switch>
+            </Router>);
+    }
 }
 
-function mapStateToProps(state) {
-  const { user } = state.auth;
-  return {
-    user,
-  };
-  
-}
-
-
-export default connect(mapStateToProps)(App);
+export default App;

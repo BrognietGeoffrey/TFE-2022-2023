@@ -7,9 +7,9 @@ class Profile extends Component {
   render() {
     const { user: currentUser } = this.props;
 
-    if (!currentUser) {
-      return <Redirect to="/login" />;
-    }
+    // if (!currentUser) {
+    //   return <Redirect to="/login" />;
+    // }
 
     return (
       
@@ -24,10 +24,11 @@ class Profile extends Component {
           <p id="profile-name" className="profile-name-card">Votre ID : {currentUser.id}</p>
         
           <p id="profile-name" className="profile-name-card">Votre token : {currentUser.accessToken}</p>
-          {console.log(currentUser.roles.includes("ROLE_ADMIN"))}
+        
+          {console.log(currentUser)}
           {
             
-            currentUser.roles.includes("ROLE_ADMIN") ? (
+            currentUser.data.role.name !== "user" ||  currentUser.data.role.name !== "moderator" ? (
               
             <a href="/register" className="btn btn-primary btn-block">Ajouter un utilisateur</a>
             ) : (

@@ -3,7 +3,7 @@ const db = require("../models");
 const Op = db.Sequelize.Op;
 const { Decomptes } = require("../models");
 // Create and Save a new Decompte
-exports.create = (req, res) => {
+const createDecompte = (req, res) => {
     // If the numDecompte is already in the database, return an error
     Decomptes.findOne({
         where: {
@@ -55,7 +55,7 @@ exports.create = (req, res) => {
 }
 
 // Retrieve all decompte from the database.
-exports.findAll = (req, res) => {
+const findAllDecompte = (req, res) => {
     Decomptes.findAll()
         .then(data => {
         res.send(data);
@@ -69,7 +69,7 @@ exports.findAll = (req, res) => {
 }
 
 // Find a single decompte with an id
-exports.findOne = (req, res) => {
+const findOneDecompte = (req, res) => {
     const id = req.params.id;
 
     Decomptes.findByPk(id)
@@ -84,7 +84,7 @@ exports.findOne = (req, res) => {
 }
 
 // Update a decompte by the id in the request
-exports.update = (req, res) => {
+const updateDecompte = (req, res) => {
     const id = req.params.id;
 
     Decomptes.update(req.body, {
@@ -109,7 +109,7 @@ exports.update = (req, res) => {
 }
 
 // Delete a decompte with the specified id in the request
-exports.delete = (req, res) => {
+const deleteDecompte = (req, res) => {
     const id = req.params.id;
 
     Decomptes.destroy({
@@ -131,4 +131,12 @@ exports.delete = (req, res) => {
             message: "Could not delete Decompte with id=" + id
         });
         });
+}
+
+module.exports = {
+    createDecompte,
+    findAllDecompte,
+    findOneDecompte,
+    updateDecompte,
+    deleteDecompte
 }

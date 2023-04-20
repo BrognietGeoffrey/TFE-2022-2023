@@ -1,20 +1,22 @@
 const db = require("../models");
 const config = require("../config/auth.config");
-const User = db.user;
-const Role = db.role;
+const {UserRoles, Role, User} = require('../models');
 const argon2 = require('argon2');
+const secretKey = 'dev/env_dev'
+
 
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
+  const hashedPassword = await argon2.hash(req.body.password);
   // Save User to Database
   User.create({
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: hashedPassword.toString()
   })
   
     .then(user => {
@@ -35,7 +37,8 @@ exports.signup = (req, res) => {
             res.send({ message: "User registered successfully!" });
           });
         });
-        
+      
+
 
       } else {
         // user role = 1
@@ -49,49 +52,115 @@ exports.signup = (req, res) => {
     });
 };
 
+exports.signin = async (req, res) => {
+  try {
+    const {username, password} = req.body;
 
-exports.signin = (req, res) => {
-  User.findOne({
-    where: {
-      username: req.body.username
-    }
-  })
-    .then(user => {
-      if (!user) {
-        return res.status(404).send({ message: "User Not found." });
-      }
+    // Trouver l'user via son username avec l'adresse api/users?username=${username}
+    const user = await User.findOne({
+      where: {username: username},
+    });
 
-      // utiliser argon2 pour le hash du mot de passe
-      var passwordIsValid = argon2.verify(user.password, req.body.password);
-
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Invalid Password!"
-        });
-      }
-
-      var token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 21700 // 24 hours
-      });
-
-      var authorities = [];
-      user.getRoles().then(roles => {
-        for (let i = 0; i < roles.length; i++) {
-          authorities.push("ROLE_" + roles[i].name.toUpperCase());
+    // Trouver son role via son id
+    const userRole = await UserRoles.findOne({
+      where: {
+        userId: user.id
+      }, 
+      include: [
+        {
+          model: Role,
         }
-        res.status(200).send({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          roles: authorities,
-          accessToken: token
-        });
-      }
-      );
-    })
-    .catch(err => {
-      res.status(500).send({ message: err.message });
+      ]
+   
+    });
+    console.log(userRole.role.dataValues, "userRole");
+    if (!user) {
+      return res.status(404).send('User Not Found.');
     }
+
+    const passwordHash = user.dataValues['password'].trim();
+    
+    const validPassword = await argon2.verify(passwordHash, password);
+
+    if (!validPassword) {
+      return res.status(401).send({
+        accessToken: null,
+        message: "Invalid Password!"
+      });
+    }
+
+    const token = jwt.sign(
+      { user_id: user.dataValues, role: userRole.role.dataValues.name},
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "1h",
+      }
     );
-};
+    console.log(token, "token, login");
+    
+
+    res.header('Authorization', token).json({
+      error: null,
+      data: {token :token, user: user.dataValues, role: userRole.role.dataValues.name},
+    })
+    return res; 
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(error.message);
+  }
+}
+
+
+
+
+
+
+// exports.signin = async (req, res) => {
+//   try {
+//     const {username, password} = req.body;
+
+//     const user = await User.findOne({
+//       where: {
+//         username: username
+//       }
+//     });
+
+//     if (!user) {
+//       return res.status(404).send('User Not Found.');
+//     }
+
+//     const validPassword = await argon2.verify(user.password, password);
+
+//     if (!validPassword) {
+//       return res.status(401).send({
+//         accessToken: null,
+//         message: "Invalid Password!"
+//       });
+//     }
+
+//     const role = await user.getRoles();
+//     const dataRole = JSON.stringify(role);
+
+//     const token = jwt.sign(
+//       { user_id: user.dataValues, role: role, username: user.dataValues.username, email: user.dataValues.email },
+//       process.env.JWT_SECRET_KEY,
+//       {
+//         expiresIn: "1h",
+//       }
+//     );
+
+  
+
+//   res.header('Authorization', token).json({
+//       error: null,
+//       data: {token :token, user: user.dataValues, role: role}
+//   })
+
+//   return res + token; 
+
+//   //return res.status(404).send('Invalid Credentials');
+// } catch (error) {
+//   console.log(error)
+//   return res.status(500).send(error.message);
+// }
+// }

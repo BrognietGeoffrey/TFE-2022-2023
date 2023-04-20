@@ -42,6 +42,7 @@ db.Tva = require('../models/tva.model')(sequelize, Sequelize);
 db.User = require('../models/user.model')(sequelize, Sequelize);
 db.Role = require('../models/role.model')(sequelize, Sequelize);
 db.Logs = require('../models/logs.model')(sequelize, Sequelize);
+db.UserRoles = require('../models/userRole.model')(sequelize, Sequelize);
 // Facture_id is the foreign key in the facturier table
 db.Facturiers.belongsTo(db.Factures, { foreignKey: 'facture_id' });
 
@@ -63,19 +64,13 @@ db.Logs.belongsTo(db.Fournisseurs, {foreignKey : 'fournisseur_id'})
 db.Logs.belongsTo(db.Objets, {foreignKey : 'objet_id'})
 db.Logs.belongsTo(db.Libelles, {foreignKey : 'libelle_id'})
 db.Logs.belongsTo(db.Decomptes, {foreignKey : 'decompte_id'})
-db.user = require("../models/user.model.js")(sequelize, Sequelize);
-db.role = require("../models/role.model.js")(sequelize, Sequelize);
+db.UserRoles.belongsTo(db.User, {foreignKey : 'userId'})
+db.UserRoles.belongsTo(db.Role, {foreignKey : 'roleId'})
 
-db.role.belongsToMany(db.user, {
-  through: "user_roles",
-  foreignKey: "roleId",
-  otherKey: "userId"
-});
-db.user.belongsToMany(db.role, {
-  through: "user_roles",
-  foreignKey: "userId",
-  otherKey: "roleId"
-});
+db.User.belongsToMany(db.Role, { through: db.UserRoles, foreignKey: 'userId', otherKey: 'roleId' });
+db.Role.belongsToMany(db.User, { through: db.UserRoles, foreignKey: 'roleId', otherKey: 'userId' });
+
+
 
 
 

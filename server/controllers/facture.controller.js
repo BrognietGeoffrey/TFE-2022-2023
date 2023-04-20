@@ -5,7 +5,7 @@ const {Factures, Tva, Objets, Libelles } = require("../models");
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Facture
-exports.create = (req, res) => {
+const createFacture = (req, res) => {
     // Validate request
     if (!req.body.num_facture) {
         res.status(400).send({
@@ -41,7 +41,7 @@ exports.create = (req, res) => {
     }
 
 // Retrieve all Factures from the database.
-exports.findAll = async (req, res) => {
+const findAllFacture = async (req, res) => {
     try {
         const factures = await Factures.findAll({
         include: [
@@ -71,7 +71,7 @@ exports.findAll = async (req, res) => {
 };
 
 // Find a single Facture with an id
-exports.findOne = (req, res) => {
+const findOneFacture = (req, res) => {
     const id = req.params.id;
 
     Factures.findByPk(id)
@@ -88,7 +88,7 @@ exports.findOne = (req, res) => {
     
 
 // Update a Facture by the id in the request
-exports.update = (req, res) => {
+const updateFacture = (req, res) => {
     const id = req.params.id;
     
     Factures.update(req.body, {
@@ -113,7 +113,7 @@ exports.update = (req, res) => {
     }
 
 // Delete a Facture with the specified id in the request
-exports.delete = (req, res) => {
+const deleteFacture = (req, res) => {
     const id = req.params.id;
     
     Factures.destroy({
@@ -139,17 +139,29 @@ exports.delete = (req, res) => {
 
 
 //get the last id of facture
-exports.getLastId = (req, res) => {
-    Factures.max('facture_id')
-        .then(lastId => {
-            res.send({ lastId });
-        })
-        .catch(err => {
+const getLastIdFacture = (req, res) => {
+    Factures.findOne({ order: [ [ 'facture_id', 'DESC' ]] })
+          .then(facture => {
+            res.send(facture.facture_id.toString());
+          })
+          .catch(err => {
             res.status(500).send({
-                message: "Error getting the last facture ID"
+              message:
+                err.message || "Some error occurred while retrieving last facture ID."
             });
-        });
+          });
+
 }
+
+module.exports = {
+    createFacture,
+    findAllFacture,
+    findOneFacture,
+    updateFacture,
+    deleteFacture,
+    getLastIdFacture
+}
+
 
 
 

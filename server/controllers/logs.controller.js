@@ -4,9 +4,7 @@ const { Facturiers, Clients, Fournisseurs, Decomptes, Objets, Libelles, Extraits
 
 // Create and Save a new Log
 // Voici les données qui se retrouvent dans la table logs (user_id, facturier_id, fournisseur_id, client_id, libelle_id, objet_id, decompte_id)
-exports.create = (req, res) => {
-    // If the facturier_id is already in the database or if the fournisseur_id is already in the database or if the client_id is already in the database or if the libelle_id is already in the database or if the objet_id is already in the database or if the decompte_id is already in the database, return an error
-
+const create = async (req, res) => {
     Logs.findOne({
         where: {
         facturier_id: req.body.facturier_id || null, 
@@ -15,10 +13,8 @@ exports.create = (req, res) => {
         libelle_id: req.body.libelle_id || null,
         objet_id: req.body.objet_id || null,
         decompte_id: req.body.decompte_id || null
-        
         }
     })
-
     .then(data => {
         if (data) {
         res.status(409).send({
@@ -58,9 +54,15 @@ exports.create = (req, res) => {
         });
     }
     );
-}
+};
 
-exports.findAll = (req, res) => {
+const findAll = (req, res) => {
+   // #swagger.tags = ['Users']
+    /* 
+    #swagger.summary = 'Get all users having an account'
+    #swagger.security = [{
+               "bearerAuth": []
+    }] */
     const user_id = req.query.user_id;
     var condition = user_id ? { user_id: { [Op.like]: `%${user_id}%` } } : null;
     // trouver tous les logs
@@ -76,7 +78,13 @@ exports.findAll = (req, res) => {
         });
     }
     );
-};
+}
+
+module.exports = {
+    findAll, 
+    create
+}
+
 
 
 

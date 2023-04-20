@@ -1,30 +1,21 @@
 import axios from "axios"
 
 const API_URL = "/api/facturiers/";
-const API_FACTURE_URL = "/api/factures/";
-const API_DECOMPTE_URL = "/api/decomptes/";
-const API_EXTRAIT_URL = "/api/extraits/";
-const API_CLIENT_URL = "/api/clients/";
-const API_FOURNISSEUR_URL = "/api/fournisseurs/";
-const API_COMPTPE_CLIENT_URL = "/api/compteClients/";
-const API_COMPTPE_FOURNISSEUR_URL = "/api/compteFournisseurs/";
-const API_OBJET = "/api/objet/";
-const API_LIBELLE = "/api/libelle/";
-const API_TVA = "/api/tva/";
 
 
+const BASIC_HEADERS = {
+    'Content-Type': 'application/json',
+    'Authorization': "Bearer " + localStorage.getItem("access_token")
+}
 class facturierService {
     
     async getAll() {
-        return axios.get(API_URL)
+        console.log(localStorage.access_token, "token");
+        const response = await axios.get(API_URL, {headers: BASIC_HEADERS});
+        
+        return response.data;
         
     }
-
-
-
-
-
-
 
     getFacturierById(id) {
         return axios.get(API_URL + id);

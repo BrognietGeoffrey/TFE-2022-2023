@@ -4,8 +4,10 @@ const Op = db.Sequelize.Op;
 const { Clients } = require("../models");
 
 // Create and Save a new Client
-exports.create = (req, res) => {
+const createClient = (req, res) => {
     // If the name_client is already in the database, return an error
+    
+
     Clients.findOne({
         where: {
         name: req.body.name
@@ -51,7 +53,12 @@ exports.create = (req, res) => {
 }
 
 // Retrieve all clients from the database.
-exports.findAll = (req, res) => {
+
+// ajouter swagger
+
+
+const findAllClients = (req, res) => {
+
     Clients.findAll()
         .then(data => {
         res.send(data);
@@ -65,7 +72,7 @@ exports.findAll = (req, res) => {
     }
 
 // Find a single client with an id
-exports.findOne = (req, res) => {
+const findOneClient = (req, res) => {
     const id = req.params.id;
 
     Clients.findByPk(id)
@@ -80,7 +87,7 @@ exports.findOne = (req, res) => {
     }
 
 // Update a client by the id in the request
-exports.update = (req, res) => {
+const updateClient = (req, res) => {
     const id = req.params.id;
 
     Clients.update(req.body, {
@@ -105,7 +112,7 @@ exports.update = (req, res) => {
     }
 
 // Delete a client with the specified id in the request
-exports.delete = (req, res) => {
+const deleteClient = (req, res) => {
     const id = req.params.id;
 
     Clients.destroy({
@@ -128,3 +135,11 @@ exports.delete = (req, res) => {
         });
         });
     }
+
+module.exports = {
+    createClient,
+    findAllClients,
+    findOneClient,
+    updateClient,
+    deleteClient
+}

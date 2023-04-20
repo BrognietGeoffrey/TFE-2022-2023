@@ -3,7 +3,7 @@ const Op = db.Sequelize.Op;
 const { Objets, Libelles } = require("../models");
 
 // Create and Save a new factureObjet
-exports.createObjet = (req, res) => {
+const createObjet = (req, res) => {
     // Validate request
     if (!req.body.title) {
         res.status(400).send({
@@ -55,7 +55,7 @@ exports.createObjet = (req, res) => {
 
 
 // Retrieve all factureObjets from the database.
-exports.findObjet = (req, res) => {
+const findObjet = (req, res) => {
     const title = req.query.title;
     var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
     
@@ -72,7 +72,7 @@ exports.findObjet = (req, res) => {
     }
 
 // Find a single factureObjet with an id
-exports.findObjetById = (req, res) => {
+const findObjetById = (req, res) => {
     const id = req.params.id;
 
     Objets.findByPk(id)
@@ -87,7 +87,7 @@ exports.findObjetById = (req, res) => {
     }
 
 
-exports.createLibelle = (req, res) => {
+const createLibelle = (req, res) => {
     // Validate request
     if (!req.body.title) {
         res.status(400).send({
@@ -136,7 +136,7 @@ exports.createLibelle = (req, res) => {
 
 
 // Retrieve all factureLibelles from the database.
-exports.findLibelle = (req, res) => {
+const findLibelle = (req, res) => {
     const title = req.query.title;
     var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
     
@@ -153,7 +153,7 @@ exports.findLibelle = (req, res) => {
     }
 
 // Find a single factureLibelle with an id
-exports.findLibelleById = (req, res) => {
+const findLibelleById = (req, res) => {
     const id = req.params.id;
 
     Libelles.findByPk(id)
@@ -166,4 +166,13 @@ exports.findLibelleById = (req, res) => {
         });
     });
     }
+
+module.exports = {
+    createObjet,
+    findObjet,
+    findObjetById,
+    createLibelle,
+    findLibelle,
+    findLibelleById
+}
 

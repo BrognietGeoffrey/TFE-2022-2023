@@ -3,7 +3,7 @@ const db = require("../models");
 const { Op } = require("sequelize");
 const { Facturiers, Factures, compteFournisseurs, compteClients, Tva, Clients, Fournisseurs, Decomptes, Objets, Libelles, Extraits } = require("../models");
 // Create and Save a new Facturier
-exports.create = (req, res) => {
+const createFacturier = (req, res) => {
     // If the numFacturier is already in the database, return an error
     Facturiers.findOne({
         where: {
@@ -52,7 +52,7 @@ exports.create = (req, res) => {
 
 // Retrieve all facturiers from the database with include for the foreign keys
 
-exports.getFacturiers = async (req, res) => {
+const getFacturiers = async (req, res) => {
     try {
         const facturiers = await Facturiers.findAll({
         include: [
@@ -117,7 +117,7 @@ exports.getFacturiers = async (req, res) => {
 
 
 // Find a single facturier with an id
-exports.findOne = (req, res) => {
+const findOne = (req, res) => {
     const id = req.params.id;
 
     Facturiers.findByPk(id, {
@@ -174,7 +174,7 @@ exports.findOne = (req, res) => {
 
 
 // Update a facturier by the id in the request
-exports.update = (req, res) => {
+const update = (req, res) => {
     const id = req.params.id;
 
     Facturiers.update(req.body, {
@@ -201,7 +201,7 @@ exports.update = (req, res) => {
 }
 
 // Delete a facturier with the specified id in the request
-exports.delete = (req, res) => {
+const deleteFacturier = (req, res) => {
     const id = req.params.id;
 
     Facturiers.destroy({
@@ -223,4 +223,12 @@ exports.delete = (req, res) => {
         message: "Could not delete facturier with id=" + id
         });
     });
+}
+
+module.exports = {
+    createFacturier,
+    getFacturiers,
+    findOne,
+    update,
+    deleteFacturier
 }

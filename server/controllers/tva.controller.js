@@ -2,8 +2,7 @@
 const db = require("../models");
 const { Tva } = require("../models");
 
-
-exports.findAll = (req, res) => {
+const findAllTva = (req, res) => {
     Tva.findAll()
     .then(data => {
         res.send(data);
@@ -18,8 +17,7 @@ exports.findAll = (req, res) => {
         });
     });
 }
-
-exports.findOne = (req, res) => {
+const findOneTva = (req, res) => {
     const id = req.params.id;
 
     Tva.findByPk(id)
@@ -32,8 +30,7 @@ exports.findOne = (req, res) => {
         });
     });
 }
-
-exports.create = (req, res) => {
+const createTva = (req, res) => {
     // si champ vide alors erreur, si existe alors erreur
     if (!req.body.tva_value || !req.body.tva_description) {
         res.status(400).send({
@@ -80,6 +77,63 @@ exports.create = (req, res) => {
         });
     }
     );
+}
+
+const updateTva = (req, res) => {
+    const id = req.params.id;
+    console.log(id)
+
+    Tva.update(req.body, {
+        where: { tva_id: id }
+    })
+    .then(num => {
+        if (num == 1) {
+            res.send({
+                message: "Tva was updated successfully."
+            });
+        } else {
+            res.send({
+                message: `Cannot update tva with id=${id}. Maybe tva was not found or req.body is empty!`
+            });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Error updating tva with id=" + id
+        });
+    });
+}
+
+const deleteTva = (req, res) => {
+    const id = req.params.id;
+
+    Tva.destroy({
+        where: { tva_id: id }
+    })
+    .then(num => {
+        if (num == 1) {
+            res.send({
+                message: "Tva was deleted successfully!"
+            });
+        } else {
+            res.send({
+                message: `Cannot delete tva with id=${id}. Maybe tva was not found!`
+            });
+        }
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Could not delete tva with id=" + id
+        });
+    });
+}
+
+module.exports = {
+    findAllTva,
+    findOneTva,
+    createTva,
+    updateTva,
+    deleteTva
 }
 
 

@@ -1,86 +1,122 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config/auth.config.js');
 const db = require('../models');
-const {User} = require('../models');
+require('dotenv').config();
 
-tokenVerification = (req, res, next) => {
-    let token = req.headers['x-access-token'];
+// get JWT secret key from .env file
+const secretKey = process.env.JWT_SECRET_KEY;
+const {User, Role, UserRoles} = require('../models');
+const { secret } = require('../config/auth.config');
+
+
+
+const tokenVerification = (req, res, next) => {
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    } 
     if (!token) {
-        return res.status(403).send({
-            message: "No token provided!"
-        });
+       return res.status(401).json({ error: 'token missing' })
     }
-    jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({
-                message: "Unauthorized!"
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      req.user = decoded;
+      next();
+    } catch (ex) {
+      return res.status(400).json({ error: 'token invalid' })
+    }
+  };
+
+const verifyAccess = async() => {
+    try{
+        const token = req.headers('Authorization').split("Bearer ")[1].trim();
+        console.log(token, "token");
+        return jwt.verify(token, secretKey)
+    }catch(e){
+        return null
+    }
+}
+
+
+// Function qui vérifie si l'utilisateur est un admin, un moderateur ou un user en paramètre. Et selon le paramètre, on retourne un message d'erreur ou non.
+const verifyIsAdminRole = (req, res, next) => {
+    User.findByPk(req.userId).then(user => {
+        UserRoles.findOne({
+            where: {
+                userId: user.id
+            }
+        }).then(userRole => {
+            Role.findByPk(userRole.roleId).then(role => {
+                console.log(role, "role");
+                if (role.name === "admin") {
+                    next();
+                    return;
+                }
+                res.status(403).send({
+                    message: "Vous devez être admin pour accéder à cette ressource."
+                });
+                return;
             });
         }
-        req.userId = decoded.id;
-        next();
+        );
     });
-}
-
-verifyIsAdminRole = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRoles().then(roles => {
-            for (let i = 0; i < roles.length; i++) {
-                if (roles[i].name === "admin") {
-                    next();
-                    return;
-                }
-            }
-            res.status(403).send({
-                message: "Require Admin Role!"
-            });
-            return;
-        });
-    });
-}
-
-verifyIsModeratorRole = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRoles().then(roles => {
-            for (let i = 0; i < roles.length; i++) {
-                if (roles[i].name === "moderator") {
-                    next();
-                    return;
-                }
-            }
-            res.status(403).send({
-                message: "Require Moderator Role!"
-            });
-            return;
-        });
-    });
-}
-
-verifyIsAdminOrModeratorRole = (req, res, next) => {
-    User.findByPk(req.userId).then(user => {
-        user.getRoles().then(roles => {
-            for (let i = 0; i < roles.length; i++) {
-                if (roles[i].name === "moderator") {
-                    next();
-                    return;
-                }
-                if (roles[i].name === "admin") {
-                    next();
-                    return;
-                }
-            }
-            res.status(403).send({
-                message: "Require Moderator or Admin Role!"
-            });
-            return;
-        });
-    });
-}
-
-const authJwt = {
-    tokenVerification: tokenVerification,
-    verifyIsAdminRole: verifyIsAdminRole,
-    verifyIsModeratorRole: verifyIsModeratorRole,
-    verifyIsAdminOrModeratorRole: verifyIsAdminOrModeratorRole
 };
 
-module.exports = authJwt;
+const verifyIsModeratorRole = (req, res, next) => {
+    User.findByPk(req.userId).then(user => {
+        UserRoles.findOne({
+            where: {
+                userId: user.id
+            }
+        }).then(userRole => {
+            Role.findByPk(userRole.roleId).then(role => {
+                console.log(role, "role");
+                if (role.name === "moderator") {
+                    next();
+                    return;
+                }
+                res.status(403).send({
+                    message: "Vous devez modérateur pour accéder à cette ressource."
+                });
+                return;
+            });
+        }
+        );
+    });
+};
+
+const verifyIsAdminOrModeratorRole = (req, res, next) => {
+    // find with decoded id
+    User.findByPk(req.userId).then(user => {
+        console.log(user, "user");
+        UserRoles.findOne({
+            where: {
+                userId: user.userId
+            }
+        }).then(userRole => {
+            Role.findByPk(userRole.roleId).then(role => {
+                console.log(role, "role");
+                if (role.name === "admin" || role.name === "moderator") {
+                    next();
+                    return;
+                }
+                res.status(403).send({
+                    message: "Vous devez être admin ou modérateur pour accéder à cette ressource."
+                });
+                return;
+            });
+        }
+        );
+    }
+    );
+};
+
+module.exports = {
+    tokenVerification,
+    verifyAccess,
+    verifyIsAdminRole,
+    verifyIsModeratorRole,
+    verifyIsAdminOrModeratorRole
+};

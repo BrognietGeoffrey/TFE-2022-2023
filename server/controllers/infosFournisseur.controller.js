@@ -5,7 +5,7 @@ const Op = db.Sequelize.Op;
 const { Fournisseurs } = require("../models");
 
 // Get all the fournisseurs
-exports.findAll = (req, res) => {
+const findAllFournisseur = (req, res) => {
     Fournisseurs.findAll()
         .then(data => {
         res.send(data);
@@ -19,7 +19,7 @@ exports.findAll = (req, res) => {
     }
 
 // Get a single fournisseur by id
-exports.findOne = (req, res) => {
+const findOneFournisseur = (req, res) => {
     const id = req.params.id;
 
     Fournisseurs.findByPk(id)
@@ -33,7 +33,7 @@ exports.findOne = (req, res) => {
         });
     }
 
-exports.create = (req, res) => {
+const createFournisseur = (req, res) => {
     // If the name_fournisseur is already in the database, return an error
     Fournisseurs.findOne({
         where: {
@@ -79,36 +79,37 @@ exports.create = (req, res) => {
     }
 
 // Update a fournisseur by the id in the request
-exports.update = (req, res) => {
+const updateFournisseur = (req, res) => {
     const id = req.params.id;
 
     Fournisseurs.update(req.body, {
-        where: { id: id }
+        where: { fournisseur_id: id }
     })
-        .then(num => {
+    // Si le name est déjà dans la base de données, retourner une erreur
+    .then(num => {
         if (num == 1) {
-            res.send({
+        res.send({
             message: "fournisseur was updated successfully."
-            });
+        });
         } else {
-            res.send({
+        res.send({
             message: `Cannot update fournisseur with id=${id}. Maybe fournisseur was not found or req.body is empty!`
-            });
+        });
         }
-        })
-        .catch(err => {
-        res.status(200).send({
-            message: "Error updating fournisseur with id=" + id
+    })
+    .catch(err => {
+        res.status(409).send({
+        message: "Error updating fournisseur with id=" + id
         });
-        });
-    }
+    });
+}
 
 // Delete a fournisseur with the specified id in the request
-exports.delete = (req, res) => {
+const deleteFournisseur = (req, res) => {
     const id = req.params.id;
 
     Fournisseurs.destroy({
-        where: { id: id }
+        where: { fournisseur_id: id }
     })
         .then(num => {
         if (num == 1) {
@@ -127,4 +128,12 @@ exports.delete = (req, res) => {
         });
         });
     }
+
+module.exports = {
+    findAllFournisseur,
+    findOneFournisseur,
+    createFournisseur,
+    updateFournisseur,
+    deleteFournisseur
+}
 

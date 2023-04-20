@@ -2,7 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-
+const swaggerFile = require('./swagger_output.json')
+//const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerUi =require('swagger-ui-express')
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 var corsOptions = {
   origin: "http://localhost:4000"
@@ -16,35 +19,28 @@ app.use(function(req, res, next) {
   next();
 });
 
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.raw({ limit: '1gb', type: 'application/pdf' }))
 
 const db = require('./models');
 
 // force: true will drop the table if it already exists
 db.sequelize.sync({force: false}).then(() => {
-  console.log('Drop and Resync Database with { force: true }');
  
 });
 
 
-require("./routes/logs.routes")(app);
-require("./routes/view.route.js")(app);
-require("./routes/auth.routes")(app);
-require('./routes/user.routes')(app);
-require("./routes/facture.route")(app);
-require("./routes/banque.route")(app);
-require("./routes/compteFournisseurs.route")(app);
-require("./routes/client.routes.js")(app);
-require("./routes/compteClient.routes.js")(app);
-require("./routes/extraits.route.js")(app);
-require("./routes/decompte.route.js")(app);
-require("./routes/facturier.route.js")(app);
-require("./routes/infoFournisseurs.route.js")(app);
-require("./routes/factureDetails.route.js")(app);
-require("./routes/tva.routes.js")(app);
+const routes = require('./routes');
+app.use('/api' ,routes);
+
 
 const port = 4000;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
+    // console.log l'adresse totale du serveur
+    console.log(`http://localhost:${port}`)
 });

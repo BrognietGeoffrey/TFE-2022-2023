@@ -22,10 +22,10 @@ services:
         - /app/node_modules
         - ./server:/app
       environment:
-        - PGUSER=postgres
-        - PGHOST=postgres
-        - PGDATABASE=postgres
-        - PGPASSWORD=postgres_password
+        - PGUSER=tfedb
+        - PGHOST=localhost
+        - PGDATABASE=jv10
+        - PGPASSWORD=tfedb
         - PGPORT=5432
       command: sh -c "while ! nc -z postgres 5432; do sleep 0.1; done; npm run dev:server"
 

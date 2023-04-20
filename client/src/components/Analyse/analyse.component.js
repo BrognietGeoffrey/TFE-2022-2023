@@ -126,14 +126,6 @@ const retrieveLogs = async () => {
     console.log(error);
   }
 };
-
-
-       
-
-
-
-
-
     useEffect(() => {
       retrieveLogs();
     }, []);
@@ -186,7 +178,7 @@ const retrieveLogs = async () => {
           <div class="div4">
           <div class="card">
               <div class="card-title">
-                <h2 class="title"><i class="fa-solid fa-eye">Statistiques sur les factures </i></h2>
+                <h2 class="title"><i class="fa-solid fa-eye"> Statistiques sur les factures </i></h2>
               </div>
               <div class="card-body">
                 Vous trouvez ici des statistiques sur toutes les factures du bilan actuel
@@ -302,14 +294,6 @@ const retrieveLogs = async () => {
 
                                         </span>
                                       )}</p>
-
-
-
-
-                                      
-
-
-                        
                                     </p>                           
                                     </div>
                           )}
@@ -322,6 +306,19 @@ const retrieveLogs = async () => {
             </div>
           </div>
           </div>
+          {/* <div class="div6">
+            <div class="card">
+              <div class="card-title">
+                <h2 class="title"><i class="fa-solid fa-eye"> Mails des mauvais payeur</i></h2>
+              </div>
+              <div class="card-body">
+                Tous les mails qui seront envoyés au mauvais payeur seront affichés ici (le retard de plus de 2 mois)
+              </div>
+              <div class="card-content">
+              </div>
+            </div>    
+          </div>             */}
+                
         </div>
       </div>
     );

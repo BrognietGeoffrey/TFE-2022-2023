@@ -6,7 +6,7 @@ const Op = db.Sequelize.Op;
 const { compteFournisseurs } = require('../models');
 
 // Create and Save a new CompteFournisseur
-exports.create = (req, res) => {
+const createCompteFournisseur = (req, res) => {
     // Validate request
     if (!req.body.numCompteFournisseur) {
         res.status(409).send({
@@ -37,7 +37,7 @@ exports.create = (req, res) => {
     }
 
 // Retrieve all CompteFournisseurs from the database.
-exports.findAll = (req, res) => {
+const findAllCompteFournisseur = (req, res) => {
     const numCompteFournisseur = req.query.numCompteFournisseur;
     var condition = numCompteFournisseur ? { numCompteFournisseur: { [Op.like]: `%${numCompteFournisseur}%` } } : null;
     
@@ -54,7 +54,7 @@ exports.findAll = (req, res) => {
     }
 
 // Find a single CompteFournisseur with an id
-exports.findOne = (req, res) => {
+const findOneCompteFournisseur = (req, res) => {
     const id = req.params.id;
     
     compteFournisseurs.findByPk(id)
@@ -69,11 +69,11 @@ exports.findOne = (req, res) => {
         console.log("CompteFournisseur with id=" + id)
     }
 // Update a CompteFournisseur by the id in the request
-exports.update = (req, res) => {
+const updateCompteFournisseur = (req, res) => {
     const id = req.params.id;
     
     compteFournisseurs.update(req.body, {
-        where: { compte_fournisseur_id: id }
+        where: { co_fournisseur_id: id }
         })
         .then(num => {
         if (num == 1) {
@@ -94,11 +94,11 @@ exports.update = (req, res) => {
     }
 
 // Delete a CompteFournisseur with the specified id in the request
-exports.delete = (req, res) => {
+const deleteCompteFournisseur = (req, res) => {
     const id = req.params.compte_fournisseur_id;
     
     compteFournisseurs.destroy({
-        where: { compte_fournisseur_id: id }
+        where: { co_fournisseur_id: id }
         })
         .then(num => {
         if (num == 1) {
@@ -117,3 +117,11 @@ exports.delete = (req, res) => {
         });
         });
     }
+
+module.exports = {
+    createCompteFournisseur,
+    findAllCompteFournisseur,
+    findOneCompteFournisseur,
+    updateCompteFournisseur,
+    deleteCompteFournisseur
+}

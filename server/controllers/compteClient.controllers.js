@@ -4,7 +4,7 @@ const Op = db.Sequelize.Op;
 const { compteClients } = require("../models");
 
 // Create and Save a new CompteClient
-exports.create = (req, res) => {
+const createCompteClient = (req, res) => {
     // If the numCompteClient is already in the database, return an error
     compteClients.findOne({
         where: {
@@ -51,7 +51,22 @@ exports.create = (req, res) => {
 };
 
 // Retrieve all compteClients from the database.
-exports.findAll = (req, res) => {
+  // Swagger 
+  /* 
+    * @swagger
+    * /api/compteClients:
+    *   
+    *  get:
+    *   description: Use to request all compteClients
+    *  responses:
+    *  '200':
+    *  description: A successful response
+    * 
+    */
+    
+const findAllComptesClients = (req, res) => {
+  
+
     compteClients.findAll()
         .then(data => {
         res.send(data);
@@ -65,7 +80,7 @@ exports.findAll = (req, res) => {
 }
 
 // Find a single CompteClient with an id
-exports.findOne = (req, res) => {
+const findOneCompteClient = (req, res) => {
     const id = req.params.id;
 
     compteClients.findByPk(id)
@@ -80,11 +95,11 @@ exports.findOne = (req, res) => {
 }
 
 // Update a CompteClient by the id in the request
-exports.update = (req, res) => {
+const updateCompteClient = (req, res) => {
     const id = req.params.id;
 
     compteClients.update(req.body, {
-        where: { compteClient_id: id }
+        where: { co_client_id: id }
     })
     .then(num => {
         if (num == 1) {
@@ -106,11 +121,11 @@ exports.update = (req, res) => {
 };
 
 // Delete a CompteClient with the specified id in the request
-exports.delete = (req, res) => {
+const deleteCompteClient = (req, res) => {
     const id = req.params.id;
 
     compteClients.destroy({
-        where: { compteClient_id: id }
+        where: { co_client_id: id }
     })
     .then(num => {
         if (num == 1) {
@@ -129,4 +144,12 @@ exports.delete = (req, res) => {
         });
     }
     );
+}
+
+module.exports = {
+    createCompteClient,
+    findAllComptesClients,
+    findOneCompteClient,
+    updateCompteClient,
+    deleteCompteClient
 }

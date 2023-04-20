@@ -1,7 +1,7 @@
 const db = require('../models');
 const { Op } = db.Sequelize;
 
-exports.createCustomView = async (req, res) => {
+const createCustomView = async (req, res) => {
   try {
     const { table, filters, joins, view_name } = req.body; // table: nom de la table, filters: tableau contenant les critères de filtrage, joins: tableau contenant les jointures
 
@@ -96,7 +96,7 @@ exports.createCustomView = async (req, res) => {
 };
 
 // get all view
-exports.getAllView = async (req, res) => {
+const getAllView = async (req, res) => {
   try {
     const view = await db.sequelize.query(`SELECT * FROM pg_views WHERE schemaname = 'public'`, { type: db.sequelize.QueryTypes.SELECT });
     console.log(view);
@@ -127,6 +127,11 @@ exports.getAllView = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+module.exports = {
+  createCustomView,
+  getAllView
 };
 
 
