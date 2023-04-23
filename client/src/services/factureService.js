@@ -1,29 +1,27 @@
 import axios from "axios"
+import { BASIC_HEADERS } from "../reducers/headers";
 
-const API_URL = "/api/factures/"; 
-const API_URL2 = "/api/facture/";
-const API_URL_OBJET = "/api/objet/";
-const API_URL_LIBELLE = "/api/libelle/";
+const API_URL = "/api/facture/"; 
 
 class factureService {
     getFactures() {
-        return axios.get(API_URL);
+        return axios.get(API_URL,{ headers: BASIC_HEADERS });
     }
     getFactureById(id) {
-        return axios.get(API_URL + id);
+        return axios.get(API_URL + id, BASIC_HEADERS);
     }
     // find by description
     findByDescription(description) {
-        return axios.get(API_URL + "?description=" + description);
+        return axios.get(API_URL + "?description=" + description, BASIC_HEADERS);
     }
 
     create(facture) {
-        return axios.post(API_URL, facture);
+        return axios.post(API_URL, facture, BASIC_HEADERS);
 
 
     }
-    update(id, estpaye) {
-        return axios.put(API_URL + id, estpaye);
+    update(id, facture) {
+        return axios.put(API_URL + id, facture,  { headers: BASIC_HEADERS });
     }
     deleteFacture(id) {
         return axios.delete(API_URL + id);

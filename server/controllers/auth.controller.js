@@ -69,7 +69,11 @@ exports.signin = async (req, res) => {
       include: [
         {
           model: Role,
+        }, 
+        {
+          model: User,
         }
+
       ]
    
     });
@@ -90,10 +94,10 @@ exports.signin = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { user_id: user.dataValues, role: userRole.role.dataValues.name},
+      { user_id: user.dataValues, role: userRole.role.dataValues.name, userInfo : userRole },
       process.env.JWT_SECRET_KEY,
       {
-        expiresIn: "1h",
+        expiresIn: "3h",
       }
     );
     console.log(token, "token, login");
@@ -102,8 +106,13 @@ exports.signin = async (req, res) => {
     res.header('Authorization', token).json({
       error: null,
       data: {token :token, user: user.dataValues, role: userRole.role.dataValues.name},
+      info : userRole
     })
-    return res; 
+    // return res et les informations de l'user
+
+
+    return res
+
   } catch (error) {
     console.log(error)
     return res.status(500).send(error.message);

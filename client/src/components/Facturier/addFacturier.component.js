@@ -527,6 +527,9 @@ const AddFacturier = () => {
             });
     };
 
+
+    
+
  
 
     const saveFournisseur = () => {
@@ -734,7 +737,7 @@ const AddFacturier = () => {
                             <i class="fa-solid fa-hashtag"></i>                            </span>
                         <span className="p-float-label">
                             <InputText id="num_facture" type="text" value={factures.num_facture} onChange={(e) => setFactures({ ...factures, num_facture: e.target.value })} />
-                            <label htmlFor="inputgroup">N° de facture</label>
+                            <label htmlFor="inputgroup">N° de facture*</label>
                         </span>
                     </div>
                 </div>
@@ -747,7 +750,7 @@ const AddFacturier = () => {
                         </span>
                         <span className="p-float-label">
                             <InputText id="num_facture_lamy" type="text" value={factures.num_facture_lamy} onChange={(e) => setFactures({ ...factures, num_facture_lamy: e.target.value })} />
-                            <label htmlFor="inputgroup">N° de facture Lamy</label>
+                            <label htmlFor="inputgroup">N° de facture Lamy*</label>
                         </span>
                     </div>
                 </div>
@@ -756,7 +759,7 @@ const AddFacturier = () => {
 
                         <span className="p-float-label">
                             <Calendar id="date_facture" value={factures.facture_date} onChange={(e) => setFactures({ ...factures, facture_date: e.target.value })} icon="pi pi-calendar" dateFormat="dd/mm/yy" showIcon />
-                            <label htmlFor="inputgroup">Date de la facture</label>
+                            <label htmlFor="inputgroup">Date de la facture*</label>
                         </span>
                         <span></span>
 
@@ -768,7 +771,7 @@ const AddFacturier = () => {
 
                         <span className="p-float-label">
                             <InputText id="montant_facture" type="numeric" value={factures.montant_facture} onChange={(e) => setFactures({ ...factures, montant_facture: e.target.value })} />
-                            <label htmlFor="inputgroup">Montant de la facture</label>
+                            <label htmlFor="inputgroup">Montant de la facture*</label>
                         </span>
                         <span className="p-inputgroup-addon">
                             <i class="fa-solid fa-euro-sign"></i>
@@ -783,7 +786,7 @@ const AddFacturier = () => {
                             </span>
                             <span className="p-float-label">
                                 <Dropdown id="libelle" value={factures.libelle} options={libelleList} onChange={(e) => setFactures({ ...factures, libelle: e.value })} placeholder="Choisir parmis les libéllés" />
-                                <label htmlFor="inputgroup">Libelle de la facture</label>
+                                <label htmlFor="inputgroup">Libelle de la facture*</label>
                             </span>
                             <Button onClick={(e) => onClick('displayLibelles', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             <Dialog header="Ajout d'un libéllé" className="libelleDialog" visible={displayLibelles} footer={renderFooter} onHide={() => onHide('displayLibelles')}>
@@ -801,7 +804,7 @@ const AddFacturier = () => {
                                         <span className="p-float-label">
                                         
                                             <InputText id="libelle" type="text" value={libelles.title} onChange={(e) => setLibelles({ ...libelles, title: e.target.value })} />
-                                            <label htmlFor="libelle">Titre du libéllé</label>
+                                            <label htmlFor="libelle">Titre du libéllé*</label>
                                         </span>
                                         {/* Button to see a list of libelle */}
                                         <Dialog header="Liste des libéllés" className="libelleListDialog" visible={displayLibellesList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayLibellesList')} maximizable filter={true} filterPlaceholder="Chercher par objet" filterBy="label">
@@ -826,7 +829,7 @@ const AddFacturier = () => {
                             </span>
                             <span className="p-float-label">
                                 <Dropdown id="decompte" value={decompte.decompte} options={decompteList} onChange={(e) => setDecompte({ ...decompte, decompte: e.value })} placeholder="Choisir parmis les décomptes" />
-                                <label htmlFor="inputgroup">Décompte de la facture</label>
+                                <label htmlFor="inputgroup">Décompte de la facture*</label>
                             </span>
                             <Button onClick={(e) => onClick('displayDecompte', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             
@@ -844,7 +847,7 @@ const AddFacturier = () => {
                                         </span>
                                         <span className="p-float-label">
                                             <InputText id="decompte" type="text" value={decompte.num_decompte} onChange={(e) => setDecompte({ ...decompte, num_decompte: e.target.value })} />
-                                            <label htmlFor="decompte">N° du décompte</label>
+                                            <label htmlFor="decompte">N° du décompte*</label>
                                         </span>
                                         <span className="p-inputgroup-addon">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -856,7 +859,7 @@ const AddFacturier = () => {
                                         </span>
                                         <span className="p-float-label">
                                             <InputText id="decompte" type="text" value={decompte.type} onChange={(e) => setDecompte({ ...decompte, type: e.target.value })} />
-                                            <label htmlFor="decompte">Titre du décompte</label>
+                                            <label htmlFor="decompte">Titre du décompte*</label>
                                         </span>
                                         <span className="p-inputgroup-addon">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -891,7 +894,7 @@ const AddFacturier = () => {
                             </span>
                             <span className="p-float-label">
                                 <Dropdown id="objet" value={factures.objet} options={objetList} onChange={(e) => setFactures({ ...factures, objet: e.value })} placeholder="Choisir parmis les objets" />
-                                <label htmlFor="inputgroup">Objet de la facture</label>
+                                <label htmlFor="inputgroup">Objet de la facture*</label>
                             </span>
                             <Button onClick={(e) => onClick('displayObjets', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             
@@ -908,7 +911,7 @@ const AddFacturier = () => {
                                         </span>
                                         <span className="p-float-label">
                                         <InputText id="objet" type="text" value={objet.title} onChange={(e) => setObjet({ ...objet, title: e.target.value })} />
-                                        <label htmlFor="objet">Objet</label>
+                                        <label htmlFor="objet">Objet*</label>
                                         </span>
                                         {/* Button to see a list of objet */}
                                         
@@ -972,7 +975,7 @@ const AddFacturier = () => {
                                             </span>
                                             <span className="p-float-label">
                                             <InputText id="name" type="text" value={fournisseur.name} onChange={(e) => setFournisseur({ ...fournisseur, name: e.target.value })} />
-                                            <label htmlFor="name">Nom du fournisseur</label>
+                                            <label htmlFor="name">Nom du fournisseur*</label>
                                             </span>
                                         </div>
                                     </div>
@@ -983,7 +986,7 @@ const AddFacturier = () => {
                                             </span>
                                             <span className="p-float-label">
                                             <InputText id="num_fournisseur" type="text" value={fournisseur.num_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, num_fournisseur: e.target.value })} />
-                                            <label htmlFor="num_fournisseur">Numéro du fournisseur</label>
+                                            <label htmlFor="num_fournisseur">Numéro du fournisseur*</label>
                                             </span>
                                         </div>
                                     </div>
@@ -994,7 +997,7 @@ const AddFacturier = () => {
                                             </span>
                                             <span className="p-float-label">
                                             <InputText id="adresse_fournisseur" type="text" value={fournisseur.adresse_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, adresse_fournisseur: e.target.value })} />
-                                            <label htmlFor="adresse_fournisseur">Adresse du fournisseur</label>
+                                            <label htmlFor="adresse_fournisseur">Adresse du fournisseur*</label>
                                             </span>
                                         </div>
                                     </div>
@@ -1006,7 +1009,7 @@ const AddFacturier = () => {
                                                 </span>
                                                 <span className="p-float-label">
                                                     <InputText id="tel_fournisseur" type="text" value={fournisseur.telephone_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, telephone_fournisseur: e.target.value })} />
-                                                    <label htmlFor="tel_fournisseur">téléphone du fournisseur</label>
+                                                    <label htmlFor="tel_fournisseur">téléphone du fournisseur*</label>
                                                 </span>
                                             </div>
                                         </div>
@@ -1017,7 +1020,7 @@ const AddFacturier = () => {
                                                 </span>
                                                 <span className="p-float-label">
                                                 <InputText id="email_fournisseur" type="text" value={fournisseur.email_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, email_fournisseur: e.target.value })} />
-                                                <label htmlFor="email_fournisseur">Email du fournisseur</label>
+                                                <label htmlFor="email_fournisseur">Email du fournisseur*</label>
                                                 </span>
                                             </div>
                                         </div>
@@ -1028,7 +1031,7 @@ const AddFacturier = () => {
                                                 </span>
                                                 <span className="p-float-label">
                                                 <InputText id="num_compte" type="text" value={compteFournisseur.numCompteFournisseur} onChange={(e) => setCompteFournisseur({ ...compteFournisseur, numCompteFournisseur: e.target.value })} />
-                                                <label htmlFor="num_compte">Numéro de compte</label>
+                                                <label htmlFor="num_compte">Numéro de compte*</label>
                                                 </span>
                                             </div>
                                         </div>
@@ -1039,7 +1042,7 @@ const AddFacturier = () => {
                                                 </span>
                                                 <span className="p-float-label">
                                                     <InputText id="banque" type="text" value={compteFournisseur.num_compte_banque} onChange={(e) => setCompteFournisseur({ ...compteFournisseur, num_compte_banque: e.target.value })} />
-                                                    <label htmlFor="banque">N° de compte de banque</label>
+                                                    <label htmlFor="banque">N° de compte de banque*</label>
                                                 </span>
                                             </div>
                                         </div>
@@ -1088,7 +1091,7 @@ const AddFacturier = () => {
                                             </span>
                                             <span className="p-float-label">
                                                 <InputText id="name" type="text" value={client.name} onChange={(e) => setClient({ ...client, name: e.target.value })} />
-                                                <label htmlFor="prenom_client">Nom du client</label>
+                                                <label htmlFor="prenom_client">Nom du client*</label>
                                             </span>
                                         </div>
                                     </div>
@@ -1099,7 +1102,7 @@ const AddFacturier = () => {
                                             </span>
                                             <span className="p-float-label">
                                                 <InputText id="prenom_client" type="text" value={client.firstname} onChange={(e) => setClient({ ...client, firstname: e.target.value })} />
-                                                <label htmlFor="adresse_client">Prénom du client</label>
+                                                <label htmlFor="adresse_client">Prénom du client*</label>
                                             </span>
                                         </div>
                                     </div>
@@ -1110,7 +1113,7 @@ const AddFacturier = () => {
                                             </span>
                                             <span className="p-float-label">
                                                 <InputText id="adresse_client" type="text" value={client.adresse_client} onChange={(e) => setClient({ ...client, adresse_client: e.target.value })} />
-                                                <label htmlFor="tel_client">Adresse du client</label>
+                                                <label htmlFor="tel_client">Adresse du client*</label>
                                             </span>
                                         </div>
                                     </div>
@@ -1122,7 +1125,7 @@ const AddFacturier = () => {
                                                 </span>
                                                 <span className="p-float-label">
                                                     <InputText id="tel_client" type="text" value={client.telephone_client} onChange={(e) => setClient({ ...client, telephone_client: e.target.value })} />
-                                                    <label htmlFor="N° de téléphone du client">Téléphone du client</label>
+                                                    <label htmlFor="N° de téléphone du client">Téléphone du client*</label>
                                                 </span>
                                             </div>
                                         </div>
@@ -1133,7 +1136,7 @@ const AddFacturier = () => {
                                                 </span>
                                                 <span className="p-float-label">
                                                     <InputText id="email_client" type="text" value={client.email_client} onChange={(e) => setClient({ ...client, email_client: e.target.value })} />
-                                                    <label htmlFor="Email du client">Email du client</label>
+                                                    <label htmlFor="Email du client">Email du client*</label>
                                                 </span>
                                             </div>
                                         </div>
@@ -1143,7 +1146,7 @@ const AddFacturier = () => {
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </span>
                                                 <span className="p-float-label">
-                                                    <label htmlFor="num_compte">Numéro de compte du client</label>
+                                                    <label htmlFor="num_compte">Numéro de compte du client*</label>
                                                     <InputText id="num_compte" type="text" value={compteClient.numCompteClient} onChange={(e) => setCompteClient({ ...compteClient, numCompteClient: e.target.value })} />
 
                                                 </span>
@@ -1156,7 +1159,7 @@ const AddFacturier = () => {
                                                 </span>
                                                 <span className="p-float-label">
                                                     <InputText id="banque" type="text" value={compteClient.num_compte_banque} onChange={(e) => setCompteClient({ ...compteClient, num_compte_banque: e.target.value })} />
-                                                    <label htmlFor="banque">N° de compte de banque du client</label>
+                                                    <label htmlFor="banque">N° de compte de banque du client*</label>
                                                 </span>
                                             </div>
                                         </div>
@@ -1179,7 +1182,7 @@ const AddFacturier = () => {
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
                             <span className="p-float-label">
-                                <Dropdown id="extrait" value={extrait.extrait} options={extraitList} onChange={(e) => setExtrait({ ...extrait, extrait: e.value })} placeholder="Choisir un extrait" />
+                                <Dropdown id="extrait" value={extrait.extrait} options={extraitList} onChange={(e) => setExtrait({ ...extrait, extrait: e.value })} placeholder="Choisir un extrait" tooltip="Ce champs n'est pas obligatoire" tooltipOptions={{ position: 'right', mouseTrack: true, mouseTrackTop: 15 }} />
                                 <label htmlFor="inputgroup">Extrait de la facture</label>
                             </span>
                             <Button onClick={(e) => onClick('displayExtrait', 'center', e)} icon="pi pi-plus" className="p-button-success" />
@@ -1287,6 +1290,7 @@ const AddFacturier = () => {
             {/* radio button   */}
           
                 {/* checked button  */}
+                <p>Les champs ayant (*) sont obligatoires</p>
                 <div className="p-field-radiobutton">
                 Êtes-vous sûr de vouloir ajouter cette facture ?  (Toutes les informations doivent être correctes) :
 

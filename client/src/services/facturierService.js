@@ -1,21 +1,15 @@
 import axios from "axios"
-
+import { BASIC_HEADERS } from "../reducers/headers";
 const API_URL = "/api/facturiers/";
 
 
-const BASIC_HEADERS = {
-    'Content-Type': 'application/json',
-    'Authorization': "Bearer " + localStorage.getItem("access_token")
-}
 class facturierService {
     
-    async getAll() {
-        console.log(localStorage.access_token, "token");
-        const response = await axios.get(API_URL, {headers: BASIC_HEADERS});
-        
-        return response.data;
-        
+    async getAll(async = true) {
+        console.log(BASIC_HEADERS, "BASIC_HEADERS");
+        return axios.get(API_URL, { headers: BASIC_HEADERS, async: async });
     }
+
 
     getFacturierById(id) {
         return axios.get(API_URL + id);
@@ -29,8 +23,8 @@ class facturierService {
         return axios.post(API_URL, facturier);
 
     }
-    update(id, estpaye) {
-        return axios.put(API_URL + id, estpaye);
+    update(id, data) {
+        return axios.put(API_URL + id, data, { headers: BASIC_HEADERS });
     }
     deleteFacturier(id) {
         return axios.delete(API_URL + id);

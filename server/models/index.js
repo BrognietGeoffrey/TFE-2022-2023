@@ -66,6 +66,8 @@ db.Logs.belongsTo(db.Libelles, {foreignKey : 'libelle_id'})
 db.Logs.belongsTo(db.Decomptes, {foreignKey : 'decompte_id'})
 db.UserRoles.belongsTo(db.User, {foreignKey : 'userId'})
 db.UserRoles.belongsTo(db.Role, {foreignKey : 'roleId'})
+// user est connecté à client_id
+
 
 db.User.belongsToMany(db.Role, { through: db.UserRoles, foreignKey: 'userId', otherKey: 'roleId' });
 db.Role.belongsToMany(db.User, { through: db.UserRoles, foreignKey: 'roleId', otherKey: 'userId' });

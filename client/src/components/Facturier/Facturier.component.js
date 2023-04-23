@@ -20,12 +20,28 @@ import AddFacturier from './addFacturier.component';
 import FacturierDatatable from './facturierDatatable.component';
 import FacturierDataService from "../../services/facturierService";
 import FournisseurService from '../../services/fournisseurService';
-
+import LoginService from '../../services/userLoginServices';
+import Dexie from 'dexie';
 
 
 
 
 const Facturier = () => {
+
+        const token = localStorage.getItem('access_token');
+        console.log(token);
+        // si les token sont invalides, on redirige vers la page de login
+        const logOut = () => {
+                localStorage.removeItem('access_token');
+                Dexie.delete('MyDatabase');
+                window.location.reload();
+        }
+        if (!token || token === 'token invalide') {
+                // logoout
+                logOut();
+                
+        }
+
 
         return (
   

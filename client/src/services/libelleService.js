@@ -1,19 +1,19 @@
 import axios from 'axios';
 import authHeader from './authHeader';
-
+import { BASIC_HEADERS } from '../reducers/headers';
 const API_URL = '/api/libelle/';
 
 class libelleService {
     getAll() {
-        return axios.get(API_URL);
+        return axios.get(API_URL, { headers: BASIC_HEADERS });
     }
 
     getLibelleById(id) {
-        return axios.get(API_URL + id);
+        return axios.get(API_URL + id, { headers: BASIC_HEADERS });
     }
 
     create(libelle) {
-        return axios.post(API_URL, libelle)
+        return axios.post(API_URL, libelle, { headers: BASIC_HEADERS });
     }
 
 }

@@ -1,54 +1,67 @@
-import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
-import { connect } from "react-redux";
+import React from "react";
+import jwt_decode from "jwt-decode";
+import './profile.css';
+const Profile = () => {
+  const token = localStorage.getItem("access_token");
+  const decoded = jwt_decode(token);
+  console.log(decoded, "decoded");
 
-class Profile extends Component {
+// Date actuelle exprimée en secondes
+const nowInSeconds = Math.floor(Date.now() / 1000);
 
-  render() {
-    const { user: currentUser } = this.props;
+// IAT et EXP reçus
+const iatInSeconds = decoded.iat;
+const expInSeconds = decoded.exp;
 
-    // if (!currentUser) {
-    //   return <Redirect to="/login" />;
-    // }
+// Temps restant en secondes
+const remainingTimeInSeconds = expInSeconds - nowInSeconds;
 
-    return (
-      
-      <div className="container">
+// Conversion du temps restant en heures et minutes
+const remainingHours = Math.floor(remainingTimeInSeconds / 3600);
+const remainingMinutes = Math.floor((remainingTimeInSeconds % 3600) / 60);
+
+// Affichage du temps restant en heures et minutes
+console.log(`Il vous reste ${remainingHours} heures et ${remainingMinutes} minutes avant l'expiration.`);
+
+
+
+
+  return (
+    <div class="container">
+      <div class="background">
         
-        {/* Boostrap Card with the user profile */}
-        <div className="card card-container">
-          <img src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="profile-img" className="profile-img-card" />
-          <p id="profile-name" className="profile-name-card">Profil de {currentUser.username}</p>
-          <p id="profile-name" className="profile-name-card">Adresse email : {currentUser.email}</p>
-          <p id="profile-name" className="profile-name-card">Votre rôle : {currentUser.roles}</p>
-          <p id="profile-name" className="profile-name-card">Votre ID : {currentUser.id}</p>
-        
-          <p id="profile-name" className="profile-name-card">Votre token : {currentUser.accessToken}</p>
-        
-          {console.log(currentUser)}
-          {
-            
-            currentUser.data.role.name !== "user" ||  currentUser.data.role.name !== "moderator" ? (
-              
-            <a href="/register" className="btn btn-primary btn-block">Ajouter un utilisateur</a>
-            ) : (
-              <div></div>
-            )
-          }
-          
-          
-        </div>
-      
       </div>
-    );
-  }
-}
+   
+{
+  decoded.role === "admin" || decoded.role === "moderator" ? (
+    <div className="profile">
+    
+      
+      <div className="profile-picture">
+      <i className="pi pi-user"  />
+      </div>
+      <div className="profile-info">
+      <h1>{decoded.userInfo.user.username}</h1>
+      <p>Rôle: {decoded.role}</p>
+      <p>Il vous reste {remainingHours} heures et {remainingMinutes} minutes avant l'expiration.</p>
 
-function mapStateToProps(state) {
-  const { user } = state.auth;
-  return {
-    user,
-  };
-}
+      </div>
+      </div> 
+  ) : (
+    <div className="profile">
+      <div className="profile-picture">
+      <i className="pi pi-user"  />
+      </div>
+      <div className="profile-info">
+      <h1>{decoded.userInfo.user.username}</h1>
+      
 
-export default connect(mapStateToProps)(Profile);
+      </div>
+      </div> 
+  )
+}
+    </div>
+  );
+};
+
+export default Profile;

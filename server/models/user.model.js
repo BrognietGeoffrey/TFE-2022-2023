@@ -9,7 +9,10 @@ module.exports
         },
         password: {
             type: Sequelize.STRING
-        }
+        }, 
+
+
+
     });
     return User;
 }

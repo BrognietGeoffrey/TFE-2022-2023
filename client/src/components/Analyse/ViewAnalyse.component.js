@@ -77,10 +77,11 @@ export const CustomViewForm = () => {
     const retrieveAllViews = async () => {
         const response = await viewServices.getAllView();
         // ajouter un id à chaque vue
-        setAllViews(response.data.resultView);
+        console.log(response);
+        setAllViews(response.resultView);
         console.log(response.data);
-        for (let i = 0; i < response.data.resultView.length; i++) {
-            response.data.resultView[i].id = i;
+        for (let i = 0; i < response.resultView.length; i++) {
+            response.resultView[i].id = i;
         }
     };
 

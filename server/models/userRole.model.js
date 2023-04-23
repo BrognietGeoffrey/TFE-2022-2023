@@ -5,7 +5,8 @@ module.exports = (sequelize, Sequelize) => {
         },
         roleId: {
             type: Sequelize.INTEGER
-        }
+        }, 
+
     });
     return UserRoles;
 }

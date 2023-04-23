@@ -10,8 +10,8 @@ const {
     findAll,
     create
 } = require('../controllers/logs.controller');
-router.get('/logs', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findAll);
-router.post('/logs', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], create);
+router.get('/logs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAll);
+router.post('/logs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), create);
 
 // Routes pour avoir tous les users
 const {
@@ -27,7 +27,7 @@ const {
     createCustomView, 
     getAllView, 
 } = require('../controllers/view.controllers');
-router.post('/createView', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createCustomView);
+router.post('/createView', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createCustomView);
 router.get('/getViews', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), getAllView);
 
 // Routes pour le facturiers
@@ -39,10 +39,10 @@ const {
     deleteFacturier 
 } = require('../controllers/facturier.controllers');
 router.get('/facturiers', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), getFacturiers);
-router.get('/facturiers/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findOne);
-router.post('/facturiers', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createFacturier);
-router.put('/facturiers/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], update);
-router.delete('/facturiers/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], deleteFacturier);
+router.get('/facturiers/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOne);
+router.post('/facturiers', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createFacturier);
+router.put('/facturiers/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), update);
+router.delete('/facturiers/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteFacturier);
 
 // Routes pour les clients
 const {
@@ -52,11 +52,11 @@ const {
     updateClient,
     deleteClient
 } = require('../controllers/client.controllers');
-router.get('/clients', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findAllClients);
-router.get('/clients/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findOneClient);
-router.post('/clients', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createClient);
-router.put('/clients/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], updateClient);
-router.delete('/clients/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], deleteClient);
+router.get('/clients', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllClients);
+router.get('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneClient);
+router.post('/clients', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createClient);
+router.put('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateClient);
+router.delete('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteClient);
 
 // Routes pour les comptes clients
 const {
@@ -66,11 +66,11 @@ const {
     updateCompteClient,
     deleteCompteClient
 } = require('../controllers/compteClient.controllers');
-router.get('/comptesClients', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findAllComptesClients);
-router.get('/comptesClients/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findOneCompteClient);
-router.post('/comptesClients', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createCompteClient);
-router.put('/comptesClients/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], updateCompteClient);
-router.delete('/comptesClients/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], deleteCompteClient);
+router.get('/compteClients', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllComptesClients);
+router.get('/compteClients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneCompteClient);
+router.post('/compteClients', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createCompteClient);
+router.put('/compteClients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateCompteClient);
+router.delete('/compteClients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteCompteClient);
 
 // Routes pour les comptes fournisseurs 
 const {
@@ -80,11 +80,11 @@ const {
     updateCompteFournisseur,
     deleteCompteFournisseur
 } = require('../controllers/compteFournisseurs.controllers');
-router.get('/comptesFournisseurs', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findAllCompteFournisseur);
-router.get('/comptesFournisseurs/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findOneCompteFournisseur);
-router.post('/comptesFournisseurs', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createCompteFournisseur);
-router.put('/comptesFournisseurs/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], updateCompteFournisseur);
-router.delete('/comptesFournisseurs/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], deleteCompteFournisseur);
+router.get('/compteFournisseurs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllCompteFournisseur);
+router.get('/compteFournisseurs/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneCompteFournisseur);
+router.post('/compteFournisseurs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createCompteFournisseur);
+router.put('/compteFournisseurs/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateCompteFournisseur);
+router.delete('/compteFournisseurs/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteCompteFournisseur);
 
 // Routes pour les fournisseurs
 const {
@@ -94,11 +94,11 @@ const {
     updateFournisseur,
     deleteFournisseur
 } = require('../controllers/infosFournisseur.controller');
-router.get('/fournisseurs', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findAllFournisseur);
-router.get('/fournisseurs/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findOneFournisseur);
-router.post('/fournisseurs', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createFournisseur);
-router.put('/fournisseurs/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], updateFournisseur);
-router.delete('/fournisseurs/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], deleteFournisseur);
+router.get('/fournisseurs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllFournisseur);
+router.get('/fournisseurs/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneFournisseur);
+router.post('/fournisseurs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createFournisseur);
+router.put('/fournisseurs/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateFournisseur);
+router.delete('/fournisseurs/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteFournisseur);
 
 // Routes pour les TVA
 const {
@@ -108,11 +108,11 @@ const {
     updateTva,
     deleteTva
 } = require('../controllers/tva.controller');
-router.get('/tva', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findAllTva);
-router.get('/tva/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findOneTva);
-router.post('/tva', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole],  createTva);
-router.put('/tva/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], updateTva);
-router.delete('/tva/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], deleteTva);
+router.get('/tva', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllTva);
+router.get('/tva/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneTva);
+router.post('/tva', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']),  createTva);
+router.put('/tva/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateTva);
+router.delete('/tva/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteTva);
 
 // Routes pour les décomptes
 const {
@@ -122,11 +122,11 @@ const {
     updateDecompte,
     deleteDecompte
 } = require('../controllers/decompte.controllers');
-router.get('/decompte', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findAllDecompte);
-router.get('/decompte/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findOneDecompte);
-router.post('/decompte', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createDecompte);
-router.put('/decompte/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], updateDecompte);
-router.delete('/decompte/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], deleteDecompte);
+router.get('/decomptes', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllDecompte);
+router.get('/decomptes/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneDecompte);
+router.post('/decomptes', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createDecompte);
+router.put('/decomptes/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateDecompte);
+router.delete('/decomptes/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteDecompte);
 
 
 // Routes pour les factures
@@ -138,12 +138,12 @@ const {
     deleteFacture, 
     getLastIdFacture
 } = require('../controllers/facture.controller');
-router.get('/facture', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findAllFacture);
-router.get('/facture/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findOneFacture);
-router.post('/facture', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createFacture);
-router.put('/facture/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], updateFacture);
-router.delete('/facture/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], deleteFacture);
-router.get('/factures/lastId', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], getLastIdFacture);
+router.get('/facture', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllFacture);
+router.get('/facture/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneFacture);
+router.post('/facture', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createFacture);
+router.put('/facture/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateFacture);
+router.delete('/facture/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteFacture);
+router.get('/factures/lastId', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), getLastIdFacture);
 
 // Routes pour les libelles
 const {
@@ -151,9 +151,9 @@ const {
     createLibelle,
     findLibelleById
 } = require('../controllers/facturedetails.controller');
-router.get('/libelles', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findLibelle);
-router.get('/libelles/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findLibelleById);
-router.post('/libelles', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createLibelle);
+router.get('/libelle', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findLibelle);
+router.get('/libelle/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findLibelleById);
+router.post('/libelle', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createLibelle);
 
 // Routes pour les objets 
 const {
@@ -163,9 +163,9 @@ const {
 
     
 } = require('../controllers/facturedetails.controller');
-router.get('/objets', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findObjet);
-router.get('/objets/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findObjetById);
-router.post('/objets', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createObjet);
+router.get('/objet', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findObjet);
+router.get('/objet/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findObjetById);
+router.post('/objet', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createObjet);
 
 // Routes pour les extraits
 const {
@@ -175,11 +175,11 @@ const {
     updateExtrait,
     deleteExtrait
 } = require('../controllers/extrait.controllers');
-router.get('/extrait', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findAllExtrait);
-router.get('/extrait/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], findOneExtrait);
-router.post('/extrait', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], createExtrait);
-router.put('/extrait/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], updateExtrait);
-router.delete('/extrait/:id', [authJwt.tokenVerification, authJwt.verifyIsAdminOrModeratorRole], deleteExtrait);
+router.get('/extraits', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllExtrait);
+router.get('/extraits/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneExtrait);
+router.post('/extraits', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createExtrait);
+router.put('/extraits/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateExtrait);
+router.delete('/extraits/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteExtrait);
 
 
 

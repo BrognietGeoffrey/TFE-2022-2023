@@ -1,20 +1,19 @@
 import axios from 'axios';
-import authHeader from './authHeader';
-
+import { BASIC_HEADERS } from '../reducers/headers';
 const API_URL = '/api/objet/';
 
 class objetService {
     getAll() {
-        return axios.get(API_URL);
+        return axios.get(API_URL, { headers: BASIC_HEADERS });
     }
 
     create(data) {
-        return axios.post(API_URL, data, { headers: authHeader() });
+        return axios.post(API_URL, data, { headers: BASIC_HEADERS });
     }
     
 
     getObjetById(id) {
-        return axios.get(API_URL + id);
+        return axios.get(API_URL + id, { headers: BASIC_HEADERS });
     }
 
 }

@@ -1,27 +1,26 @@
 import axios from 'axios';
-// retrieve all name of compte_client_id from the compte_clients table
+import { BASIC_HEADERS } from '../reducers/headers';
 
-// const API_URL = 'http://localhost:8082/api/clients/';
-// dynamic url
 const API_URL = '/api/clients/';
+
 
 
 class clientService {
     getAll() {
-        return axios.get(API_URL);
+        return axios.get(API_URL, { headers: BASIC_HEADERS });
     }
 
     getClientById(id) {
-        return axios.get(API_URL + id);
+        return axios.get(API_URL + id, { headers: BASIC_HEADERS });
     }
 
     create(client) {
-        return axios.post(API_URL, client);
+        return axios.post(API_URL, client, { headers: BASIC_HEADERS });
     }
 
     getLastClientId() {
         async function getLastClientId() {
-            const data = await axios.get(API_URL);
+            const data = await axios.get(API_URL, { headers: BASIC_HEADERS });
             const lastClientId = data.data[data.data.length - 1].client_id;
             console.log(lastClientId);
             return lastClientId;

@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "dexie": "^3.2.3",
     "dotenv": "^16.0.3",
+    "jwt-decode": "^3.1.2",
     "swagger": "^0.7.5",
     "swagger-ui-express": "^4.6.2"
   }

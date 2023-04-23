@@ -18,15 +18,14 @@ export
 
     useEffect(() => {
       retrieveFacturier();
-      // retrieveView();
-      // getDataAnalyse();
+      retrieveView();
     }, []);
 
     const retrieveFacturier = async () => {
       try {
         const response = await FacturierDataService.getAll();
-        setFacturier(response.data);
-        console.log(response.data);
+        setFacturier(response);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -35,49 +34,17 @@ export
     const retrieveView = async () => {
       try {
         const response = await viewServices.getAllView();
-        setView(response.data);
+        setView(response);
       } catch (error) {
         console.log(error);
       }
     };
 
-    const getDataAnalyse = async () => {
-      // trouver toutes les factures payés et non payées dans facturier
-      const billPayed = facturier.filter((bill) => bill.facture.estpaye === true);
-      console.log(facturier);
-      const billNotPayed = facturier.filter((bill) => bill.facture.estpaye === false);
-      console.log(billPayed, billNotPayed);
-      // afficher le nombre de factures payées et non payées
-      setBillPayed(billPayed.length);
-      setBillNotPayed(billNotPayed.length);
-
-      // trouver toutes les clients et indiqué le nombre de factures payées et non payées pour chaque client
-      const clientList = [];
-      for (let i = 0; i < facturier.length; i++) {
-        if (!clientList.includes(facturier[i].compte_client.client)) {
-          clientList.push(facturier[i].compte_client.client);
-        }
-      }
-      // Maintenant dans une variable clientListWithFacture, je veux pour chaque client, le nom, le prénom, les factures payés et non payés (pas le nombre de factures mais les factures elles-mêmes)
-      const clientListWithFacture = [];
-      for (let i = 0; i < clientList.length; i++) {
-        const client = clientList[i];
-        const factures = facturier.filter((bill) => bill.compte_client.client === client);
-        const facturesPayed = factures.filter((bill) => bill.facture.estpaye === true);
-        const facturesNotPayed = factures.filter((bill) => bill.facture.estpaye === false);
-        clientListWithFacture.push({
-          client,
-          facturesPayed,
-          facturesNotPayed,
-        });
-      }
-      setClientListWithFacture(clientListWithFacture);
-    };
 
 
 
     return (
-      <div class="container">
+      <div class="container" >
         <div class="parent">
           <div class="div1">  <ViewAnalyse /></div>
           <div class="div2">
@@ -125,6 +92,7 @@ export
                         <h3>Factures payées</h3>
                         {/* Afficher le nombre de factures payées */}
                         {client.facturesPayed ? client.facturesPayed.map((bill) => (
+                          console.log(bill),
                           <p>{bill.facturesPayed.num_facture}</p>
                         )) : console.log("pas de factures payées"
 

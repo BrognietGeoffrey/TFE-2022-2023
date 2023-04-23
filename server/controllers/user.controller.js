@@ -1,4 +1,4 @@
-const {UserRoles, Role, User} = require('../models');
+const {UserRoles, Role, User, Clients} = require('../models');
 
 
 const getAllUsers = async (req, res) => {
@@ -10,7 +10,7 @@ const getAllUsers = async (req, res) => {
                 },
                 {
                     model: Role,
-                }
+                }, 
             ]
         });
         res.send(users);
