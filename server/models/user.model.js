@@ -10,7 +10,10 @@ module.exports
         password: {
             type: Sequelize.STRING
         }, 
-
+        client_id: {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        }
 
 
     });

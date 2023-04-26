@@ -38,14 +38,10 @@ module.exports = (sequelize, Sequelize) => {
         description : {
             type: Sequelize.STRING
         },
+       
 
         
     });
-    // clients.associate = function(models) {
-    //     clients.belongsTo(models.compteClient, {
-    //         foreignKey: 'compte_client_id',
-    //         as: 'compteClient'
-    //     });
-    // };
+
     return clients;
 }

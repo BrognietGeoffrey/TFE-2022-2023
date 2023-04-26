@@ -16,11 +16,13 @@ router.post('/logs', [authJwt.tokenVerification], checkRolePermission(['admin', 
 // Routes pour avoir tous les users
 const {
     getAllUsers,
-    getUserByUsername
+    getUserByUsername, 
+    getUserAndClient
 }
 = require('../controllers/user.controller');
 router.get('/users', [authJwt.tokenVerification], getAllUsers);
 router.get('/users/:username', [authJwt.tokenVerification], getUserByUsername);
+router.get('/userClient', [authJwt.tokenVerification], getUserAndClient);
 
 // Routes pour les views
 const {
@@ -53,7 +55,7 @@ const {
     deleteClient
 } = require('../controllers/client.controllers');
 router.get('/clients', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllClients);
-router.get('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneClient);
+router.get('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator', 'user']), findOneClient);
 router.post('/clients', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createClient);
 router.put('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateClient);
 router.delete('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteClient);
@@ -136,7 +138,8 @@ const {
     createFacture,
     updateFacture,
     deleteFacture, 
-    getLastIdFacture
+    getLastIdFacture, 
+    getFactureById
 } = require('../controllers/facture.controller');
 router.get('/facture', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllFacture);
 router.get('/facture/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneFacture);
@@ -144,6 +147,7 @@ router.post('/facture', [authJwt.tokenVerification], checkRolePermission(['admin
 router.put('/facture/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateFacture);
 router.delete('/facture/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteFacture);
 router.get('/factures/lastId', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), getLastIdFacture);
+router.get('/factures/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator', 'user']), getFactureById);
 
 // Routes pour les libelles
 const {
@@ -180,6 +184,17 @@ router.get('/extraits/:id', [authJwt.tokenVerification], checkRolePermission(['a
 router.post('/extraits', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createExtrait);
 router.put('/extraits/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateExtrait);
 router.delete('/extraits/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteExtrait);
+
+// Routes pour les comments 
+const {
+
+    createComment,
+    getAllComments
+
+} = require('../controllers/comments.controller');
+;
+router.post('/comments', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createComment);
+router.get('/comments', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), getAllComments);
 
 
 

@@ -43,16 +43,19 @@ db.User = require('../models/user.model')(sequelize, Sequelize);
 db.Role = require('../models/role.model')(sequelize, Sequelize);
 db.Logs = require('../models/logs.model')(sequelize, Sequelize);
 db.UserRoles = require('../models/userRole.model')(sequelize, Sequelize);
+db.Comments = require('../models/comments.model')(sequelize, Sequelize);
 // Facture_id is the foreign key in the facturier table
 db.Facturiers.belongsTo(db.Factures, { foreignKey: 'facture_id' });
 
 // compte_client_id is the foreign key in the facturier table
 db.Facturiers.belongsTo(db.compteClients, { foreignKey: 'co_client_id' });
-db.Facturiers.belongsTo(db.compteFournisseurs, { foreignKey: 'co_client_id' });
+db.Facturiers.belongsTo(db.compteFournisseurs, { foreignKey: 'co_fournisseur_id' });
 // Factures foreign key TVA
 db.Factures.belongsTo(db.Tva, {foreignKey : 'tva_id'})
-db.compteClients.belongsTo(db.Clients, {foreignKey : 'client_id'})
-db.compteFournisseurs.belongsTo(db.Fournisseurs, {foreignKey : 'fournisseur_id'})
+db.compteClients.belongsTo(db.Clients, {foreignKey : 'client_id', onDelete: 'cascade'})
+db.Clients.hasMany(db.compteClients, {foreignKey : 'client_id', onDelete: 'cascade'})
+db.compteFournisseurs.belongsTo(db.Fournisseurs, {foreignKey : 'fournisseur_id', onDelete: 'cascade'}) 
+db.Fournisseurs.hasMany(db.compteFournisseurs, {foreignKey : 'fournisseur_id', onDelete: 'cascade'})
 db.Facturiers.belongsTo(db.Decomptes, {foreignKey : 'decompte_id'})
 db.Factures.belongsTo(db.Objets, {foreignKey : 'objet_id'})
 db.Factures.belongsTo(db.Libelles, {foreignKey : 'libelle_id'})
@@ -64,9 +67,18 @@ db.Logs.belongsTo(db.Fournisseurs, {foreignKey : 'fournisseur_id'})
 db.Logs.belongsTo(db.Objets, {foreignKey : 'objet_id'})
 db.Logs.belongsTo(db.Libelles, {foreignKey : 'libelle_id'})
 db.Logs.belongsTo(db.Decomptes, {foreignKey : 'decompte_id'})
+db.Logs.belongsTo(db.Factures, {foreignKey : 'facture_id'})
+db.Logs.belongsTo(db.Extraits, {foreignKey : 'extrait_id'})
+db.Logs.belongsTo(db.Tva, {foreignKey : 'tva_id'})
 db.UserRoles.belongsTo(db.User, {foreignKey : 'userId'})
 db.UserRoles.belongsTo(db.Role, {foreignKey : 'roleId'})
+db.Comments.belongsTo(db.User, {foreignKey : 'userId'})
+
+
 // user est connecté à client_id
+db.User.belongsTo(db.Clients, {foreignKey : 'client_id'})
+
+
 
 
 db.User.belongsToMany(db.Role, { through: db.UserRoles, foreignKey: 'userId', otherKey: 'roleId' });

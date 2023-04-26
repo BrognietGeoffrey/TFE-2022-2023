@@ -1,3 +1,5 @@
+const { Factures } = require(".");
+
 // Table de base données qui reprends les données que rajoute l'utilisateur
 module.exports = (sequelize, Sequelize) => {
     const Logs = sequelize.define("logs", {
@@ -12,8 +14,14 @@ module.exports = (sequelize, Sequelize) => {
         },
         facturier_id : {
             type: Sequelize.INTEGER,
-            allowNull: true
+            allowNull: true,
+           
         },
+        facture_id : {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+        },
+
         fournisseur_id : {
             type: Sequelize.INTEGER,
             allowNull: true
@@ -34,10 +42,18 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: true
         },
+        extrait_id : {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
         description : {
             type: Sequelize.STRING,
             allowNull: false
-        }
+        }, 
+        tva_id : {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
 
     });
     return Logs;
