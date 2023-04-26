@@ -194,7 +194,11 @@ const FacturierDatatable = () => {
 
     }
     const numfactureLamyBodyTemplate = (rowData) => {
-        return "23/" + rowData.facture.num_facture_lamy;
+        console.log(rowData.facture.num_facture_lamy)
+        if (rowData.facture.num_facture_lamy === null) {
+            return 'Pas de numéro';
+        }
+        return rowData.facture.num_facture_lamy;
 
     }
     const numdecompteBodyTemplate = (rowData) => {
@@ -248,7 +252,10 @@ const FacturierDatatable = () => {
             return <ProgressBar mode="indeterminate" style={{ height: '6px' }} />
         }
         else {
-        if (rowData.facture.estpaye === true) {
+        if (rowData.facture.estpaye === null) {
+            return <p>Il n'y pas de statut pour cette facture</p>
+        }
+        else if (rowData.facture.estpaye === true) {
             return <Button label="Payée" className="p-button-success" icon="pi pi-check-circle" />;
         }
         else {
@@ -275,7 +282,7 @@ const FacturierDatatable = () => {
             return 'Pas d"extrait';
         }
         else {
-            return "N°" + rowData.extrait.num_extrait 
+            return rowData.extrait.num_extrait 
         }
     }
       
@@ -307,7 +314,7 @@ const FacturierDatatable = () => {
                     emptyMessage="Aucunes données trouvées." scrollable 
                     currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}>
                     
-                    <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ minWidth: '14rem' }}/>
+                    <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ minWidth: '14rem', backgroundColor: '#f8f9fa' }}  />
                     <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom" style={{ minWidth: '14rem' }} />
                          
                     <Column field='compte_fournisseur.fournisseur.num_fournisseur' header="N° de fournisseur" sortable  filter filterPlaceholder='Rechercher par N°' style={{ minWidth: '14rem' }}></Column>
@@ -318,7 +325,12 @@ const FacturierDatatable = () => {
                     <Column field="decompte.num_decompte" header="N° de décompte " sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numdecompteBodyTemplate}/>
                     <Column field="facture.montant" header="Montant de la facture" sortable dataType="numeric" style={{ minWidth: '8rem' }} body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
                     <Column header="Montant avec TVA"  sortable dataType="numeric" style={{ minWidth: '8rem' }} body={tvaBalanceBodyTemplate} filter filterElement={balanceFilterTemplate} sortField="facture.montant" />
-                    <Dialog header="Ajouter un extrait" visible={displayExtrait} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtrait')} className="extraitDialog">
+                    
+                    <Column field="facture.estpaye" header="Status" sortable filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '10rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate}/>
+                    <Column field="extrait.num_extrait" header="N° extrait" sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numextraitBodyTemplate}  />
+                    <Column field="extrait.date_extrait" header="Date extrait" sortable filterField="date" dataType="date" style={{ minWidth: '8rem' }} body={dateBodyExtraitTemplate} filter filterElement={dateFilterTemplate} /> 
+                </DataTable> 
+                <Dialog header="Ajouter un extrait" visible={displayExtrait} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtrait')} className="extraitDialog">
                                 <Button onClick={(e) => onClick('displayExtraitList', 'center', e)}  className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
                                     Liste des extraits
                                 </Button>
@@ -366,10 +378,6 @@ const FacturierDatatable = () => {
                                     </div>
                                 </div>                             
                             </Dialog>
-                    <Column field="facture.estpaye" header="Status" sortable filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '10rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate}/>
-                    <Column  header="N° extrait" sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numextraitBodyTemplate}/>
-                    <Column field="extrait.date_extrait" header="Date extrait" sortable filterField="date" dataType="date" style={{ minWidth: '8rem' }} body={dateBodyExtraitTemplate} filter filterElement={dateFilterTemplate} /> 
-                </DataTable> 
                 <Dialog
                     header={`Facture n° ${extrait.facture.num_facture}`}
                     visible={displayExtrait}
