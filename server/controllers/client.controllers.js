@@ -28,13 +28,15 @@ const createClient = (req, res) => {
             adresse_client: req.body.adresse_client,
             telephone_client: req.body.telephone_client,
             email_client: req.body.email_client,
-            description : req.body.description
+            description : req.body.description, 
         };
 
         // Save client in the database
         Clients.create(client)
             .then(data => {
             res.send(data);
+          
+
             })
             .catch(err => {
             res.status(409).send({

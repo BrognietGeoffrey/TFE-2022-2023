@@ -1,6 +1,6 @@
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const { Facturiers, Clients, Fournisseurs, Decomptes, Objets, Libelles, Extraits, Logs, User } = require("../models");
+const { Facturiers, Clients, Fournisseurs, Decomptes, Objets, Libelles, Extraits, Logs, User, Factures, Tva } = require("../models");
 
 // Create and Save a new Log
 // Voici les données qui se retrouvent dans la table logs (user_id, facturier_id, fournisseur_id, client_id, libelle_id, objet_id, decompte_id)
@@ -12,7 +12,10 @@ const create = async (req, res) => {
         client_id: req.body.client_id || null,
         libelle_id: req.body.libelle_id || null,
         objet_id: req.body.objet_id || null,
-        decompte_id: req.body.decompte_id || null
+        decompte_id: req.body.decompte_id || null, 
+        facture_id : req.body.facture_id || null,
+        extrait_id : req.body.extrait_id || null,
+        tva_id : req.body.tva_id || null,
         }
     })
     .then(data => {
@@ -31,7 +34,10 @@ const create = async (req, res) => {
             libelle_id : req.body.libelle_id,
             objet_id : req.body.objet_id,
             decompte_id : req.body.decompte_id, 
-            description : req.body.description
+            description : req.body.description, 
+            facture_id : req.body.facture_id,
+            extrait_id : req.body.extrait_id,
+            tva_id : req.body.tva_id,
         };
 
         // Save log in the database
@@ -66,7 +72,7 @@ const findAll = (req, res) => {
     const user_id = req.query.user_id;
     var condition = user_id ? { user_id: { [Op.like]: `%${user_id}%` } } : null;
     // trouver tous les logs
-    Logs.findAll({ where: condition, include: [Facturiers, Fournisseurs, Clients, Libelles, Objets, Decomptes, User] })
+    Logs.findAll({ where: condition, include: [Facturiers, Factures, Fournisseurs, Clients, Libelles, Objets, Decomptes, User, Extraits, Tva] })
     .then(data => {
         res.send(data);
     }

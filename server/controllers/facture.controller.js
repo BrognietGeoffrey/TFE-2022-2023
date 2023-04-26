@@ -1,7 +1,7 @@
 // Middleware pour les factures
 
 const db = require("../models");
-const {Factures, Tva, Objets, Libelles } = require("../models");
+const {Factures, Tva, Objets, Libelles, Facturiers, compteClients } = require("../models");
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Facture
@@ -153,13 +153,64 @@ const getLastIdFacture = (req, res) => {
 
 }
 
+const getFactureById = (req, res) => {
+    // find the co_client_id from the table compte_client
+    const id = req.params.id;
+    const compteClientData = compteClients.findOne({ where: { client_id: id } })
+    .then(compteClientData => {
+        // find the facture_id from the table facture
+        const facturierData = Facturiers.findAll({ 
+            where: { co_client_id: compteClientData.co_client_id }, 
+            include: [
+                {
+                    model: Factures,
+                    include: [
+                        {
+                            model: Tva,
+                        },
+                        {
+                            model: Objets,
+                        },
+                        {
+                            model: Libelles,
+                        }
+                    ]
+                }
+            ]
+        })
+        .then(facturierData => {
+            res.send(facturierData);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving facturier."
+            });
+        });
+    })
+    .catch(err => {
+        res.status(500).send({
+            message:
+                err.message || "Some error occurred while retrieving compte client."
+        });
+    });
+}
+
+                
+        
+    
+
+
+
+
 module.exports = {
     createFacture,
     findAllFacture,
     findOneFacture,
     updateFacture,
     deleteFacture,
-    getLastIdFacture
+    getLastIdFacture, 
+    getFactureById
 }
 
 

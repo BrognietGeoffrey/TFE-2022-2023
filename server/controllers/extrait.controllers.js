@@ -13,7 +13,7 @@ const createExtrait = (req, res) => {
 
     .then(data => {
         if (data) {
-        res.status(200).send({
+        res.status(409).send({
             message: "This extrait already exists"
         });
         return;
@@ -34,7 +34,7 @@ const createExtrait = (req, res) => {
             res.send(data);
             })
             .catch(err => {
-            res.status(200).send({
+            res.status(409).send({
                 message:
                 err.message || "Some error occurred while creating the extrait."
             });
@@ -42,7 +42,7 @@ const createExtrait = (req, res) => {
         }
     })
     .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
             err.message || "Some error occurred while creating the extrait."
         });

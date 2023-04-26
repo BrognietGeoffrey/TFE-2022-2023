@@ -16,7 +16,8 @@ exports.signup = async (req, res) => {
   User.create({
     username: req.body.username,
     email: req.body.email,
-    password: hashedPassword.toString()
+    password: hashedPassword.toString(), 
+    client_id: req.body.client_id
   })
   
     .then(user => {
@@ -34,7 +35,7 @@ exports.signup = async (req, res) => {
           
         }).then(roles => {
           user.setRoles(roles).then(() => {
-            res.send({ message: "User registered successfully!" });
+            res.status(200).send({ message: "User registered successfully!", user: user });
           });
         });
       
@@ -43,7 +44,7 @@ exports.signup = async (req, res) => {
       } else {
         // user role = 1
         user.setRoles([1]).then(() => {
-          res.send({ message: "User registered successfully!" });
+          res.status(200).send({ message: "User registered successfully!", user: user });
         });
       }
     })
@@ -101,14 +102,15 @@ exports.signin = async (req, res) => {
       }
     );
     console.log(token, "token, login");
-    
+    console.log(userRole.user, "userRole, login");
 
     res.header('Authorization', token).json({
       error: null,
-      data: {token :token, user: user.dataValues, role: userRole.role.dataValues.name},
-      info : userRole
-    })
+      data: {token :token, role: userRole.role.dataValues.name , user: userRole.user.dataValues},
+      message: 'User logged in successfully'    })
     // return res et les informations de l'user
+    // add to the session storage the user info
+
 
 
     return res

@@ -2,9 +2,10 @@ const db = require('../models');
 const { Op } = db.Sequelize;
 
 const createCustomView = async (req, res) => {
+  console.log("createCustomView")
   try {
     const { table, filters, joins, view_name } = req.body; // table: nom de la table, filters: tableau contenant les critères de filtrage, joins: tableau contenant les jointures
-
+    console.log(req.body);
     // Valider les données d'entrée
     if (!table || !view_name || !filters || !joins) {
       throw new Error("Invalid input data");
@@ -41,6 +42,7 @@ const createCustomView = async (req, res) => {
         }
       });
     }
+    console.log(whereClause);
 
     // Générer la clause JOIN dynamiquement
     let joinClause = "";
@@ -58,6 +60,7 @@ const createCustomView = async (req, res) => {
         }
       });
     }
+    console.log(joinClause);
 
     // Générer la requête SQL pour créer la vue
     const sqlCreateQuery = `
@@ -66,6 +69,7 @@ const createCustomView = async (req, res) => {
       ${whereClause}
       ORDER BY ${table} DESC;
     `;
+    console.log(sqlCreateQuery);
 
     // Exécuter la requête SQL pour créer la vue
     await db.sequelize.query(sqlCreateQuery, {

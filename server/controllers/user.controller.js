@@ -11,6 +11,9 @@ const getAllUsers = async (req, res) => {
                 {
                     model: Role,
                 }, 
+                {
+                    model: Clients,
+                }
             ]
         });
         res.send(users);
@@ -46,7 +49,26 @@ const getUserByUsername = async (req, res, username) => {
     }
 }
 
+const getUserAndClient = async (req, res) => {
+    try {
+        const user = await User.findAll({
+            include: [
+                {
+                    model: Clients,
+                }
+            ]
+        });
+        res.send(user);
+    } catch (err) {
+        res.status(409).send({
+            message:
+                err.message || "Some error occurred while retrieving users."
+        });
+    }
+}
+
 module.exports = {
     getAllUsers,
-    getUserByUsername
+    getUserByUsername, 
+    getUserAndClient
 }

@@ -54,7 +54,8 @@ const createFournisseur = (req, res) => {
             adresse_fournisseur: req.body.adresse_fournisseur,
             telephone_fournisseur: req.body.telephone_fournisseur,
             email_fournisseur: req.body.email_fournisseur,
-            description : req.body.description
+            description : req.body.description, 
+            num_fournisseur : req.body.num_fournisseur,
         };
         
         // Save fournisseur in the database
