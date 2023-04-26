@@ -4,7 +4,7 @@ import { Col, Form } from "react-bootstrap";
 // import axios
 import { InputNumber } from 'primereact/inputnumber';
 import { SelectButton}  from 'primereact/selectbutton';
-
+import jwt_decode from "jwt-decode";
 import React, { useState, useEffect, useRef } from "react";
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -79,6 +79,9 @@ const AddFacturier = () => {
     const [displayTva, setDisplayTva] = useState(false);
     const [position, setPosition] = useState('center');
     const [checked1, setChecked1] = useState(false);
+    const token = localStorage.getItem("access_token");
+    const decoded = jwt_decode(token);
+    console.log(decoded);
 
     const dialogFuncMap = {
         'displayObjets': setDisplayObjets,
@@ -318,16 +321,19 @@ const AddFacturier = () => {
 
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Facture Added', life: 3000 });
                 setFactureId(response.data.facture_id + 1);
-                saveFacturier();
+                // si la création de la facture est un succès, on crée le facturier
+                if (response.data.facture_id) {
+                    saveFacturier(response.data.facture_id);
+                }
             })
             .catch(e => {
                 toast.current.show({ severity: 'error', summary: 'Error', detail: 'Facture not added', life: 3000 });
             });
     };
     // fonction qui crée le facturier dans la base de donnée grâce au dernier id de facture récupéré
-    const saveFacturier = () => {
+    const saveFacturier = (facture_id) => {
         var data = {
-            facture_id: factureId,
+            facture_id: facture_id,
             decompte_id: decompte.decompte,
             co_fournisseur_id: fournisseur.fournisseur,
             extrait_id: extrait.extrait? extrait.extrait : null,
@@ -377,13 +383,18 @@ const AddFacturier = () => {
                     ...extrait,
                     extrait: "",
                 });
+                // set checked to false
+                setChecked1(false);
      
 
                 const logData = {
                     facturier_id : response.data.facturier_id,
+                    facture_id : response.data.facture_id,
+                    user_id : decoded.user_id.id,
                     description : "Ajout d'un facturier", 
-                    user_id : user.id
                 };
+                console.log(logData);
+                console.log(user)
                 LogsDataService.create(logData);
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
 
@@ -419,7 +430,7 @@ const AddFacturier = () => {
                 const logData = {
                     libelle_id : response.data.id,
                     description : "Ajout d'un libelle",
-                    user_id : user.id
+                    user_id : decoded.user_id.id
                 }
                 LogsDataService.create(logData)
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
@@ -450,7 +461,7 @@ const AddFacturier = () => {
                 const logData = {
                     objet_id : response.data.id,
                     description : "Ajout d'un objet",
-                    user_id : user.id
+                    user_id : decoded.user_id.id,
                 }
                 LogsDataService.create(logData)
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
@@ -482,7 +493,8 @@ const AddFacturier = () => {
                 const logData = {
                     decompte_id : response.data.decompte_id,
                     description : "Ajout d'un decompte",
-                    user_id : user.id
+                    user_id : decoded.user_id.id,
+
                 }
                 LogsDataService.create(logData)
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
@@ -512,18 +524,20 @@ const AddFacturier = () => {
                     date_extrait: "",
                     montant: "",
                 });
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Extrait Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Decompte Added', life: 3000 });
                 getExtraitList();
                 const logData = {
-                    extrait_id : response.data.id,
+                    extrait_id : response.data.extrait_id,
                     description : "Ajout d'un extrait",
-                    user_id : user.id
+                    user_id : decoded.user_id.id,
+
                 }
+                console.log(logData);
                 LogsDataService.create(logData)
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
             })
             .catch(e => {
-                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Extrait not added', life: 3000 });
+                toastAddon.current.show({ severity: 'ERROR', summary: 'ERROR', detail: 'Extrait not Added', life: 3000 });
             });
     };
 
@@ -551,14 +565,18 @@ const AddFacturier = () => {
                     email_fournisseur: response.data.email_fournisseur,
                     num_fournisseur: response.data.num_fournisseur,
                 });
+                console.log(response.data.fournisseur_id);
+                setFournisseurId(response.data.fournisseur_id+1);
 
-                setFournisseurId(response.data.fournisseur_id + 1);
-                saveCompteFournisseur();
+
+
+                saveCompteFournisseur(response.data.fournisseur_id);
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Fournisseur Added', life: 3000 });
                 const logData = {
                     fournisseur_id : response.data.fournisseur_id,
                     description : "Ajout d'un fournisseur",
-                    user_id : user.id
+                                        user_id : decoded.user_id.id,
+
                 }
                 LogsDataService.create(logData)
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
@@ -569,14 +587,14 @@ const AddFacturier = () => {
             });
     };
     // fonction qui crée le facturier dans la base de donnée grâce au dernier id de facture récupéré
-    const saveCompteFournisseur = () => {
+    const saveCompteFournisseur = async (fournisseur_id) => {
         var data = {
-            fournisseur_id: fournisseurId,
+            fournisseur_id: fournisseur_id,
             num_compte_banque: compteFournisseur.num_compte_banque,
             numCompteFournisseur: compteFournisseur.numCompteFournisseur,
         };
 
-        compteFournisseurDataService.create(data)
+        await compteFournisseurDataService.create(data)
             .then(response => {
                 setCompteFournisseur({
                     ...compteFournisseur,
@@ -615,7 +633,7 @@ const AddFacturier = () => {
         };
         clientDataService.create(data)
             .then(response => {
-                setFournisseur({
+                setClient({
                     ...client,
                     name: response.data.name,
                     firstname: response.data.firstname,
@@ -627,11 +645,12 @@ const AddFacturier = () => {
 
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Added', life: 3000 });
                 setClientId(response.data.client_id + 1);
-                savecompteClient();
+                savecompteClient(response.data.client_id);
                 const logData = {
                     client_id : response.data.client_id,
                     description : "Ajout d'un client",
-                    user_id : user.id
+                                        user_id : decoded.user_id.id,
+
                 }
                 LogsDataService.create(logData)
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
@@ -641,9 +660,9 @@ const AddFacturier = () => {
             });
     };
     // fonction qui crée le facturier dans la base de donnée grâce au dernier id de facture récupéré
-    const savecompteClient = () => {
+    const savecompteClient = (client_id) => {
         var data = {
-            client_id: clientId,
+            client_id: client_id,
             numCompteClient: compteClient.numCompteClient,
 
 
@@ -701,22 +720,28 @@ const AddFacturier = () => {
                     tva_value: response.data.tva_value,
                     tva_description: response.data.tva_description
                 });
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Tva Added', life: 3000 });
-                // mettre à jour la liste des tva
-                getTvaList();
+
                 setTva({
                     ...tva,
                     tva_value: "",
                     tva_description: ""
                 });
+
+                getTvaList();
+                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Tva Added', life: 3000 });
+
+                // mettre à jour la liste des tva
+               
+                
                 const logData = {
-                    tva_id : response.data.id,
+                    tva_id : response.data.tva_id,
                     description : "Ajout d'une tva",
-                    user_id : user.id
+                    user_id : decoded.user_id.id,
+
                 }
                 LogsDataService.create(logData)
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-
+                // refresh the list 
             })
             .catch(e => {
                 toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Tva not added', life: 3000 });
@@ -1187,12 +1212,14 @@ const AddFacturier = () => {
                             </span>
                             <Button onClick={(e) => onClick('displayExtrait', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             <Dialog header="Ajouter un extrait" visible={displayExtrait} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtrait')} className="extraitDialog">
+                            <Toast ref={toastAddon} />
                                 <Button onClick={(e) => onClick('displayExtraitList', 'center', e)}  className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
                                     Liste des extraits
                                 </Button>
                                     <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitDialog">
                                         <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive>
-                                            <Column field="num_extrait" header="N° de l'extrait" />
+                                            {console.log(extraitList)}
+                                            <Column field="label" header="N° de l'extrait" />
                                             <Column field="date" header="Date de l'extrait" />
                                             <Column field="montant" header="Montant de l'extrait" />
                                         </DataTable>
@@ -1249,6 +1276,8 @@ const AddFacturier = () => {
 
                             <Button onClick={(e) => onClick('displayTva', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             <Dialog header="Ajouter une TVA" visible={displayTva} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayTva')} className="tvaDialog">
+                            <Toast ref={toastAddon} />
+
                                 <Button onClick={(e) => onClick('displayTvaList', 'center', e)}  className="p-button-info" badge={tvaList.length} tooltip="Liste des TVA's" tooltipOptions={{ position: 'right' }}>
                                     Liste des TVA 
                                 </Button>

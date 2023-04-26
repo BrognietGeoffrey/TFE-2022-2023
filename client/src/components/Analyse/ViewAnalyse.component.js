@@ -9,6 +9,7 @@ import { Calendar } from 'primereact/calendar';
 import { Dialog } from 'primereact/dialog';
 import createViewService from '../../services/createViewService';
 import viewServices from '../../services/viewServices';
+import './ViewAnalyse.css';
 export const CustomViewForm = () => {
     const [table, setTable] = useState(null);
     const [tables, setTables] = useState([
@@ -60,9 +61,48 @@ export const CustomViewForm = () => {
 
 
     const handleTableChange = (e) => {
+        // Clear the existing columns before adding new ones
+        setColumns([]);
+      
+        // Add columns for the selected table
+        switch (e.value) {
+          case 'factures':
+            setColumns([
+              { label: 'Date', value: 'facture_date', type: 'date', joinsTable: 'factures' },
+              { label: 'Montant', value: 'montant', type: 'number', joinsTable: 'factures' },
+              { label: 'Payé', value: 'estpaye', type: 'boolean', joinsTable: 'factures' },
+              { label: 'Libélle', value: 'libelleTitle', valueQuery: "title", type: "string", joinsTable: 'libelles', conditionJoins: "factures.libelle_id = libelles.id" },
+              { label: 'Objets', value: 'title', type: "string", joinsTable: 'objets', conditionJoins: "factures.objet_id = objets.id" }
+            ]);
+            break;
+          case 'clients':
+            setColumns([
+              { label: 'Nom', value: 'name', type: 'string', joinsTable: 'clients' }
+            ]);
+            break;
+          case 'facturiers':
+            setColumns([
+              { label: 'Montant de la facture', value: 'factures.montant', type: 'number', joinsTable: 'factures', conditionJoins: "factures.facture_id = facturiers.facture_id" }
+            ]);
+            break;
+          default:
+            setColumns([]);
+        }
+      
+        // Reset the parameter values
+        setColumn(null);
+        setOperator(null);
+        setValueParam1(null);
+        setValueParam2(null);
+        setValueDate1(null);
+        setValueDate2(null);
+        setValueQuery(null);
+      
+        // Update the selected table
         setTable(e.value);
-        handleColumnChange(e);
-    };
+      };
+      
+
 
     const handleOperatorChange = (e) => {
         setOperator(e.value);
@@ -78,9 +118,9 @@ export const CustomViewForm = () => {
         const response = await viewServices.getAllView();
         // ajouter un id à chaque vue
         console.log(response);
-        setAllViews(response.resultView);
+        setAllViews(response.data.resultView);
         console.log(response.data);
-        for (let i = 0; i < response.resultView.length; i++) {
+        for (let i = 0; i < response.data.resultView.length; i++) {
             response.resultView[i].id = i;
         }
     };
@@ -92,25 +132,7 @@ export const CustomViewForm = () => {
 
 
     // selon la table sélectionnée, on récupère les colonnes de la table
-    const handleColumnChange = (e) => {
-        const table = e.value;
-        const columns = [];
-        switch (table) {
-            case 'factures':
-                columns.push({ label: 'Date', value: 'facture_date', type: 'date', joinsTable: 'factures' });
-                columns.push({ label: 'Montant', value: 'montant', type: 'number', joinsTable: 'factures', });
-                columns.push({ label: 'Payé', value: 'estpaye', type: 'boolean', joinsTable: 'factures' });
-                columns.push({ label: 'Libélle', value: 'libelleTitle', valueQuery: "title", type: "string", joinsTable: 'libelles', conditionJoins: "factures.libelle_id = libelles.id" });
-                columns.push({ label: 'Objets', value: 'title', type: "string", joinsTable: 'objets', conditionJoins: "factures.objet_id = objets.id" });
-                break;
-            case 'clients':
-                columns.push({ label: 'Nom', value: 'name', type: 'string', joinsTable: 'clients' });
-                break;
-            case 'facturiers':
-                columns.push({ label: 'Montant de la facture', value: 'factures.montant', type: 'number', joinsTable: 'factures', conditionJoins: "factures.facture_id = facturiers.facture_id" });
-        }
-        setColumns(columns);
-    };
+
 
     function formatDate(timestamp) {
         const date = new Date(timestamp);
@@ -153,7 +175,7 @@ export const CustomViewForm = () => {
             value
         }];
         const joinsArray = joins ? joins : [];
-        createViewService.createView(table, filters, joinsArray, view_name)
+        viewServices.createView(table, filters, joinsArray, view_name)
             .then((response) => {
                 console.log(response);
                 setResponseView(response.data.view);
@@ -199,8 +221,9 @@ export const CustomViewForm = () => {
       
 
     return (
-        <div className="container">
-            <div class="card">
+
+        <div className="section-three" >
+            <div class="card" >
                 <div class="card-title">
                 <h2 class="title"><i class="fa-solid fa-eye">Zone des vues </i></h2>
                 </div>  
@@ -211,33 +234,39 @@ export const CustomViewForm = () => {
                 <div>
             <div>
                 {/* choix du nom de la vue */}
-               <h1>Choix du nom de la vue</h1>
              <div>
                    <InputText
                         value={viewName}
                         onChange={(e) => setViewName(e.target.value)}
-                        placeholder="Nom de la vue" />
+                        placeholder="Nom de la vue"
+                        tooltip="Veuillez d'abord indiquer le nom de la vue (attention a bien choisir un nom qui permet de recconnaitre la vue facilement)"
+                        tooltipOptions={{ position: 'top' }} 
+                        style = {{width: '100%', marginTop: '-10px', marginBottom: '10px'}}/>
                 </div>
-                <h1>Sur quelles données voulez-vous créer la vue ?</h1>
                 <div>
 
                     <Dropdown
                         value={table}
                         options={tables}
                         onChange={handleTableChange}
-                        placeholder="Sélectionnez une table" />
+                        placeholder="Sélectionnez une table" 
+                        tooltip="La table ici représente les données sur lesquelles vous voulez faire votre vue"
+                        tooltipOptions={{ position: 'top' }}
+                        style = {{width: '100%', marginBottom: '10px'}}/>
+
                 </div>
-                Et maintenant, choisissez une partie à trier :
                 <div>
                     <Dropdown
                         value={column}
                         options={columns}
                         onChange={(e) => setColumn(e.value)}
+                        placeholder="Que voulez-vous trier ?"
+                        tooltip="Ici, vous choisissez les données qui seront triées"
+                        tooltipOptions={{ position: 'top' }}
+                        style = {{width: '100%', marginBottom: '10px'}}/>
 
-                        placeholder="Sélectionnez une colonne" />
                 </div>
                 <div>
-                    <h1>Et enfin comment voulez-vous trier cette donnée ?</h1>
                     {/* si la colonne est de type number, on affiche les opérateurs de type 1 et 2, si non, on affiche juste les 1 */}
                     {columns.length > 0 && column && (columns.find((c) => c.value === column).type === 'date' || columns.find((c) => c.value === column).type === 'number') && (
 
@@ -246,21 +275,31 @@ export const CustomViewForm = () => {
                             value={operator}
                             options={operators.filter((o) => o.type === 1 || o.type === 2 || o.type === 3)}
                             onChange={(e) => setOperator(e.value)}
-                            placeholder="Sélectionnez un opérateur" />
+                            placeholder="Sélectionnez un opérateur" 
+                            tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
+                            tooltipOptions={{ position: 'top' }}
+                            style = {{width: '100%', marginBottom: '10px'}}/>
                     )}
                     {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'boolean' && (
                         <Dropdown
                             value={operator}
                             options={operators.filter((o) => o.type === 0)}
                             onChange={(e) => setOperator(e.value)}
-                            placeholder="Sélectionnez un opérateur" />
+                            placeholder="Sélectionnez un opérateur"
+                            tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
+                            tooltipOptions={{ position: 'top' }}
+                            style = {{width: '100%', marginBottom: '10px'}}/>
+
                     )}
                     {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'string' && (
                         <Dropdown
                             value={operator}
                             options={operators.filter((o) => o.type === 3)}
                             onChange={(e) => setOperator(e.value)}
-                            placeholder="Sélectionnez un opérateur" />
+                            placeholder="Sélectionnez un opérateur" 
+                            tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
+                            tooltipOptions={{ position: 'top' }}
+                            style = {{width: '100%', marginBottom: '10px'}}/>
                     )}
                 </div>
 
@@ -271,13 +310,19 @@ export const CustomViewForm = () => {
                             value={valueParam1}
                             onChange={(e) => setValueParam1(e.value)}
                             placeholder="Valeur"
+                            tooltip = "Veuillez indiquer une valeur"
+                            tooltipOptions={{ position: 'top' }}
+                            style = {{width: '100%', marginBottom: '10px'}}
                         />
                         {operator === 'BETWEEN' && (
                             <InputNumber
                                 value={valueParam2}
                                 onChange={(e) => setValueParam2(e.value)}
                                 placeholder="Valeur"
-                            />
+                                tooltip = "Veuillez indiquer la seconde valeur"
+                                tooltipOptions={{ position: 'top' }}
+                                style = {{width: '100%', marginBottom: '10px'}}/>
+                            
                         )}
                     </>
                 )}
@@ -289,19 +334,29 @@ export const CustomViewForm = () => {
                                 value={valueDate1}
                                 onChange={(e) => setValueDate1(e.value)}
                                 placeholder="Valeur"
+                                tooltip='Veuillez indiquer la date'
 
-                                showIcon />
+                                showIcon 
+                                style = {{width: '100%', marginBottom: '10px'}}/>
                             <Calendar
                                 value={valueDate2}
                                 onChange={(e) => setValueDate2(e.value)}
-                                placeholder="Valeur" />
+                                placeholder="Valeur" 
+                                showIcon 
+                                style = {{width: '100%', marginBottom: '10px'}}
+                                tooltip='Veuillez indiquer la seconde date'/>
+
                         </div>
                     ) : (
                         <div>
                             <Calendar
                                 value={valueDate1}
                                 onChange={(e) => setValueDate1(e.value)}
-                                placeholder="Valeur" />
+                                placeholder="Valeur" 
+                                showIcon
+                                style = {{width: '100%', marginBottom: '10px'}}
+                                tooltip='Veuillez indiquer la date'
+                                tooltipOptions={{ position: 'top' }}/>
                         </div>
                     )
                 )}
@@ -310,11 +365,15 @@ export const CustomViewForm = () => {
                         <InputText
                             value={valueQuery}
                             onChange={(e) => setValueParam1(e.target.value)}
-                            placeholder="Valeur" />
+                            placeholder="Valeur" 
+                            tooltip='Veuillez indiquer une valeur'
+                            tooltipOptions={{ position: 'top' }}
+                            style = {{width: '100%', marginBottom: '10px'}}/>
                     </div>
                 )}
             </div>
-            <Button label="Créer la vue" onClick={submitView} />
+            {/* Button qui est disabled tant que la valeur de la case valeur n'est pas remplie */}
+            <Button label="Créer la vue" onClick={submitView}/>
         </div>
                 </div>
                 <div class="card-footer">
@@ -370,6 +429,7 @@ export const CustomViewForm = () => {
                 </div>     
             </div>
         </div>
+  
     );
 };
 
