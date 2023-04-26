@@ -1,4 +1,6 @@
 function isLoggedIn() {
+  // vérifier si le token est présent dans le local storage et si il est toujours valide
+    
   return localStorage.getItem("access_token") !== null && localStorage.getItem("access_token") !== "undefined";
 }
 

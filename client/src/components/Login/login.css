@@ -7,7 +7,6 @@
     top:45%;
     left: 50%;
     transform: translate(-50%,-45%);
-    //margin: 20rem auto;
 }
 .p-button{
     background-color: var(--main-color);
@@ -35,3 +34,41 @@ input#email:-webkit-autofill:active  {
     width: 10rem;
     height: auto;
 }
+
+.field {
+    margin-bottom: 1rem;
+    display : flex; 
+    align-items: center;
+    flex-direction: column;
+}
+
+.section-three {
+    display: flex center;
+    flex-direction: column;
+    flex-flow : row wrap;
+    flex-grow: 1;
+    margin-top: 2em;
+    margin-left: 1em;
+    margin-right: 1em;
+
+}
+
+.facture-section {
+    display: flex;
+    flex-direction: column;
+    flex-flow : row wrap;
+    /* center */
+    justify-content: center;
+    width : 100%;
+}
+
+#login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width : 90%;
+    align-items: center;
+
+
+}
+

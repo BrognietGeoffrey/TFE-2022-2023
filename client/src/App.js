@@ -1,6 +1,6 @@
 
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { BrowserRouter as Router, Switch, Redirect, Route, NavLink } from 'react-router-dom';
 import { faTools, faUsers,faAddressBook, faCalendar,faHome, faBook, faFileContract, faHardHat, faFileSignature } from "@fortawesome/free-solid-svg-icons";
 import './App.css';
@@ -11,7 +11,9 @@ import Analyse from './components/Analyse/analyse.component';
 import Login from './components/Login/login.component';
 import Facturiers from './components/Facturier/Facturier.component';
 import Profile from './components/profile.component';
+import AllData from './components/AllData/allData.component';
 import RedirectionPage from './components/redirectPage';
+import DataUserClient from './components/dataUserClient.component';
 import PrivateRoute from './services/PrivateRoute';
 import { useHistory } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
@@ -22,12 +24,13 @@ const App = () => {
 
     const [menuIsVisible, setMenuIsVisible] = useState(false);
     const user =localStorage.getItem('role')
+    const toast = useRef(null);
 
     const menu = [
         { label: "Mes données", to: "/userData", icon: faBook, isVisible: user === 'user' ? true : false},
 
         
-        {label : 'Factures', to : '/factures', icon: faFileContract, isVisible : user === 'admin' || user === 'moderator' ? true : false},
+        {label : 'Base de données', to : '/allData', icon: faFileContract, isVisible : user === 'admin' || user === 'moderator' ? true : false},
         { label: "Analyse", to: "/analyse", icon: faHome, isVisible: user === 'admin' || user === 'moderator' ? true : false},
         { label: "Clients", to: "/clients", icon: faAddressBook, isVisible: user === 'admin' || user === 'moderator' ? true : false},
         { label: "Facturiers", to: "/facturiers", icon: faFileSignature, isVisible: user === 'admin' || user === 'moderator' ? true : false},
@@ -43,11 +46,38 @@ const App = () => {
     const forcedCloseMenu = () => {
         setMenuIsVisible(false)
     }
+    const checkTimeSession = () => {
+        const token = localStorage.getItem('access_token')
+        const decoded = jwt_decode(token);
+        const nowInSeconds = Math.floor(Date.now() / 1000);
+        const iatInSeconds = decoded.iat;
+        const expInSeconds = decoded.exp;
+        const remainingTimeInSeconds = expInSeconds - nowInSeconds;
+        const remainingHours = Math.floor(remainingTimeInSeconds / 3600);
+        const remainingMinutes = Math.floor((remainingTimeInSeconds % 3600) / 60);
+        const remainingSeconds = remainingTimeInSeconds % 60;
+        const remainingTime = `${remainingHours}h${remainingMinutes}m${remainingSeconds}s`;
+        toast.current.show({ severity: 'success', summary: 'Il vous reste', detail: remainingTime, life: 3000 });
+        if (remainingTimeInSeconds < 300) {
+            toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Temps de session bientôt expiré !', life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Error Message', detail: remainingTime, life: 3000 });
+        }
+        if (remainingTimeInSeconds < 0) {
+            localStorage.removeItem('access_token')
+            localStorage.removeItem('role')
+            window.location.reload(false);
+        }
+
+    }
+
+    setInterval(checkTimeSession, 300000);
 
 
 
 
-    if (isLoggedIn()) {    
+
+    if (isLoggedIn()) {  
+        console.log(user)  
         // si l'utilisateur connecté est un user, il est redirigé vers la page de profil
        
   
@@ -55,7 +85,10 @@ const App = () => {
         return (<Router>
             <div className="main-window">
                 {/* Checker le temps restant de connexion toutes les minutes, si le temps est bientot fini, afficher un message */}
-              
+                <Toast ref={toast} />
+         
+
+             
 
 
 
@@ -78,10 +111,11 @@ const App = () => {
                             <PrivateRoute path='/profile' exact component={Profile} />
 
                             <PrivateRoute path='/analyse' exact component={Analyse} roles={['admin', 'moderator']}/>
-                            <PrivateRoute path='/factures' exact component={Analyse} roles={['admin', 'moderator']}/>
+                            <PrivateRoute path='/allData' exact component={AllData} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/clients' exact component={Analyse} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/facturiers' exact component={Facturiers} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/utilisateurs' exact component={Analyse} roles={['admin', 'moderator']}/>
+                            <PrivateRoute path='/userData' exact component={DataUserClient} roles={['user']}/>
                             <PrivateRoute path="/login" exact component={Login} />
                             <PrivateRoute path='/contact' exact component={Analyse} />
                             <PrivateRoute path='/redirect' exact component={RedirectionPage}/>

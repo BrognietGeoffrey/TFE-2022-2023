@@ -1,237 +1,262 @@
-import React, { Component } from "react";
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
-import { Link } from 'react-router-dom';
-import { connect } from "react-redux";
-import { register } from "../actions/auth";
+import React, { useState, useRef, useEffect } from 'react';
+import { InputText } from 'primereact/inputtext';
+import { Password } from 'primereact/password';
+import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
+import { ToggleButton } from 'primereact/togglebutton';
+import { Dropdown } from 'primereact/dropdown';
+import { classNames } from 'primereact/utils';
+import logo from '../images/logojv.png';
+import '../components/Login/login.css'
+import compteClientDataService from "../services/compteClientService";
+import auhtService from "../services/authService";
 
+import ClientDataService from '../services/clientService';
 
-const required = (value) => {
-  if (!value) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This field is required!
-      </div>
-    );
-  }
-};
+function Register() {
+  const toast = useRef(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [telephone, setTelephone] = useState('');
+  const [address, setAddress] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [client, setClient] = useState(false);
+  const [emailClient, setEmailClient] = useState('');
+  const [numCompteClient, setNumCompteClient] = useState('');
+  const [num_compte_banque, setNum_compte_banque] = useState('');
+  const [descriptionClient, setDescriptionClient] = useState('');
+  const [infosClients, setInfosClients] = useState([]);
+  const [infosCompteClients, setInfosCompteClients] = useState([]);
+  const [clientId, setClientId] = useState('');
+  const [userId, setUserId] = useState('');
+  const [clientList, setClientList] = useState([]);
+  const [role, setRole] = useState('');
+  const roles = [
+    { label: 'Admin', value: 'admin' },
+    { label: 'Moderator', value: 'moderator' }, 
+    { label: 'User', value: 'user' }
+  ];
+  const getClientList = async () => {
+    const clientList = await compteClientDataService.getAll();
+    setClientList(clientList.map(client => {
+        return {
+            label: client.client.name + " " + client.client.firstname,
+            value: client.co_client_id, 
+            name : client.client.name,
+            firstname : client.client.firstname, 
+            adresse_client : client.client.adresse_client,
+            telephone_client : client.client.telephone_client,
+            email_client : client.client.email_client,
+            numCompteClient : client.numCompteClient,
+            num_compte_banque : client.num_compte_banque
 
-const email = (value) => {
-  if (!isEmail(value)) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        This is not a valid email.
-      </div>
-    );
-  }
-};
+        };
+    }).sort((a, b) => a.label.localeCompare(b.label)));
+  };
 
-const vusername = (value) => {
-  if (value.length < 3 || value.length > 20) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 20 characters.
-      </div>
-    );
-  }
-};
+  
 
-const vpassword = (value) => {
-  if (value.length < 6 || value.length > 40) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The password must be between 6 and 40 characters.
-      </div>
-    );
-  }
-};
+  const registerUser = (event) => {
 
-class Register extends Component {
-  constructor(props) {
-    super(props);
-    this.handleRegister = this.handleRegister.bind(this);
-    this.onChangeUsername = this.onChangeUsername.bind(this);
-    this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.onChangeRole = this.onChangeRole.bind(this);
-
-    this.state = {
-      username: "",
-      email: "",
-      password: "",
-      role: "",
-      successful: false,
+    event.preventDefault();
+    setErrorMsg('');
+     // Create client
+     const data = {
+      name: lastname,
+      firstname: firstname,
+      adresse_client: address,
+      telephone_client: telephone,
+      email_client: email
     };
-  }
+    ClientDataService.create(data)
+      .then(response => {
+        console.log(response.data);
+        setInfosClients(response.data);
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Created', life: 3000 });
+        setLastname('');
+        setFirstname('');
+        setAddress('');
+        setTelephone('');
+        setEmail('');
 
-  onChangeUsername(e) {
-    this.setState({
-      username: e.target.value,
-    });
-  }
-
-  onChangeEmail(e) {
-    this.setState({
-      email: e.target.value,
-    });
-  }
-
-  onChangePassword(e) {
-    this.setState({
-      password: e.target.value,
-    });
-  }
-  onChangeRole(e) {
-    this.setState({
-      role: e.target.value[0].toLowerCase() + e.target.value.slice(1),
-    });
-  }
-
-  handleRegister(e) {
-    e.preventDefault();
-
-    this.setState({
-      successful: false,
-    });
-
-    this.form.validateAll();
-
-    if (this.checkBtn.context._errors.length === 0) {
-      this.props
-        .dispatch(
-          register(this.state.username, this.state.email, this.state.password, this.state.role)
-        )
-        .then(() => {
-          this.setState({
-            successful: true,
+        // create compte client
+        const dataCompteClient = {
+          numCompteClient: numCompteClient,
+          num_compte_banque: num_compte_banque,
+          descriptionClient: descriptionClient,
+          client_id: response.data.client_id
+        };
+        const dataUser = {
+          username: username,
+          password: password,
+          email: email,
+          role: role,
+          client_id: response.data.client_id
+        };
+        compteClientDataService.create(dataCompteClient)
+          .then(response => {
+            console.log(response.data);
+            setInfosCompteClients(response.data);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Client Created', life: 3000 });
+            setNumCompteClient('');
+            setNum_compte_banque('');
+            setDescriptionClient('');
+            // create user
+            auhtService.register(dataUser)
+              .then(response => {
+                console.log(response.data);
+                setUserId(response.data.user_id);
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+                setUsername('');
+                setPassword('');
+                setConfirmPassword('');
+                setEmail('');
+                setRole('');
+                
+              }
+              )
+              .catch(e => {
+                console.log(e);
+                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'User Not Created', life: 3000 });
+              });
+          }
+          )
+          .catch(e => {
+            console.log(e);
+            toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Compte Client Not Created', life: 3000 });
           });
-        })
-        .catch(() => {
-          this.setState({
-            successful: false,
-          });
-        });
-    }
-  }
+      }
+      )
+      .catch(e => {
+        console.log(e);
+        toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Client Not Created', life: 3000 });
+      });
+  };
 
-  render() {
-    const { message } = this.props;
 
-    return (
-      <div className="col-md-12">
-        <div className="card card-container">
-          <img
-            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-            alt="profile-img"
-            className="profile-img-card"
-          />
 
-          <Form
+
+  
+
+
+
+
+
+
+
+
+  return (
+    <>
+      <Toast ref={toast}  />
+      <div className="login" id="login">
+      <img src={logo} alt="logo" className="logo" style={{width: '50%', height: '50%'}}/>
+
+
+        <form className="p-fluid" >
+          
+          <div className="facture-section">
+          <div className="section-three">
+            <span className="p-input-icon-right">
+              <i className="pi pi-user" />
+              <InputText id="username" name="username" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            </span>
+          </div>
+
+          <div className="section-three">
+            <span className="p-input-icon-right">
+              <i className="pi pi-envelope" />
+              <InputText id="email" name="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </span>
+          </div>
+          </div>
+          <div className="facture-section">
+          <div className="section-three">
+            <span className="p-input-icon-right">
+              <i className="pi pi-lock" />
+              <Password id="password" placeholder="Password" feedback={false} name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </span>
+            </div>
             
-            onSubmit={this.handleRegister}
-            ref={(c) => {
-              this.form = c;
-            }}
-          >
-            {!this.state.successful && (
+            
+            <div className="section-three">
+            <span className="p-input-icon-right">
+                <i className="pi pi-lock" />
+                <Password id="confirmPassword" placeholder="Confirm Password" feedback={false} name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            </span>
+            </div>
+            </div>
+            <div className="section-three" style={{ marginBotton: '1em' }}>
+            <span className="p-input-icon-right">
+                <i className="pi pi-lock" />
+                <Dropdown id="role" name="role" placeholder="Role" value={role} options={roles} onChange={(e) => setRole(e.value)} />
+            </span>
+            </div>
+            
+
+            {/* Button qui demande si ce user doit être lié à un client, et si oui on affiche la div qui contient le formulaire pour le client */}
+            <ToggleButton checked={client} onChange={(e) => setClient(e.value)} offLabel="Appuyer pour lier l'utilisateur à un client" onLabel="Informations du client" style={{ marginTop: '1em', width: '90%', position: 'relative', left: '5%' }} />
+            {client && (
               <div>
-                <div className="form-group">
-                  <label htmlFor="username">Username</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="username"
-                    value={this.state.username}
-                    onChange={this.onChangeUsername}
-                    validations={[required, vusername]}
-                  />
+              <div className="facture-section">
+                <div className="section-three">
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText id="firstname" name="firstname" placeholder="Firstname" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
+                  </span>
+                </div>
+                <div className="section-three">
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-user" />
+                    <InputText id="lastname" name="lastname" placeholder="Lastname" value={lastname} onChange={(e) => setLastname(e.target.value)} />
+                  </span>
+                </div>
+                <div className="section-three">
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-phone" />
+                    <InputText id="telephone" name="telephone" placeholder="Telephone" value={telephone} onChange={(e) => setTelephone(e.target.value)} />
+                  </span>
+                </div>
+              </div>
+              <div className="facture-section">
+                <div className="section-three">
+                  <span className="p-input-icon-right">
+                    <i className="pi pi-home" />
+                    <InputText id="address" name="address" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                  </span>
+                </div>
+                <div className="section-three">
+                  <span className="p-input-icon-right">
+                    {/* numCompteClient */}
+                    
+                    <span className="p-float-label">
+                    <InputText id="numCompteClient" name="numCompteClient"  value={numCompteClient} onChange={(e) => setNumCompteClient(e.target.value)}></InputText>
+                    <label htmlFor="numCompteClient">Numéro de compte client</label>
+                    </span>
+                  </span>
+                </div>
+                <div className="section-three">
+                  <span className="p-input-icon-right">
+                    {/* numCompteClient */}
+                    <i className="pi pi-home" />
+                    <InputText id="numCompteClient" name="numCompteClient" placeholder="Numéro de compte en banque du client" value={num_compte_banque} onChange={(e) => setNum_compte_banque(e.target.value)} />
+                  </span>
+                </div>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="email"
-                    value={this.state.email}
-                    onChange={this.onChangeEmail}
-                    validations={[required, email]}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <Input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.onChangePassword}
-                    validations={[required, vpassword]}
-                  />
-                </div>
-
-       
-                <div className="form-group">
-               
-                <label htmlFor="role">Rôle de l'utilisateur</label>
-                <select className="form-control"
-                    name="role"
-                    value={this.state.role}
-                    onChange={this.onChangeRole}
-                    validations={[required]}>
-                {/* option who disabled and selected */}
-                <option value="" disabled selected>Choisir un rôle</option>
-               
-                <option  value="user">Utilisateur</option>
-                <option value="moderator">Comptable</option>
-                <option value="admin">Président</option>
-
-            </select>
-            <br/>
-                  </div>
-                <div className="d-grid gap-2 col-6 mx-auto">
-                  <button className="btn btn-primary btn-block text-center">Enregistrer l'utilisateur </button>
-                </div>
               </div>
             )}
 
-            <CheckButton
-              style={{ display: "none" }}
-              ref={(c) => {
-                this.checkBtn = c;
-              }}
-            />
-          </Form>
-          {/* Adding a register confirmation with the button want to create new one and go to progile */}
-            {this.state.successful && (
-                <div className="alert alert-success" role="alert">
-                    L'utilisateur a été enregistré avec succès!
-                    <br/>
-                    <Link to="/profile">
-                    <button className="btn btn-primary btn-block text-center">Aller au profil</button>
-                    </Link>
-                    <br/>
-                    {/* Button who appear the form for create an user */}
-                    <Link to="/register">
-                    <button className="btn btn-primary btn-block text-center">Créer un autre utilisateur</button>
-                    </Link>
-
-                    </div>
-            )}
-        </div>
+            <div className="section-three">
+            <Button label="Submit" onClick={registerUser} />
+            </div>
+        </form>
       </div>
-    );
-  }
-}
+    </>
+  );
+};
 
-function mapStateToProps(state) {
-  const { message } = state.message;
-  return {
-    message,
-  };
-}
-
-export default connect(mapStateToProps)(Register);
+export default Register;
