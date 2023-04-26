@@ -12,22 +12,22 @@ class facturierService {
 
 
     getFacturierById(id) {
-        return axios.get(API_URL + id);
+        return axios.get(API_URL + id, { headers: BASIC_HEADERS });
     }
     // find by description
     findByDescription(description) {
-        return axios.get(API_URL + "?description=" + description);
+        return axios.get(API_URL + "?description=" + description, { headers: BASIC_HEADERS });
     }
 
     create(facturier) {
-        return axios.post(API_URL, facturier);
+        return axios.post(API_URL, facturier, { headers: BASIC_HEADERS });
 
     }
     update(id, data) {
         return axios.put(API_URL + id, data, { headers: BASIC_HEADERS });
     }
     deleteFacturier(id) {
-        return axios.delete(API_URL + id);
+        return axios.delete(API_URL + id, { headers: BASIC_HEADERS });
     }
 
 

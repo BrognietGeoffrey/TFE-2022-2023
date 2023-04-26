@@ -1,21 +1,25 @@
 import axios from 'axios';
-import authHeader from './authHeader';
-
+import { BASIC_HEADERS } from '../reducers/headers';
 const API_URL = '/api/';
 // Ajouter les token dans les headers
 
 
-const BASIC_HEADERS = {
-    'Content-Type': 'application/json',
-    'Authorization': "Bearer " + localStorage.getItem("access_token")
+class viewService {
+    getAllView() {
+        return axios.get(API_URL + 'getViews', { headers: BASIC_HEADERS });
+    }
+    createView(table, filters, joins, view_name) {
+        const data = {
+          table,
+          filters,
+          joins,
+          view_name
+        };
+        console.log(data);
+        return axios.post(`${API_URL}`+ 'createView', data, { headers: BASIC_HEADERS });
+        
+      }
 }
 
-const getAllView = async () => {
-    const response = await axios.get(API_URL + "getViews", { headers: BASIC_HEADERS });
-    return response.data;
-}
-
-export default {
-    getAllView
-}
+export default new viewService();
 

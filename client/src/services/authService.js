@@ -18,13 +18,8 @@ class AuthService {
     logout() {
         localStorage.removeItem("user");
     }
-    register(username, email, password, roles) {
-        return axios.post(API_URL + "signup", {
-            username,
-            email,
-            password,
-            roles: [roles],
-        });
+    register(informations) {
+        return axios.post(API_URL + "signup", informations);
        
     }
     
