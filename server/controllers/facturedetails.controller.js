@@ -86,6 +86,31 @@ const findObjetById = (req, res) => {
     });
     }
 
+const updateObjet = (req, res) => {
+    const id = req.params.id;
+
+    Objets.update(req.body, {
+        where: { id: id }
+    })
+    .then(num => {
+        if (num == 1) {
+        res.status(200).send({
+            message: "factureObjet was updated successfully."
+        });
+        } else {
+        res.status(409).send({
+            message: `Cannot update factureObjet with id=${id}. Maybe factureObjet was not found or req.body is empty!`
+        });
+        }
+    })
+    .catch(err => {
+        res.status(409).send({
+        message: "Error updating factureObjet with id=" + id
+        });
+    });
+    }
+
+
 
 const createLibelle = (req, res) => {
     // Validate request
@@ -167,12 +192,40 @@ const findLibelleById = (req, res) => {
     });
     }
 
+const updateLibelle = (req, res) => {
+    const id = req.params.id;
+
+    Libelles.update(req.body, {
+        where: { id: id }
+    })
+    .then(num => {
+        if (num == 1) {
+        res.status(200).send({
+            message: "factureLibelle was updated successfully."
+        });
+        } else {
+        res.status(409).send({
+            message: `Cannot update factureLibelle with id=${id}. Maybe factureLibelle was not found or req.body is empty!`
+        });
+        }
+    })
+    .catch(err => {
+        res.status(409).send({
+        message: "Error updating factureLibelle with id=" + id
+        });
+
+    });
+    }
+
+
 module.exports = {
     createObjet,
     findObjet,
     findObjetById,
     createLibelle,
     findLibelle,
-    findLibelleById
+    findLibelleById, 
+    updateLibelle, 
+    updateObjet
 }
 

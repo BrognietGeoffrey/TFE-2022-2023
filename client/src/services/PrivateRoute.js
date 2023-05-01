@@ -3,6 +3,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
+
 const PrivateRoute = ({ component: Component, roles, ...rest }) => (
   <Route {...rest} render={props => {
       const currentUser = localStorage.getItem('role');
@@ -18,7 +19,10 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => (
 
         // si l'utilisateur connecté est un user, il est redirigé vers la page de profil
         if (currentUser === 'user') {
+
+            // Afficher un toast pour annoncer que l'utilisateur n'a pas les droits pour accéder à la page
             return <Redirect to={{ pathname: '/profile', state: { from: props.location } }} />
+
         }
         return <Redirect to={{ pathname: '/analyse', state: { from: props.location } }} />
         

@@ -21,6 +21,8 @@ const Facturier = () => {
                     <TabPanel header="Ajout " style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <AddFacturier style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}/>
                     </TabPanel>
+                  
+                
 
                 </TabView>
                 {/* Dialog pour ajouter une facture

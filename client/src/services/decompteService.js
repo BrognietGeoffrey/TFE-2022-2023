@@ -15,6 +15,11 @@ class decompteService {
         return axios.post(API_URL, decompte, { headers: BASIC_HEADERS });
     }
 
+    update(id, decompte) {
+        return axios.put(API_URL + id, decompte, { headers: BASIC_HEADERS });
+    }
+    
+
 
 }
 

@@ -73,6 +73,7 @@ db.Logs.belongsTo(db.Tva, {foreignKey : 'tva_id'})
 db.UserRoles.belongsTo(db.User, {foreignKey : 'userId'})
 db.UserRoles.belongsTo(db.Role, {foreignKey : 'roleId'})
 db.Comments.belongsTo(db.User, {foreignKey : 'userId'})
+db.Comments.belongsTo(db.Facturiers, {foreignKey : 'facturier_id'})
 
 
 // user est connecté à client_id

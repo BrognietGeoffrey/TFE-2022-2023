@@ -18,6 +18,11 @@ class extraitService {
 
     }
 
+    update(id, extrait) {
+        return axios.put(API_URL + id, extrait, { headers: BASIC_HEADERS});
+    }
+    
+
 }
 
 export default new extraitService();

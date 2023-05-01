@@ -19,12 +19,7 @@ const create = async (req, res) => {
         }
     })
     .then(data => {
-        if (data) {
-        res.status(409).send({
-            message: "This log already exists"
-        });
-        return;
-        } else {
+        
         // Create a log
         const log = {
             user_id: req.body.user_id,
@@ -52,7 +47,7 @@ const create = async (req, res) => {
             });
             });
         }
-    })
+    )
     .catch(err => {
         res.status(409).send({
             message:

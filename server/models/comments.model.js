@@ -7,9 +7,17 @@ module.exports = (sequelize, Sequelize) => {
         },
         comments : {
             type: Sequelize.STRING,
+            // longueur maximale du champ
+            len: [0, 500],
             allowNull: false
         },
-        user_id : {
+        title : {
+            type: Sequelize.STRING,
+            // longueur maximale du champ
+            len: [0, 50],
+            allowNull: false
+        },
+        userId : {
             type: Sequelize.INTEGER,
             allowNull: false
         },

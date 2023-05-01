@@ -12,46 +12,39 @@ var bcrypt = require("bcryptjs");
 
 exports.signup = async (req, res) => {
   const hashedPassword = await argon2.hash(req.body.password);
-  // Save User to Database
+  // Save user to the database, with hashed password, and role and client_id
   User.create({
     username: req.body.username,
     email: req.body.email,
-    password: hashedPassword.toString(), 
-    client_id: req.body.client_id
+    password: hashedPassword,
+    role: req.body.role,
+    client_id: req.body.client_id,
   })
-  
-    .then(user => {
-      
-      if (req.body.roles) {
-        
-        Role.findAll({
+    .then((user) => {
+      if (req.body.role) {
+        console.log(req.body.role);
+        Role.findOne({
           where: {
-            name: {
-              [Op.or]: req.body.roles
-              
-            }
-            
-          }
-          
-        }).then(roles => {
-          user.setRoles(roles).then(() => {
-            res.status(200).send({ message: "User registered successfully!", user: user });
+            name: req.body.role,
+          },
+        }).then((role) => {
+          user.setRoles(role).then(() => {
+            res.send({ message: "User was registered successfully!" });
           });
         });
-      
-
-
       } else {
         // user role = 1
         user.setRoles([1]).then(() => {
-          res.status(200).send({ message: "User registered successfully!", user: user });
+          res.send({ message: "User was registered successfully!" });
         });
       }
     })
-    .catch(err => {
-      res.status(500).send({ message: err.message });
+    .catch((err) => {
+      res.status(409).send({ message: err.message });
     });
 };
+
+
 
 exports.signin = async (req, res) => {
   try {

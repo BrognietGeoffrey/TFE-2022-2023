@@ -2,8 +2,14 @@
   "dependencies": {
     "dexie": "^3.2.3",
     "dotenv": "^16.0.3",
+    "form-data": "^4.0.0",
+    "https": "^1.0.0",
     "jwt-decode": "^3.1.2",
+    "material-ui": "^0.20.2",
+    "mindee": "^3.7.4",
+    "nodemailer": "^6.9.1",
     "swagger": "^0.7.5",
-    "swagger-ui-express": "^4.6.2"
+    "swagger-ui-express": "^4.6.2",
+    "tesseract.js": "^4.0.4"
   }
 }

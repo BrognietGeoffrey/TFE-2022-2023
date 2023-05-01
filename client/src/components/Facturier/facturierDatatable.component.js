@@ -14,6 +14,8 @@ import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { Dialog } from 'primereact/dialog';
 import {Tooltip} from 'primereact/tooltip';
+import { SpeedDial } from 'primereact/speeddial';
+
 
 import {Card} from 'primereact/card';
 import {TabView, TabPanel} from 'primereact/tabview';
@@ -27,11 +29,10 @@ const FacturierDatatable = () => {
 
     const [loading, setLoading] = useState(true)
     const [facturiers, setFacturiers] = useState([]);
-    const [selectedCustomers, setSelectedCustomers] = useState(null);
-    const [customers, setCustomers] = useState(null);
     const [extraitList, setExtraitList] = useState([]);
     const [displayExtraitList, setDisplayExtraitList] = useState(false);
-    const [extrait, setExtrait] = useState({ facture: {} });
+    const [extrait, setExtrait] = useState({ facture: {} })
+
     const status = [
         { label: 'payée', value: true },
         { label: 'non payée', value: false }
@@ -52,7 +53,6 @@ const FacturierDatatable = () => {
     const [displayExtrait, setDisplayExtrait] = useState(false);
 
 
-    const [globalFilterValue, setGlobalFilterValue] = useState('');
     const statuses = ['payée', 'non payée '];
 
     const dialogFuncMap = {
@@ -60,12 +60,16 @@ const FacturierDatatable = () => {
         'displayExtraitList': setDisplayExtraitList,
     };
 
+
+    
+
     const onClick = (name, position, e, rowData) => {
         e.preventDefault();
       
         if (name === 'displayExtrait') {
           setExtrait(rowData);
         }
+        
       
         dialogFuncMap[name](true);
       
@@ -86,6 +90,7 @@ const FacturierDatatable = () => {
                 </div>
             );
         }
+       
     };
     const getExtraitList = async () => {
         const extraitList = await ExtraitDataService.getAll();
@@ -171,11 +176,14 @@ const FacturierDatatable = () => {
     const fetchData = async () => {
         const response = await FacturierDataService.getAll();
         setFacturiers(response.data);
+      
         setLoading(false);
       };
     
       useEffect(() => {
         fetchData();
+
+    
       }, []);
     
     const formatDate = (value) => {
@@ -240,11 +248,7 @@ const FacturierDatatable = () => {
     const balanceFilterTemplate = (options) => {
         return <InputNumber value={options.value} onChange={(e) => options.filterCallback(e.value, options.index)} mode="currency" currency="EUR" locale="fr-BE" />
     }
-    const sortTVA = (value1, value2) => {
-        const tva1 = value1.facture.tva.tva_value;
-        const tva2 = value2.facture.tva.tva_value;
-        return tva1.localeCompare(tva2);
-    }
+
 
 
     const statusBodyTemplate = (rowData) => {
@@ -264,14 +268,6 @@ const FacturierDatatable = () => {
         }
     }
     }
-
-
-        //    refer to add extrait on file addfacturier.component
-
-
-
-   
-
     const tvaBodyTemplate = (rowData) => {
         const tva = rowData.facture.montant + rowData.tva.tva_value / 100;
         return formatCurrency(tva) + ' €';
@@ -294,10 +290,6 @@ const FacturierDatatable = () => {
         return <span className={`customer-badge status-${option}`}>{option}</span>;
     }
 
-    
-    <Tooltip target=".extraitDialog" mouseTrack mouseTrackLeft={10}>
-        <span>Extrait</span>
-    </Tooltip>
 
 
     if (loading) {
@@ -313,7 +305,7 @@ const FacturierDatatable = () => {
                     dataKey="id" rowHover filterDisplay="menu" loading={loading}
                     emptyMessage="Aucunes données trouvées." scrollable 
                     currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}>
-                    
+
                     <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ minWidth: '14rem', backgroundColor: '#f8f9fa' }}  />
                     <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom" style={{ minWidth: '14rem' }} />
                          
@@ -329,6 +321,7 @@ const FacturierDatatable = () => {
                     <Column field="facture.estpaye" header="Status" sortable filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '10rem' }} body={statusBodyTemplate} filter filterElement={statusFilterTemplate}/>
                     <Column field="extrait.num_extrait" header="N° extrait" sortable filter filterPlaceholder="Rechercher par N°" style={{ minWidth: '14rem' }} body={numextraitBodyTemplate}  />
                     <Column field="extrait.date_extrait" header="Date extrait" sortable filterField="date" dataType="date" style={{ minWidth: '8rem' }} body={dateBodyExtraitTemplate} filter filterElement={dateFilterTemplate} /> 
+
                 </DataTable> 
                 <Dialog header="Ajouter un extrait" visible={displayExtrait} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtrait')} className="extraitDialog">
                                 <Button onClick={(e) => onClick('displayExtraitList', 'center', e)}  className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
@@ -435,6 +428,10 @@ const FacturierDatatable = () => {
                                     </div>
                                 </div>
                             </Dialog>
+
+
+               
+
                 </div>
         )
     }

@@ -14,6 +14,10 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             unique: true
         },
+        num_compte_banque : {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
         fournisseur_id: {
             type: Sequelize.INTEGER,
             allowNull: false,

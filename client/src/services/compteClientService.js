@@ -22,6 +22,10 @@ class compteClientService {
         return axios.post(API_URL, compteClient, { headers: BASIC_HEADERS });
     }
     
+    update(id, compteClient) {
+        return axios.put(API_URL + id, compteClient, { headers: BASIC_HEADERS });
+    }
+    
 }
 
 

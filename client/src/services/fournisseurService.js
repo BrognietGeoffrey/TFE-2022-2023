@@ -26,6 +26,11 @@ class fournisseurService {
         return getLastFournisseurId();
 
     }
+
+    update(id, data) {
+        return axios.put(API_URL + id, data, { headers: BASIC_HEADERS });
+    }
+    
     
 }
 export default new fournisseurService();

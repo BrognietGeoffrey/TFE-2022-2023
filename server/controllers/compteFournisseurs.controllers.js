@@ -18,7 +18,7 @@ const createCompteFournisseur = (req, res) => {
     // Create a CompteFournisseur
     const compteFournisseur = {
         numCompteFournisseur : req.body.numCompteFournisseur,
-        banque_id : req.body.banque_id,
+        num_compte_banque : req.body.num_compte_banque,
         fournisseur_id : req.body.fournisseur_id
     };
     

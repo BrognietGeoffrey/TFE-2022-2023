@@ -5,13 +5,15 @@ import ExtraitDatatable from './extraitDatatable.component';
 import FactureDatatable from './factureDatatable.component';
 import ClientDatatable from './clientDatatable.component';
 import FournisseurDatatable from './fournisseurDatatable.component';
+import './allData.css'
 
 import Dexie from 'dexie';
 
 const AllData = () => {
 
         return (
-                <div className="card">
+                <div className="container" >
+                <div className="card" style={{width:"450em", height:"560px", borderRadius: '10px'}}>
                 <h5></h5>
                 <TabView style={{borderRadius: '10px'}}>
                     <TabPanel header="Extrait" leftIcon="pi pi-file">
@@ -30,7 +32,7 @@ const AllData = () => {
 
                 </TabView>
            
-              
+                </div>
                  </div>
         );
 

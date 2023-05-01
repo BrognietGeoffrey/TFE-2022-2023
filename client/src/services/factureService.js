@@ -47,6 +47,12 @@ class factureService {
             return axios.get(API_URLs  + id, { headers: BASIC_HEADERS });
         }
     }
+
+    //update
+    updateFacture(id, facture) {
+        return axios.put(API_URL + id, facture, { headers: BASIC_HEADERS });
+    }
+    
 }
 
 

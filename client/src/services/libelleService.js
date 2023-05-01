@@ -16,6 +16,10 @@ class libelleService {
         return axios.post(API_URL, libelle, { headers: BASIC_HEADERS });
     }
 
+    update(id, libelle) {
+        return axios.put(API_URL + id, libelle, { headers: BASIC_HEADERS });
+    }
+
 }
 
 export default new libelleService();

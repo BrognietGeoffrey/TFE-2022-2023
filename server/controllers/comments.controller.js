@@ -1,6 +1,6 @@
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const { Comments } = require("../models");
+const { Comments, User, Facturiers, Factures } = require("../models");
 
 // Create and Save a new Comment
 const createComment = (req, res) => {
@@ -8,7 +8,8 @@ const createComment = (req, res) => {
     // Create a comment
     const comment = {
         comments: data.comments,
-        user_id: data.user_id,
+        title : data.title,
+        userId: data.userId,
         facturier_id: data.facturier_id
     };
 
@@ -28,7 +29,25 @@ const createComment = (req, res) => {
 }
 
 const getAllComments = (req, res) => {
-    Comments.findAll()
+    // Get all comments and include user and facturier
+    Comments.findAll({
+        include: [
+            {
+                model: User,
+      
+            },
+            {
+                model: Facturiers,
+             
+                include: [
+                    {
+                        model: Factures,
+                        
+                    }
+                ]
+            }
+        ]
+    })
         .then(data => {
         res.send(data);
         })
@@ -37,9 +56,10 @@ const getAllComments = (req, res) => {
             message:
             err.message || "Some error occurred while retrieving comments."
         });
-
         });
     }
+
+
 
 
 

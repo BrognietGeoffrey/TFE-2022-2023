@@ -1,0 +1,99 @@
+
+  
+  .card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 500px;
+    /* espacement entre les cards */
+    
+  }
+
+section {
+    margin: 20px;
+    margin-top: 2%;
+  }
+
+/* Style des commentaires */
+.container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2em;
+    width : 100%;
+    margin : 2 auto;
+    justify-content: center;
+
+  }
+
+  .comment-section {
+    margin: 0 auto;
+  }
+  
+  .comment-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .comment-item {
+    display: flex;
+    margin-bottom: 30px;
+  }
+  
+  .comment-avatar {
+    flex-shrink: 0;
+    margin-right: 20px;
+  }
+  
+  .comment-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+  }
+  
+  .comment-content {
+    flex-grow: 1;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .comment-title {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .comment-meta {
+    margin: 0;
+    color: #999;
+    font-size: 14px;
+  }
+  
+  .comment-body {
+    padding: 10px;
+    margin: 0;
+  }
+  
+  .comment-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .comment-reply {
+    cursor: pointer;
+    color: #007bff;
+  }
+  

@@ -1,12 +1,17 @@
 import { Card } from 'primereact/card';
 import { classNames } from 'primereact/utils';
 import axios from 'axios';
-import './ViewAnalyse.css';
+import './analyse.css';
 import React, { useState, useEffect, useRef } from "react";
 import FacturierDataService from "../../services/facturierService";
 import viewServices from "../../services/viewServices";
 import ViewAnalyse from "./ViewAnalyse.component";
 import LogsService from "../../services/logsService";
+import CommentService from "../../services/commentService";
+import { InputText } from 'primereact/inputtext';
+import { InputTextarea } from 'primereact/inputtextarea';
+import CommentZone from './comment.component';
+
 import { Tooltip } from 'primereact/tooltip';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
@@ -296,117 +301,55 @@ const retrieveLogs = async () => {
       toast.current.show({ severity: 'success', summary: 'Groupe réduit', detail: 'Value: ' + event.data.nom, life: 3000 });
   }
 
+  const statusBodyTemplate = (rowData) => {
+    if (rowData.facture.estpaye === true) {
+      return (
+        <span className="p-badge p-badge-success">Payé</span>
+      );
+    } else {
+      return (
+        <span className="p-badge p-badge-warning">Non payé</span>
+      );
+    }
+  };
+
+
   const num_factureTemplate = (rowData) => {
     const factureLength = rowData.factures.length;
     console.log(factureLength)
     return (
-      <span>
-        <span className="p-column-title">
-        {rowData.factures.length > 0 ? rowData.factures.map((facture) => {
-          return (
-            <span>
-              <Button
-                className="custom-button-logs "
-                tooltip="N° de facture"
-                tooltipOptions={{ position: 'left' }}
-                onClick={() => handleShowDetails(rowData)}
-                // Si le facture est payée alors on affiche le bouton en vert sinon en rouge
-                style={{backgroundColor: facture.facture.estpaye === true ? "green" : "red", marginLeft : "5px"}}
-              >
-                {facture.facture.num_facture} 
-                {console.log(facture)}
-               </Button>
-            </span>
-          )
-        }) : "Pas de facture"}
-        </span>
-      </span>
+      <DataTable value={rowData.factures} className="p-datatable-sm">
+        <Column field="facture.num_facture" header="N° Facture"  />
+        <Column field="facture.estpaye" header="Statut de la facture" sortable  body={statusBodyTemplate} />
+      </DataTable>
     );
   };
 
     return (
-      <div class="container">
-        <Toast ref={toast} />
-        <div class="section1">
-          <div class="section-three" >
-            <ViewAnalyse />
-          </div>
-          <div class="section-three" style = {{marginLeft : "22px"}}>
-          <div class="card">
-            <div class="card-title">
-              {/* Zone commentaire */}
-              <h2 class="title"><i class="fa-solid fa-comment">Commentaires</i></h2>
-            </div>
-            <div class="card-body">
-              Vous trouvez ici tous les Commentaires
+      <div className="container">
+                <Toast ref={toast} />
 
-            </div>
-
-            <div class="card-content" style={{ overflowY: "scroll"}}>
-              <div class="card-content-item">
-                <div class="card-content-item-title">
-                  {/* afficher chaque utilisateur avec les couleurs associées grâce à userColor, puis afficher les informations de chaque user selon l'user_id de logs.user et userColor.user_id */}
-                  <p></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-          
+      <section className="features">
+        <h2>Les fonctionnalités</h2>
+        <div className="card">
+          <h3>Vues</h3>
+          <p><ViewAnalyse/></p>
         </div>
 
-        <div class="section2">
-        <div class="section-three" >
-            {/* Afficher dans une card toutes les factures non payés et payés */}
-            <div class="card" >
-              <div class="card-title">
-                <h2 class="title"><i class="fa-solid fa-eye">Les habitants et leurs comptes </i></h2>
-              </div>
-              <div class="card-body">
-                Vous retrouvez ici les informations sur les habitants et leurs comptes
-              </div>
-              <div class="card-content"style={{overflowY: "scroll"}}>
-                {/* afficher les données de clientListWithFactures, faire une séparation entre chaque client et indiqué pour chaque client le numéro de facture des factures payés et non payés */}
-                <div class="card-content-item">
-                  <div class="card-content-item-title">
-                    {console.log(clientListWithFacture)}
-                    
-                    <DataTable value={clientListWithFacture} rowGroupMode="subheader" groupRowsBy="nom"
-                    sortMode="single" sortField="nom" sortOrder={1} responsiveLayout="scroll"
-                    expandableRowGroups expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
-                    onRowExpand={onRowGroupExpand} onRowCollapse={onRowGroupCollapse}
-                    rowGroupHeaderTemplate={headerTemplate} >
-                      {console.log(clientListWithFacture)}
-                      <Column field="" header="Nom" style={{width:'250px'}}></Column>
-                    <Column field="factures.facture.num_facture" header="N° de facture" body={num_factureTemplate}></Column>
 
-                  
-                </DataTable>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="section-three">
-          <div class="card">
-            <div class="card-title">
-              <h2 class="title"><i class="fa-solid fa-eye">Logs des changements</i></h2>
-            </div>
-            <div class="card-body">
-              Vous trouvez ici les logs des changements effectués sur le bilan actuel
-            </div>
-            <div class="card-content" style={{ overflowY: "scroll"}}>
-              <div class="card-content-item">
-                <div class="card-content-item-title">
-                  {/* afficher chaque utilisateur avec les couleurs associées grâce à userColor, puis afficher les informations de chaque user selon l'user_id de logs.user et userColor.user_id */}
-                  <DataTable value={logs} paginator rows={10} rowsPerPageOptions={[5,10,20]} emptyMessage="Aucun log pour le moment">
+      </section>
+      <section className="testimonials">
+        <h2>Commentaires et historiques</h2>
+        <div className="card">
+          <CommentZone/>
+        </div>
+        <div className="card" >
+        <DataTable value={logs} paginator rows={5} rowsPerPageOptions={[5,10,20]} emptyMessage="Aucun log pour le moment" style={{height : "90%"}}>
                     {console.log(logs)}
                     <Column field="user.username" header="Utilisateur"  />
                     <Column field="date" header="Date" body={dateBodyTemplate} />
                     <Column field="action" header="Type d'ajout" body={actionBodyTemplate} />
-                    <Column field="ajout" header="Contenu de l'ajour" body={ajoutBodyTemplate} />         
+                    <Column field="ajout" header="Contenu de l'ajout" body={ajoutBodyTemplate} />         
                   </DataTable>
                   <Dialog
                     header="Détails de la ligne de tableau sélectionnée"
@@ -463,29 +406,39 @@ const retrieveLogs = async () => {
                         <p><b>Description : </b>{selectedLog.tva.tva_description}</p>
                       </div>
                     )}
-                 
-
-                  </Dialog>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
-
-          
-
-
-
-
-                
+                    </Dialog>
         </div>
-      </div>
-    );
-  }
+      </section>
+      <section className="blog">
+        <h2>Les statistiques</h2>
+        <div className="card">
+          <h3>Nombres total de factures </h3>
+          <p>{billNotPayed.length + billPayed.length}</p>
+        </div>
+        <div className="card">
+          <h3>Les clients et leurs factures </h3>
+          <p> <DataTable value={clientListWithFacture} rowGroupMode="subheader" groupRowsBy="nom"
+                    sortMode="single" sortField="nom" sortOrder={1} responsiveLayout="scroll"
+                    expandableRowGroups expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
+                    onRowExpand={onRowGroupExpand} onRowCollapse={onRowGroupCollapse}
+                    rowGroupHeaderTemplate={headerTemplate} >
+                      {console.log(clientListWithFacture)}
+                      <Column field="" header="" ></Column>
+                    <Column field="" header="" body={num_factureTemplate}></Column>
+              </DataTable>
+          </p>
+        </div>
+      </section>
+    </div>
 
-                  
+    )
+}
 
 
-  export default Analyse;
+                    
+    
+    
+
+export default Analyse
 
          

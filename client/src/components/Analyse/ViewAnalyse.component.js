@@ -6,10 +6,11 @@ import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
+import {Badge } from 'primereact/badge';
 import { Dialog } from 'primereact/dialog';
 import createViewService from '../../services/createViewService';
 import viewServices from '../../services/viewServices';
-import './ViewAnalyse.css';
+import './analyse.css';
 export const CustomViewForm = () => {
     const [table, setTable] = useState(null);
     const [tables, setTables] = useState([
@@ -223,7 +224,6 @@ export const CustomViewForm = () => {
     return (
 
         <div className="section-three" >
-            <div class="card" >
                 <div class="card-title">
                 <h2 class="title"><i class="fa-solid fa-eye">Zone des vues </i></h2>
                 </div>  
@@ -373,14 +373,11 @@ export const CustomViewForm = () => {
                 )}
             </div>
             {/* Button qui est disabled tant que la valeur de la case valeur n'est pas remplie */}
-            <Button label="Créer la vue" onClick={submitView}/>
+            <Button label="Créer la vue" onClick={submitView}/>                     <Button label="Voir les vues créées" onClick={getAllViews} style={{backgroundColor:"#f0ad4e", color:"white", position:"absolute", right:"20px"}}><Badge value={allViews.length} severity="info" /></Button>
+
         </div>
                 </div>
-                <div class="card-footer">
-                    {/* afficher le nombre de vues déjà créées */}
-                    <h1>Nombre de vues déjà créées : {allViews? allViews.length : 0}</h1>
-                    {/* bouton pour afficher la liste des vues déjà créées */}
-                    <Button label="Voir les vues" onClick={getAllViews} />
+             
                     {/* afficher la liste des vues */}
                     <Dialog header="Liste des vues" visible={displayAllViews} style={{ width: '70%' }} footer={null} onHide={() => onHide('displayAllViews')}>
                     <DataTable value={allViews} selection={selectedView} onSelectionChange={(e) => setSelectedView(e.value)}>
@@ -427,8 +424,7 @@ export const CustomViewForm = () => {
                     </DataTable>
                     </Dialog>
                 </div>     
-            </div>
-        </div>
+
   
     );
 };

@@ -153,23 +153,27 @@ router.get('/factures/:id', [authJwt.tokenVerification], checkRolePermission(['a
 const {
     findLibelle, 
     createLibelle,
-    findLibelleById
+    findLibelleById, 
+    updateLibelle,
 } = require('../controllers/facturedetails.controller');
 router.get('/libelle', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findLibelle);
 router.get('/libelle/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findLibelleById);
 router.post('/libelle', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createLibelle);
+router.put('/libelle/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateLibelle);
 
 // Routes pour les objets 
 const {
     findObjet,
     createObjet,
-    findObjetById
+    findObjetById,
+    updateObjet
 
     
 } = require('../controllers/facturedetails.controller');
 router.get('/objet', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findObjet);
 router.get('/objet/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findObjetById);
 router.post('/objet', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createObjet);
+router.put('/objet/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateObjet);
 
 // Routes pour les extraits
 const {

@@ -14,7 +14,10 @@ import Profile from './components/profile.component';
 import AllData from './components/AllData/allData.component';
 import RedirectionPage from './components/redirectPage';
 import DataUserClient from './components/dataUserClient.component';
+import Contact from './components//sendMail.component';
 import PrivateRoute from './services/PrivateRoute';
+import ReadInvoice from './components/readInvoice/readInvoice.component';
+
 import { useHistory } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import {Toast } from 'primereact/toast';
@@ -28,13 +31,11 @@ const App = () => {
 
     const menu = [
         { label: "Mes données", to: "/userData", icon: faBook, isVisible: user === 'user' ? true : false},
-
-        
+        { label: "Contact", to: "/contact", icon: faHome, isVisible: user === 'user' ? true : false},
+        { label: "Photos", to: "/readInvoice", icon: faFileSignature, isVisible: user === 'admin' || user === 'moderator' ? true : false},
         {label : 'Base de données', to : '/allData', icon: faFileContract, isVisible : user === 'admin' || user === 'moderator' ? true : false},
         { label: "Analyse", to: "/analyse", icon: faHome, isVisible: user === 'admin' || user === 'moderator' ? true : false},
-        { label: "Clients", to: "/clients", icon: faAddressBook, isVisible: user === 'admin' || user === 'moderator' ? true : false},
         { label: "Facturiers", to: "/facturiers", icon: faFileSignature, isVisible: user === 'admin' || user === 'moderator' ? true : false},
-        { label: "Utilisateurs", to: "/utilisateurs", icon: faUsers, isVisible: user === 'admin' || user === 'moderator' ? true : false},
         {label : 'Profil', to : '/profile', icon: faHardHat, isVisible : true, isLast: true},
 
     ];
@@ -82,48 +83,33 @@ const App = () => {
        
   
 
-        return (<Router>
+        return (
+        
+        <Router>
+            <Toast ref={toast} />
             <div className="main-window">
                 {/* Checker le temps restant de connexion toutes les minutes, si le temps est bientot fini, afficher un message */}
                 <Toast ref={toast} />
-         
-
-             
-
-
-
-                
-
                 <TopMenuBar onToggleMenu={onToggleMenu}></TopMenuBar>
-
                 <div className='main-section'>
-                    {/* Quand le temps de connexion est bientot fini, afficher un message  */}
-                     
-
                     <div className={`side-menu ${menuIsVisible ? "menu-is-visible" : "menu-is-hidden"}`}>
                     <SideMenuBar menu={menu} setMenuVisible={forcedCloseMenu}></SideMenuBar>
                     </div>
-                    
                     <div className={`main-content ${menuIsVisible ? "" : "menu-is-hidden-content"}`}>
-     
                         <Switch>
-
                             <PrivateRoute path='/profile' exact component={Profile} />
-
                             <PrivateRoute path='/analyse' exact component={Analyse} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/allData' exact component={AllData} roles={['admin', 'moderator']}/>
-                            <PrivateRoute path='/clients' exact component={Analyse} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/facturiers' exact component={Facturiers} roles={['admin', 'moderator']}/>
-                            <PrivateRoute path='/utilisateurs' exact component={Analyse} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/userData' exact component={DataUserClient} roles={['user']}/>
+                            <PrivateRoute path='/readInvoice' exact component={ReadInvoice} roles={['admin', 'moderator']}/>
+                            <PrivateRoute path='/contact' exact component={Contact} />
                             <PrivateRoute path="/login" exact component={Login} />
                             <PrivateRoute path='/contact' exact component={Analyse} />
                             <PrivateRoute path='/redirect' exact component={RedirectionPage}/>
                             <Route>
                                 <Redirect to="/redirect" exact component={RedirectionPage} />
                             </Route>
-                        
-                    
                         </Switch>
                     
                     </div>

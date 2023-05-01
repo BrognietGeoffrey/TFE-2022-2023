@@ -90,3 +90,28 @@ body {
   box-shadow: 0 0 0 0.2rem #fec7c7;
   border-color: #bc0100;
 }
+
+/* si la taille de l'écran correspond à celle d'un téléphone, on adapte */
+@media screen and (max-width: 768px) {
+  .main-window .main-section .main-content {
+    width: 100%;
+    margin: 0;
+    transition: width var(--menu-transition-time);
+    height: 70%;
+  }
+  .menu-is-visible {
+    position: sticky;
+    top: calc(var(--top-menu-height) + 2rem);
+  }
+  .menu-is-hidden {
+    width: 0rem !important;
+    /*display: none !important;*/
+    overflow: hidden;
+    /*transition: width var(--menu-transition-time)!important;*/
+    /*transition: width var(--menu-transition-time);*/
+    /*visibility: hidden;*/
+  }
+  .menu-is-hidden-content {
+    width: calc(100% - 2rem) !important;
+  }
+}

@@ -19,6 +19,10 @@ class compteFournisseurService {
         return axios.post(API_URL, compteFournisseur, { headers: BASIC_HEADERS });
     }
 
+    async update(id, compteFournisseur) {
+        return axios.put(API_URL + id, compteFournisseur, { headers: BASIC_HEADERS });
+    }
+    
 
     
     

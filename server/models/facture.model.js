@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       
     },
     num_facture: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
 
     },

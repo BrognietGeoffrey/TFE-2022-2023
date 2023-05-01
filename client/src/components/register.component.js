@@ -61,6 +61,8 @@ function Register() {
   
 
   const registerUser = (event) => {
+    event.preventDefault();
+    if (client === true) {
 
     event.preventDefault();
     setErrorMsg('');
@@ -135,6 +137,32 @@ function Register() {
         console.log(e);
         toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Client Not Created', life: 3000 });
       });
+    } else {
+      const dataUser = {
+        username: username,
+        password: password,
+        email: email,
+        role: role,
+      };
+      auhtService.register(dataUser)
+        .then(response => {
+          console.log(response.data);
+          setUserId(response.data.user_id);
+          toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+          setUsername('');
+          setPassword('');
+          setConfirmPassword('');
+          setEmail('');
+          setRole('');
+          
+        }
+        )
+        .catch(e => {
+          console.log(e);
+          toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'User Not Created', life: 3000 });
+        }
+        );
+    }
   };
 
 

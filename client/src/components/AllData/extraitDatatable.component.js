@@ -52,7 +52,7 @@ const AllData = () => {
     return (
         <div className="datatable-rowgroup-demo">
             <Toast ref={toast}></Toast>
-            <div className="card">
+   
                 
                 <DataTable value={extraits} rowGroupMode="subheader" groupRowsBy="date_extrait"
                     sortMode="single" sortField="date_extrait" sortOrder={1} responsiveLayout="scroll"
@@ -64,7 +64,7 @@ const AllData = () => {
                     <Column field="montant" header="Montant" sortable></Column>
                     <Column field="description" header="Description" sortable></Column>
                 </DataTable>
-            </div>
+        
         </div>
     );
 }

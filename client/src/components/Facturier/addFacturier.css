@@ -39,3 +39,12 @@
     flex-direction: row;
     justify-content: center;
 }
+
+.yellow-tooltip.p-tooltip .p-tooltip-arrow {
+    border-top-color: var(--yellow-500);
+}
+
+.yellow-tooltip.p-tooltip .p-tooltip-text {
+    background-color: var(--yellow-500);
+    color: var(--yellow-50);
+}

@@ -15,6 +15,8 @@ import { Dialog } from 'primereact/dialog';
 import { Checkbox } from 'primereact/checkbox';
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
+import { Tooltip } from  'primereact/tooltip';
+import {Message } from 'primereact/message';
 
 import {RadioButton} from 'primereact/radiobutton';
 import {ToggleButton} from 'primereact/togglebutton';
@@ -30,6 +32,7 @@ import tvaDataService from "../../services/tva.services";
 import clientDataService from "../../services/clientService";
 import FournisseurDataService from "../../services/fournisseurService";
 import LogsDataService from "../../services/logsService";
+import { classNames } from "primereact/utils";
 
 const AddFacturier = () => {
     const [user, setUser] = useState(null);
@@ -60,6 +63,8 @@ const AddFacturier = () => {
     const [factureId, setFactureId] = useState(null);
     const [fournisseurId, setFournisseurId] = useState(null);
     const [clientId, setClientId] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
+
     const toast = useRef(null);
     const toastAddon = useRef(null);
 
@@ -175,7 +180,8 @@ const AddFacturier = () => {
             return {
                 label: libelle.title,
                 // add tooltip to the label
-                value: libelle.id
+                value: libelle.id,
+                from : 'libelle'
             };
             // sort the list by label
         }).sort((a, b) => a.label.localeCompare(b.label)));
@@ -187,7 +193,8 @@ const AddFacturier = () => {
         setObjetList(objetList.data.map(objet => {
             return {
                 label: objet.title,
-                value: objet.id
+                value: objet.id, 
+                from : 'objet'
             };
             // sort the list by label
         }).sort((a, b) => a.label.localeCompare(b.label)));
@@ -199,7 +206,8 @@ const AddFacturier = () => {
             return {
                 label: decompte.num_decompte,
                 value: decompte.decompte_id, 
-                type : decompte.type
+                type : decompte.type, 
+                from : 'decompte'
             };
             // sort the list by label
         }).sort((a, b) => a.label.localeCompare(b.label)));
@@ -212,7 +220,8 @@ const AddFacturier = () => {
                 label: extrait.num_extrait,
                 value: extrait.extrait_id, 
                 montant : extrait.montant,
-                date : extrait.date_extrait
+                date : extrait.date_extrait, 
+                from : 'extrait'
             };
         }));
     };
@@ -224,6 +233,7 @@ const AddFacturier = () => {
                 label: tva.tva_value,
                 value: tva.tva_id, 
                 tva_description : tva.tva_description,
+                from : 'tva'
 
             };
         }));
@@ -231,6 +241,7 @@ const AddFacturier = () => {
 
     const getFournisseurList = async () => {
         const fournisseurList = await compteFournisseurDataService.getAll();
+        console.log(fournisseurList)
         setFournisseurList(fournisseurList.map(fournisseur => {
             return {
                 label: fournisseur.fournisseur.name,
@@ -239,6 +250,9 @@ const AddFacturier = () => {
                 adresse_fournisseur : fournisseur.fournisseur.adresse_fournisseur,
                 telephone_fournisseur : fournisseur.fournisseur.telephone_fournisseur,
                 email_fournisseur : fournisseur.fournisseur.email_fournisseur,
+                num_compte_banque : fournisseur.num_compte_banque,
+                fournisseur_id : fournisseur.fournisseur_id,
+                from : 'fournisseur'
 
 
             };
@@ -257,7 +271,9 @@ const AddFacturier = () => {
                 telephone_client : client.client.telephone_client,
                 email_client : client.client.email_client,
                 numCompteClient : client.numCompteClient,
-                num_compte_banque : client.num_compte_banque
+                num_compte_banque : client.num_compte_banque, 
+                client_id : client.client.client_id,
+                from : 'client'
 
             };
         }).sort((a, b) => a.label.localeCompare(b.label)));
@@ -748,9 +764,280 @@ const AddFacturier = () => {
             });
     };
 
+    const onRowEditComplete = (e) => {
+        console.log(e)
+        if (e.data.from ==="libelle")   {
+            const data = {
+                id: e.data.value,
+                title: e.newData.label,
+            }
+            LibelleDataService.update(e.data.value, data)
+                .then(response => {
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Libelle Updated', life: 3000 });
+                    const logData = {
+                        libelle_id : e.data.libelle_id,
+                        description : "Modification d'un libelle",
+                        user_id : decoded.user_id.id,
+    
+                    }
+                    LogsDataService.create(logData)
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                    getLibelleList();
+                }
+                )
+                .catch(e => {
+                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Libelle not updated', life: 3000 });
+                }
+                )
+
+        }
+        else if (e.data.from ==="objet")   {
+            const data = {
+                id: e.data.value,
+                title: e.newData.label,
+            }
+            ObjetDataService.update(e.data.value, data)
+                .then(response => {
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Objet Updated', life: 3000 });
+                    const logData = {
+                        objet_id : e.data.objet_id,
+                        description : "Modification d'un objet",
+                        user_id : decoded.user_id.id,
+
+                    }
+                    LogsDataService.create(logData)
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                    getObjetList();
+                    setShowAlert(false);
+
+                }
+                )
+                .catch(e => {
+                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Objet not updated', life: 3000 });
+                }
+                )
+
+        }
+        else if (e.data.from ==="decompte")   {
+            console.log(e)
+            const data = {
+                decompte_id: e.data.value,
+                num_decompte: e.newData.label,
+                type : e.newData.type,
+            }
+            DecompteDataService.update(e.data.value, data)
+                .then(response => {
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Decompte Updated', life: 3000 });
+                    const logData = {
+                        decompte_id : e.data.decompte_id,
+                        description : "Modification d'un decompte",
+                        user_id : decoded.user_id.id,
+
+                    }
+                    LogsDataService.create(logData)
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                    getDecompteList();
+                    setShowAlert(false);
+
+                }
+                )
+                .catch(e => {
+                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Decompte not updated', life: 3000 });
+                }
+                )
+            }
+        else if (e.data.from ==="fournisseur")   {
+            console.log(e)
+            const dataFournisseur = {
+                name: e.newData.label,
+                adresse_fournisseur : e.newData.adresse_fournisseur,
+                telephone_fournisseur : e.newData.telephone_fournisseur,
+                email_fournisseur : e.newData.email_fournisseur,
+            }
+            const dataCompteFournisseur = {
+                numCompteFournisseur : e.newData.numCompteFournisseur,
+                num_compte_banque : e.newData.num_compte_banque,
+            }
+            FournisseurDataService.update(e.data.fournisseur_id, dataFournisseur)
+                .then(response => {
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Fournisseur Updated', life: 3000 });
+                    const logData = {
+                        fournisseur_id : e.data.fournisseur_id,
+                        description : "Modification d'un fournisseur",
+                        user_id : decoded.user_id.id,
+
+                    }
+                    LogsDataService.create(logData)
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                    getFournisseurList();
+                    setShowAlert(false);
+
+                }
+                )
+                .catch(e => {
+                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Fournisseur not updated', life: 3000 });
+                }
+                )
+                compteFournisseurDataService.update(e.data.value, dataCompteFournisseur)
+                .then(response => {
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Fournisseur Updated', life: 3000 });
+                    const logData = {
+                        compte_fournisseur_id : e.data.compte_fournisseur_id,
+                        description : "Modification d'un compte fournisseur",
+                        user_id : decoded.user_id.id,
+
+                    }
+                    LogsDataService.create(logData)
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                    getFournisseurList();
+                    setShowAlert(false);
+
+                }
+                )
+                .catch(e => {
+                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Compte Fournisseur not updated', life: 3000 });
+                }
+                )
+            }
+        else if (e.data.from === "client") {
+            console.log(e)
+            const dataClient = {
+                firstname: e.newData.firstname,
+                name : e.newData.name,
+                adresse_client : e.newData.adresse_client,
+                telephone_client : e.newData.telephone_client,
+                email_client : e.newData.email_client,
+
+            }
+            const dataCompteClient = {
+                numCompteClient : e.newData.numCompteClient,
+                num_compte_banque : e.newData.num_compte_banque,
+            }
+            clientDataService.update(e.data.client_id, dataClient)
+                .then(response => {
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Updated', life: 3000 });
+                    const logData = {
+                        client_id : e.data.client_id,
+                        description : "Modification d'un client",
+                        user_id : decoded.user_id.id,
+
+                    }
+                    LogsDataService.create(logData)
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                    getClientList();
+                    setShowAlert(false);
+
+                }
+                )
+                .catch(e => {
+                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Client not updated', life: 3000 });
+                }
+                )
+                compteClientDataService.update(e.data.value, dataCompteClient)
+                .then(response => {
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Client Updated', life: 3000 });
+                    const logData = {
+                        compte_client_id : e.data.compte_client_id,
+                        description : "Modification d'un compte client",
+                        user_id : decoded.user_id.id,
+
+                    }
+                    LogsDataService.create(logData)
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                    getClientList();
+                    setShowAlert(false);
+
+                }
+                )
+                .catch(e => {
+                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Compte Client not updated', life: 3000 });
+                }
+                )
+            
+        }
+        else if (e.data.from === "tva") {
+            console.log(e)
+            const dataTva = {
+                tva_value: e.newData.label,
+                tva_description : e.newData.tva_description,
+            }
+            tvaDataService.update(e.data.value, dataTva)
+                .then(response => {
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Tva Updated', life: 3000 });
+                    const logData = {
+                        tva_id : tva.tva_id,
+                        description : "Modification d'une tva",
+                        user_id : decoded.user_id.id,
+
+                    }
+                    LogsDataService.create(logData)
+                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                    getTvaList();
+                    setShowAlert(false);
+
+                }
+                )
+                .catch(e => {
+                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Tva not updated', life: 3000 });
+                }
+                )
+        }
+        else if (e.data.from === 'extrait') {
+            const dataExtrait = {
+                num_extrait: e.newData.label,
+                montant : e.newData.montant,
+                date_extrait : e.newData.date
+        }
+        ExtraitDataService.update(e.data.value, dataExtrait)
+            .then(response => {
+                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Extrait Updated', life: 3000 });
+                const logData = {
+                    extrait_id : e.data.extrait_id,
+                    description : "Modification d'un extrait",
+                    user_id : decoded.user_id.id,
+
+                }
+                LogsDataService.create(logData)
+                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                getExtraitList();
+                setShowAlert(false);
+
+            }
+            )
+            .catch(e => {
+                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Extrait not updated', life: 3000 });
+            }
+            )
+        }
+
+    }
+
+    const textEditor = (options) => {
+        // Message dans le dialog pour informer l'utilisateur
+        
+        return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} tooltip="Attention ! Toutes modifications entrainera des changements sur tout le facturier" tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }} />;
+
+    }
+
+
+
+
+
+
+
     return (
+        
         <div>
+
             <Toast ref={toast} />
+            <Tooltip
+  target=".editButton"
+  content="Modifier"
+    position="bottom"   
+    mouseTrack={true}
+    mouseTrackLeft={10}
+
+/>
             <h3 class="style-section-title">Factures</h3>
             <div class="facture-section">
 
@@ -832,11 +1119,21 @@ const AddFacturier = () => {
                                             <label htmlFor="libelle">Titre du libéllé*</label>
                                         </span>
                                         {/* Button to see a list of libelle */}
-                                        <Dialog header="Liste des libéllés" className="libelleListDialog" visible={displayLibellesList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayLibellesList')} maximizable filter={true} filterPlaceholder="Chercher par objet" filterBy="label">
-                                            <DataTable value={libelleList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive maximizable filter={true} filterPlaceholder="Chercher par libéllé" filterBy="label">
-                                                <Column field="label" header="Libéllés" sortable filter filterPlaceholder="Rechercher" />
-                                            </DataTable>
+                                        <Dialog header="Liste des libéllés" className="libelleListDialog" visible={displayLibellesList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayLibellesList')} maximizable filter={true} filterPlaceholder="Chercher par objet" filterBy="label"
+                                        >
+                                            <Toast ref={toastAddon} />
+                                            <DataTable value={libelleList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive maximizable filter={true} filterPlaceholder="Chercher par libéllé" filterBy="label" editMode="row" onRowEditComplete={onRowEditComplete}>
+                                                <Column  field="label" header="Libéllés" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)}  />
+                                                {/* colonne avec le bouton de modifier  */}
 
+                                                <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
+
+
+                                            </DataTable>
+                                            {/* si l'utilisateur appuie sur modifier de la className editbutton, alors on affiche un message d'attention  */}
+                                            
+                              
+                                            
                                         </Dialog>
                                         
 
@@ -898,10 +1195,18 @@ const AddFacturier = () => {
                                         {/* Button to see a list of libelle */}
                                        
                                         <Dialog header="Liste des décomptes" className="decompteListDialog" visible={displayDecompteList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayDecompteList')}>
-                                            <DataTable value={decompteList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive maximizable filter={true} filterPlaceholder="Chercher par décompte" filterBy="label" >
-                                                <Column field="label" header="Décompte" sortable filter filterPlaceholder="Rechercher" />
-                                                <Column field="type" header="Type" sortable filter filterPlaceholder="Rechercher" />
+                                            
+
+                                            <DataTable value={decompteList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive maximizable filter={true} filterPlaceholder="Chercher par décompte" filterBy="label" editMode="row" onRowEditComplete={onRowEditComplete}>
+                                                <Column field="label" header="Décompte" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)}/>
+                                                <Column field="type" header="Type" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)}/>
+                                                {/* colonne avec le bouton de modifier  */}
+                                                <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} className="editButton" data-pr-tooltip="No notifications" data-pr-position="right"></Column>
+
                                             </DataTable>
+                                            {/* check if the className editButton is changed */}
+                                            {/* si le bouton modifier est cliqué, on indique un message en rouge pour indiqué que ce changement sera effectué sur tous les facturiers existants */}
+                                            
 
                                         </Dialog>
                                         
@@ -940,9 +1245,11 @@ const AddFacturier = () => {
                                         </span>
                                         {/* Button to see a list of objet */}
                                         
-                                        <Dialog header="Liste des objets" className="objetListDialog" visible={displayObjetList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayObjetList')}>
-                                            <DataTable value={objetList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive stripedRows resizableColumns columnResizeMode="expand">
-                                                <Column field="label" header="Objets" sortable filter filterPlaceholder="Rechercher" />
+                                        <Dialog header="Liste des objets" className="objetListDialog" visible={displayObjetList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayObjetList')} >
+                                            <DataTable value={objetList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive stripedRows resizableColumns columnResizeMode="expand" editMode="row" onRowEditComplete={onRowEditComplete}>
+                                                <Column field="label" header="Objets" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)}/>
+                                                <Column  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} className="editButton" data-pr-tooltip="No notifications" data-pr-position="right" />
+
                                             </DataTable>
 
                                         </Dialog>
@@ -982,13 +1289,14 @@ const AddFacturier = () => {
                                     Liste des fournisseurs existants
                                 </Button>
                                 <Dialog header="Liste des fournisseurs" className="fournisseurListDialog" visible={displayFournisseurList} style={{ width: '70%' }} footer={renderFooter} onHide={() => onHide('displayFournisseurList')}>
-                                        <DataTable value={fournisseurList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]}  stripedRows columnResizeMode="expand" filter={true} filterPlaceholder="Chercher par fournisseur" filterBy="label" scrollable scrollHeight="flex">
-                                            <Column field="label" header="Fournisseurs" sortable filter filterPlaceholder="Rechercher" frozen style={{ minWidth: '200px' }}/>
-                                            <Column field="numCompteFournisseur" header="Numéro de compte fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} />
-                                            <Column field="adresse_fournisseur" header="Adresse du fournisseur" sortable filter filterPlaceholder="Rechercher"  style={{ minWidth: '200px' }}/>
-                                            <Column field="telephone_fournisseur" header="Téléphone du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} />
-                                            <Column field="email_fournisseur" header="Email du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} />
-
+                                        <DataTable value={fournisseurList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]}  stripedRows columnResizeMode="expand" filter={true} filterPlaceholder="Chercher par fournisseur" filterBy="label" scrollable scrollHeight="flex" editMode="row" onRowEditComplete={onRowEditComplete}>
+                                            <Column field="label" header="Fournisseurs" sortable filter filterPlaceholder="Rechercher"  style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                            <Column field="numCompteFournisseur" header="Numéro de compte fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                            <Column field="adresse_fournisseur" header="Adresse du fournisseur" sortable filter filterPlaceholder="Rechercher"  style={{ minWidth: '200px' }} editMode  ="row" editor={(options) => textEditor(options)} />
+                                            <Column field="telephone_fournisseur" header="Téléphone du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                            <Column field="email_fournisseur" header="Email du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                            <Column field="num_compte_banque" header="N° de compte en banque du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                            <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
 
                                         </DataTable>
                                 </Dialog>
@@ -1097,14 +1405,15 @@ const AddFacturier = () => {
                                     Liste des clients existants
                                 </Button>
                                 <Dialog header="Liste des clients" className="clientListDialog" visible={displayClientList} style={{ width: '80%' }} footer={renderFooter} onHide={() => onHide('displayClientList')}>
-                                        <DataTable value={clientList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]}  stripedRows columnResizeMode="expand" filter={true} filterPlaceholder="Chercher par client" filterBy="label" scrollable scrollHeight="flex">
-                                            <Column field="name" header="Nom du client" sortable filter filterPlaceholder="Chercher par client" filterMatchMode="contains" style={{ width: '250px' }} frozen/>
-                                            <Column field="firstname" header="Prénom du client" sortable filter filterPlaceholder="Chercher par prénom" filterMatchMode="contains" style={{ width: '250px' }} />
-                                            <Column field="adresse_client" header="Adresse du client" sortable filter filterPlaceholder="Chercher par adresse" filterMatchMode="contains" style={{ width: '250px' }} />
-                                            <Column field="telephone_client" header="Téléphone du client" sortable filter filterPlaceholder="Chercher par téléphone" filterMatchMode="contains" style={{ width: '250px' }} />
-                                            <Column field="email_client" header="Email du client" sortable filter filterPlaceholder="Chercher par email" filterMatchMode="contains" style={{ width: '250px' }} />
-                                            <Column field="numCompteClient" header="Numéro de compte" sortable filter filterPlaceholder="Chercher par numéro de compte" filterMatchMode="contains" style={{ width: '250px' }} />
-                                            <Column field="num_compte_banque" header="N° de compte de banque" sortable filter filterPlaceholder="Chercher par numéro de compte de banque" filterMatchMode="contains" style={{ width: '250px' }} />
+                                        <DataTable value={clientList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]}  stripedRows columnResizeMode="expand" filter={true} filterPlaceholder="Chercher par client" filterBy="label" scrollable scrollHeight="flex" editMode="row" onRowEditComplete={onRowEditComplete}>
+                                            <Column field="name" header="Nom du client" sortable filter filterPlaceholder="Chercher par client" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
+                                            <Column field="firstname" header="Prénom du client" sortable filter filterPlaceholder="Chercher par prénom" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
+                                            <Column field="adresse_client" header="Adresse du client" sortable filter filterPlaceholder="Chercher par adresse" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
+                                            <Column field="telephone_client" header="Téléphone du client" sortable filter filterPlaceholder="Chercher par téléphone" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
+                                            <Column field="email_client" header="Email du client" sortable filter filterPlaceholder="Chercher par email" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
+                                            <Column field="numCompteClient" header="Numéro de compte" sortable filter filterPlaceholder="Chercher par numéro de compte" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
+                                            <Column field="num_compte_banque" header="N° de compte de banque" sortable filter filterPlaceholder="Chercher par numéro de compte de banque" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
+                                            <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
 
                                         </DataTable>
                                 </Dialog>
@@ -1207,7 +1516,7 @@ const AddFacturier = () => {
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
                             <span className="p-float-label">
-                                <Dropdown id="extrait" value={extrait.extrait} options={extraitList} onChange={(e) => setExtrait({ ...extrait, extrait: e.value })} placeholder="Choisir un extrait" tooltip="Ce champs n'est pas obligatoire" tooltipOptions={{ position: 'right', mouseTrack: true, mouseTrackTop: 15 }} />
+                                <Dropdown id="extrait" value={extrait.extrait} options={extraitList} onChange={(e) => setExtrait({ ...extrait, extrait: e.value })} placeholder="Choisir un extrait" tooltip="Ce champs n'est pas obligatoire. Si vous décidez de ne pas le remplir, la facture sera indiquée comme non payée" tooltipOptions={{ position: 'top'}} />
                                 <label htmlFor="inputgroup">Extrait de la facture</label>
                             </span>
                             <Button onClick={(e) => onClick('displayExtrait', 'center', e)} icon="pi pi-plus" className="p-button-success" />
@@ -1216,12 +1525,13 @@ const AddFacturier = () => {
                                 <Button onClick={(e) => onClick('displayExtraitList', 'center', e)}  className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
                                     Liste des extraits
                                 </Button>
-                                    <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitDialog">
-                                        <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive>
-                                            {console.log(extraitList)}
-                                            <Column field="label" header="N° de l'extrait" />
-                                            <Column field="date" header="Date de l'extrait" />
-                                            <Column field="montant" header="Montant de l'extrait" />
+                                    <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitListDialog">
+                                        <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive editMode="row" onRowEditComplete={onRowEditComplete}>
+                                            <Column field="label" header="N° de l'extrait" editor={(options) => textEditor(options)}/>
+                                            <Column field="date" header="Date de l'extrait" editor={(options) => textEditor(options)}/>
+                                            <Column field="montant" header="Montant de l'extrait" editor={(options) => textEditor(options)} />
+                                            <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
+
                                         </DataTable>
                                     </Dialog>
                                 <div class="section-three">
@@ -1281,10 +1591,12 @@ const AddFacturier = () => {
                                 <Button onClick={(e) => onClick('displayTvaList', 'center', e)}  className="p-button-info" badge={tvaList.length} tooltip="Liste des TVA's" tooltipOptions={{ position: 'right' }}>
                                     Liste des TVA 
                                 </Button>
-                                    <Dialog header="Liste des TVA" visible={displayTvaList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayTvaList')}>
-                                        <DataTable value={tvaList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive filter>
-                                            <Column field="label" header="Valeur de la TVA" sortable/>
-                                            <Column field="tva_description" header="Description " sortable/>
+                                    <Dialog header="Liste des TVA" visible={displayTvaList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayTvaList')}  className="tvaDialog">
+                                        <DataTable value={tvaList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive filter editMode="row" onRowEditComplete={onRowEditComplete}>
+                                            <Column field="label" header="Valeur de la TVA" sortable editor={(options) => textEditor(options)}/>
+                                            <Column field="tva_description" header="Description " sortable editor={(options) => textEditor(options)}/>
+                                            <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
+
 
                                         </DataTable>
                                     </Dialog>

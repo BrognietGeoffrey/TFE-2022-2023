@@ -29,6 +29,10 @@ class clientService {
 
     }
 
+    update(id, client) {
+        return axios.put(API_URL + id, client, { headers: BASIC_HEADERS });
+    }
+    
 }
 export default new clientService();
 

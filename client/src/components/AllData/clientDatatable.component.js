@@ -25,7 +25,7 @@ const ClientDatatable = () => {
 
     return (
         <div>
-            <DataTable value={clients}>
+            <DataTable value={clients} style={{width: '100%', height: '450px', overflowY : 'auto'}}>
                 <Column field="name" header="Nom" sortable></Column>
                 <Column field="firstname" header="Prénom" sortable></Column>
                 <Column field="email_client" header="Email" sortable></Column>
