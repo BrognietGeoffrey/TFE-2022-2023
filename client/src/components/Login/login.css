@@ -1,0 +1,74 @@
+
+ 
+
+.login{
+    width: 20rem;
+    position: absolute;
+    top:45%;
+    left: 50%;
+    transform: translate(-50%,-45%);
+}
+.p-button{
+    background-color: var(--main-color);
+    border: var(--main-color);
+}
+
+button.p-button.p-component.login-button:hover{
+    border: 1px solid var(--main-color);
+}
+input#email:-webkit-autofill,
+input#email:-webkit-autofill:hover,
+input#email:-webkit-autofill:focus,
+input#email:-webkit-autofill:active  {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+
+.logo-masterservices{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+.logo-masterservices img{
+    width: 10rem;
+    height: auto;
+}
+
+.field {
+    margin-bottom: 1rem;
+    display : flex; 
+    align-items: center;
+    flex-direction: column;
+}
+
+.section-three {
+    display: flex center;
+    flex-direction: column;
+    flex-flow : row wrap;
+    flex-grow: 1;
+    margin-top: 2em;
+    margin-left: 1em;
+    margin-right: 1em;
+
+}
+
+.facture-section {
+    display: flex;
+    flex-direction: column;
+    flex-flow : row wrap;
+    /* center */
+    justify-content: center;
+    width : 100%;
+}
+
+#login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width : 90%;
+    align-items: center;
+
+
+}
+

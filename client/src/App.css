@@ -1,0 +1,93 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  --main-color: #c9392f;
+  --success: rgb(18, 143, 18);
+  --info: lightblue;
+  --warning: orange;
+  --danger: red;
+  --top-menu-height: 4.5rem;
+  --side-menu-width: 18rem;
+  --menu-transition-time: 0.25s;
+}
+
+html,
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: black;
+  background-color: white;
+  width: 100vw;
+  max-width: 100%;
+}
+
+.main-window {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 5rem;
+}
+
+.main-window .main-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.main-window .main-section .main-content {
+  width: calc(100% - var(--side-menu-width) - 2rem);
+  /*100% of view - width of sideMenu - margin of sideMenu - margin of self*/
+  margin: 1rem;
+  transition: width var(--menu-transition-time);
+}
+
+.menu-is-visible {
+  position: sticky;
+  top: calc(var(--top-menu-height) + 2rem);
+}
+
+.menu-is-hidden {
+  width: 0rem !important;
+  /*display: none !important;*/
+  overflow: hidden;
+  /*transition: width var(--menu-transition-time)!important;*/
+  /*transition: width var(--menu-transition-time);*/
+  /*visibility: hidden;*/
+}
+
+.menu-is-hidden-content {
+  width: calc(100% - 2rem) !important;
+}
+
+.required::after {
+  content: '*';
+  color: red;
+}
+
+.title {
+  padding-bottom: .5rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #c9392f;
+}
+
+.title h1 {
+  color: #c9392f;
+  font-weight: 700;
+  font-size: x-large;
+}
+
+.p-button.p-button-outlined {
+  background-color: transparent;
+  color: #bc0100;
+  border: 1px solid;
+}
+
+.p-inputtext:enabled:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #fec7c7;
+  border-color: #bc0100;
+}
+
