@@ -66,6 +66,7 @@ const FactuerDatatable = () => {
 
     return (
         <div>
+            
             <DataTable value={facture} editMode="row" onRowEditComplete={onRowEditComplete}>
                 <Column field="num_facture" header="Numéro de facture" editor={(options) => numberEditor(options)} sortable></Column>
 

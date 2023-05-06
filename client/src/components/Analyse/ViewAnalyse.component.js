@@ -8,7 +8,6 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import {Badge } from 'primereact/badge';
 import { Dialog } from 'primereact/dialog';
-import createViewService from '../../services/createViewService';
 import viewServices from '../../services/viewServices';
 import './analyse.css';
 export const CustomViewForm = () => {
@@ -41,7 +40,6 @@ export const CustomViewForm = () => {
     const [valueDate2, setValueDate2] = useState(null);
     const [valueQuery, setValueQuery] = useState(null);
     const [viewName, setViewName] = useState("");
-    const [viewResult, setViewResult] = useState(null);
     const [responseView, setResponseView] = useState(null);
     const [allViews, setAllViews] = useState([]);
     const [displayAllViews, setDisplayAllViews] = useState(false);
@@ -73,7 +71,8 @@ export const CustomViewForm = () => {
               { label: 'Montant', value: 'montant', type: 'number', joinsTable: 'factures' },
               { label: 'Payé', value: 'estpaye', type: 'boolean', joinsTable: 'factures' },
               { label: 'Libélle', value: 'libelleTitle', valueQuery: "title", type: "string", joinsTable: 'libelles', conditionJoins: "factures.libelle_id = libelles.id" },
-              { label: 'Objets', value: 'title', type: "string", joinsTable: 'objets', conditionJoins: "factures.objet_id = objets.id" }
+              { label: 'Objets', value: 'title', type: "string", joinsTable: 'objets', conditionJoins: "factures.objet_id = objets.id" },
+              { label: 'Tva', value: 'tva_value', type: 'string', joinsTable: 'tvas', conditionJoins: "factures.tva_id = tvas.tva_id" }
             ]);
             break;
           case 'clients':
@@ -105,9 +104,6 @@ export const CustomViewForm = () => {
       
 
 
-    const handleOperatorChange = (e) => {
-        setOperator(e.value);
-    };
 
 
 
@@ -224,12 +220,8 @@ export const CustomViewForm = () => {
     return (
 
         <div className="section-three" >
-                <div class="card-title">
-                <h2 class="title"><i class="fa-solid fa-eye">Zone des vues </i></h2>
-                </div>  
-                <div class="card-body">
-                    Ici vous pouvez créer des vues personnalisées
-                </div>
+               
+           
                 <div class="card-content">
                 <div>
             <div>
@@ -373,8 +365,12 @@ export const CustomViewForm = () => {
                 )}
             </div>
             {/* Button qui est disabled tant que la valeur de la case valeur n'est pas remplie */}
-            <Button label="Créer la vue" onClick={submitView}/>                     <Button label="Voir les vues créées" onClick={getAllViews} style={{backgroundColor:"#f0ad4e", color:"white", position:"absolute", right:"20px"}}><Badge value={allViews.length} severity="info" /></Button>
-
+            <div style={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
+            <Button label="Créer la vue" onClick={submitView} id="buttonViewAnalyse" style = {{width: '100%', marginBottom: '10p'}} disabled={valueParam1 === ''} />
+            </div>
+            <div style={{display:"flex", flexDirection:"column", justifyContent:"space-between", marginTop:"0.5em"}}>
+            <Button  id="buttonViewAnalyse" label="Voir les vues créées" onClick={getAllViews} style={{backgroundColor:"#f0ad4e", color:"white"}}><Badge value={allViews.length} severity="info" /></Button>
+            </div>
         </div>
                 </div>
              
@@ -406,6 +402,14 @@ export const CustomViewForm = () => {
                                     <DataTable value={rowData.data}>
                                         <Column field="facturier_id" header="Id du facturier"></Column>
                                         <Column field="facture_id" header="ID de la facture"></Column>
+                                    </DataTable>
+                                );
+                            }
+                            else if (rowData.table = "tvas") {
+                                return (
+                                    <DataTable value={rowData.data}>
+                                        <Column field="num_facture" header="N° de la facture"></Column>
+                                        <Column field="montant" header="Montant de la facture"></Column>
                                     </DataTable>
                                 );
                             }

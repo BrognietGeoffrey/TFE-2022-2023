@@ -130,11 +130,39 @@ const deleteFournisseur = (req, res) => {
         });
     }
 
+const getFournisseurByName = (req, res) => {
+    const name = req.params.name;
+
+    Fournisseurs.findOne({
+        where: {
+        name: name
+        }
+    })
+    .then(data => {
+        if (!data) {
+        res.status(200).send({
+            message: "This fournisseur does not exist"
+        });
+        } else {
+        res.send(data);
+        }
+    })
+    .catch(err => {
+        res.status(409).send({
+            message: "Error retrieving fournisseur with name=" + name
+        });
+    });
+    }
+    
+
+
+
 module.exports = {
     findAllFournisseur,
     findOneFournisseur,
     createFournisseur,
     updateFournisseur,
-    deleteFournisseur
+    deleteFournisseur, 
+    getFournisseurByName
 }
 

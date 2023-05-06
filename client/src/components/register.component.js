@@ -25,13 +25,11 @@ function Register() {
   const [address, setAddress] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [client, setClient] = useState(false);
-  const [emailClient, setEmailClient] = useState('');
   const [numCompteClient, setNumCompteClient] = useState('');
   const [num_compte_banque, setNum_compte_banque] = useState('');
   const [descriptionClient, setDescriptionClient] = useState('');
   const [infosClients, setInfosClients] = useState([]);
   const [infosCompteClients, setInfosCompteClients] = useState([]);
-  const [clientId, setClientId] = useState('');
   const [userId, setUserId] = useState('');
   const [clientList, setClientList] = useState([]);
   const [role, setRole] = useState('');
@@ -40,23 +38,23 @@ function Register() {
     { label: 'Moderator', value: 'moderator' }, 
     { label: 'User', value: 'user' }
   ];
-  const getClientList = async () => {
-    const clientList = await compteClientDataService.getAll();
-    setClientList(clientList.map(client => {
-        return {
-            label: client.client.name + " " + client.client.firstname,
-            value: client.co_client_id, 
-            name : client.client.name,
-            firstname : client.client.firstname, 
-            adresse_client : client.client.adresse_client,
-            telephone_client : client.client.telephone_client,
-            email_client : client.client.email_client,
-            numCompteClient : client.numCompteClient,
-            num_compte_banque : client.num_compte_banque
+  // const getClientList = async () => {
+  //   const clientList = await compteClientDataService.getAll();
+  //   setClientList(clientList.map(client => {
+  //       return {
+  //           label: client.client.name + " " + client.client.firstname,
+  //           value: client.co_client_id, 
+  //           name : client.client.name,
+  //           firstname : client.client.firstname, 
+  //           adresse_client : client.client.adresse_client,
+  //           telephone_client : client.client.telephone_client,
+  //           email_client : client.client.email_client,
+  //           numCompteClient : client.numCompteClient,
+  //           num_compte_banque : client.num_compte_banque
 
-        };
-    }).sort((a, b) => a.label.localeCompare(b.label)));
-  };
+  //       };
+  //   }).sort((a, b) => a.label.localeCompare(b.label)));
+  // };
 
   
 

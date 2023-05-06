@@ -1,9 +1,5 @@
 import "./addFacturier.css";
-// import form from primereact
-import { Col, Form } from "react-bootstrap";
-// import axios
-import { InputNumber } from 'primereact/inputnumber';
-import { SelectButton}  from 'primereact/selectbutton';
+import axios from "axios";
 import jwt_decode from "jwt-decode";
 import React, { useState, useEffect, useRef } from "react";
 import { InputText } from 'primereact/inputtext';
@@ -16,10 +12,7 @@ import { Checkbox } from 'primereact/checkbox';
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import { Tooltip } from  'primereact/tooltip';
-import {Message } from 'primereact/message';
-
-import {RadioButton} from 'primereact/radiobutton';
-import {ToggleButton} from 'primereact/togglebutton';
+import { ProgressBar } from "primereact/progressbar";
 import LibelleDataService from "../../services/libelleService";
 import ObjetDataService from "../../services/objetService";
 import DecompteDataService from "../../services/decompteService";
@@ -32,10 +25,13 @@ import tvaDataService from "../../services/tva.services";
 import clientDataService from "../../services/clientService";
 import FournisseurDataService from "../../services/fournisseurService";
 import LogsDataService from "../../services/logsService";
-import { classNames } from "primereact/utils";
 
 const AddFacturier = () => {
     const [user, setUser] = useState(null);
+    const [file, setFile] = useState(null);
+    const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [fileInfo , setFileInfo] = useState(null);
 
     useEffect(() => {
         const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -58,6 +54,7 @@ const AddFacturier = () => {
     const [fournisseur, setFournisseur] = useState([]);
     const [client, setClient] = useState([]);
     const [tva, setTva] = useState([]);
+    const [tvaId , setTvaId] = useState(null);
     const [compteFournisseur, setCompteFournisseur] = useState([]);
     const [compteClient, setCompteClient] = useState([]);
     const [factureId, setFactureId] = useState(null);
@@ -303,55 +300,117 @@ const AddFacturier = () => {
         getTvaList();
         getFournisseurList();
         getClientList();
+
     }, []);
 
     const saveFacture = () => {
-
-        var data = {
-            num_facture: factures.num_facture,
-            facture_date: factures.facture_date,
-            montant: factures.montant_facture,
-            objet_id: factures.objet,
-            libelle_id: factures.libelle,
-            // Si l'extrait est rempli alors la facture est payée
-            estpaye: extrait.extrait ? true : false,
-
-        
-            tva_id: factures.tva,
-            num_facture_lamy: factures.num_facture_lamy
-        };        
-
-        FactureDataService.create(data)
+        const tvaValue = result ? result.taxes[0].rate : null // remplacer par la valeur de la TVA récupérée par OCR
+        // Si la TVA n'est pas dans la liste des TVA, on l'ajoute
+        if (tvaList.find(tva => tva.label === tvaValue)) {
+            console.log(!tvaList.find(tva => tva.label === tvaValue, 'tvaValue'))
+          const tvaData = {
+            tva_value: tvaValue,
+            tva_description: 'TVA ' + tvaValue + '%'
+          };
+          tvaDataService.create(tvaData)
             .then(response => {
-                setFactures({
+              const data = {
+                num_facture: result ? result.invoiceNumber.value : factures.num_facture,
+                facture_date: result ? result.date.value : factures.facture_date,
+                montant: result ? result.totalAmount.value : factures.montant,
+                objet_id: factures.objet,
+                libelle_id: factures.libelle,
+                estpaye: extrait.extrait ? true : false,
+                tva_id: response.data.tva_id,
+                num_facture_lamy: factures.num_facture_lamy
+              };
+        
+              FactureDataService.create(data)
+                .then(response => {
+                  setFactures({
                     ...factures,
                     num_facture: response.data.num_facture,
                     facture_date: response.data.facture_date,
                     montant: response.data.montant,
-                    objet_id: response.data.objet_id,
-                    libelle_id: response.data.libelle_id,
+                    objet: response.data.objet_id,
+                    libelle: response.data.libelle_id,
                     estpaye: response.data.estpaye,
                     tva_id: response.data.tva_id,
                     num_facture_lamy: response.data.num_facture_lamy,
+                    submitted: true
+                  });
+                  console.log(response.data);
+                //   Ajouter dans le facturier
+                  saveFacturier(response.data.facture_id)
+                })
+                .catch(e => {
+                  console.log(e);
                 });
-
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Facture Added', life: 3000 });
-                setFactureId(response.data.facture_id + 1);
-                // si la création de la facture est un succès, on crée le facturier
-                if (response.data.facture_id) {
-                    saveFacturier(response.data.facture_id);
-                }
             })
             .catch(e => {
-                toast.current.show({ severity: 'error', summary: 'Error', detail: 'Facture not added', life: 3000 });
+              console.log(e);
             });
+        } else  {
+     
+            const listTva = tvaList 
+            let tvaId = null
+            listTva.forEach(tva => {
+                if (result && tva.label === tvaValue.toString()) {
+                    tvaId = tva.value
+                    console.log(tvaId)
+                }
+            })
+
+            console.log(factures.date_facture)
+            
+            const data = {  
+                num_facture: result ? result.invoiceNumber.value : factures.num_facture,
+                facture_date: result ? result.date.value : factures.date_facture,
+                montant: result ? result.totalAmount.value : factures.montant,
+                objet_id: factures.objet,
+                libelle_id: factures.libelle,
+                estpaye: extrait.extrait ? true : false,
+                tva_id: result ? tvaId : factures.tva_id,
+                num_facture_lamy: factures.num_facture_lamy
+            };
+
+            FactureDataService.create(data)
+                .then(response => {
+                    setFactures({
+                        ...factures,
+                        num_facture: response.data.num_facture,
+                        facture_date: response.data.facture_date,
+                        montant: response.data.montant,
+                        objet: response.data.objet_id,
+                        libelle: response.data.libelle_id,
+                        estpaye: response.data.estpaye,
+                        tva_id: response.data.tva_id,
+                        num_facture_lamy: response.data.num_facture_lamy,
+                        submitted: true
+                    });
+                    console.log(response.data);
+                    //   Ajouter dans le facturier
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Facture Added', life: 3000 });
+
+                    saveFacturier(response.data.facture_id)
+                    
+                    
+                })
+                .catch(e => {
+                    console.log(e);
+                    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Facture Not Added', life: 3000 });
+                });
+        }
     };
+
+
+      
     // fonction qui crée le facturier dans la base de donnée grâce au dernier id de facture récupéré
     const saveFacturier = (facture_id) => {
         var data = {
             facture_id: facture_id,
             decompte_id: decompte.decompte,
-            co_fournisseur_id: fournisseur.fournisseur,
+            co_fournisseur_id: fournisseur.fournisseur.fournisseur_id,
             extrait_id: extrait.extrait? extrait.extrait : null,
             co_client_id: client.client,
         };
@@ -372,7 +431,7 @@ const AddFacturier = () => {
                 setFactures({
                     ...factures,
                     num_facture: "",
-                    facture_date: "",
+                    date_facture: "",
                     montant_facture: "",
                     objet: "",
                     libelle: "",
@@ -399,6 +458,12 @@ const AddFacturier = () => {
                     ...extrait,
                     extrait: "",
                 });
+                // Vider le résultat de l'OCR et le fichier uploadé
+                setResult(null);
+                setFile(null);
+
+
+               
                 // set checked to false
                 setChecked1(false);
      
@@ -440,8 +505,8 @@ const AddFacturier = () => {
                     ...libelles,
                     title: "",
                 });
-
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Libelle Added', life: 3000 });
+
                 getLibelleList();
                 const logData = {
                     libelle_id : response.data.id,
@@ -562,7 +627,7 @@ const AddFacturier = () => {
 
  
 
-    const saveFournisseur = () => {
+    const saveFournisseur = async () => {
 
         var data = {
             name: fournisseur.name,
@@ -571,7 +636,7 @@ const AddFacturier = () => {
             email_fournisseur: fournisseur.email_fournisseur,
             num_fournisseur: fournisseur.num_fournisseur,
         };
-        FournisseurDataService.create(data)
+       await FournisseurDataService.create(data)
             .then(response => {
                 setFournisseur({
                     ...fournisseur,
@@ -583,9 +648,7 @@ const AddFacturier = () => {
                 });
                 console.log(response.data.fournisseur_id);
                 setFournisseurId(response.data.fournisseur_id+1);
-
-
-
+                
                 saveCompteFournisseur(response.data.fournisseur_id);
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Fournisseur Added', life: 3000 });
                 const logData = {
@@ -614,10 +677,12 @@ const AddFacturier = () => {
             .then(response => {
                 setCompteFournisseur({
                     ...compteFournisseur,
+
                     num_compte_banque: response.data.num_compte_banque,
                     numCompteFournisseur: response.data.numCompteFournisseur,
                 });
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Fournisseur Added', life: 3000 });
+                getFournisseurList();
                 //vide les champs du formulaire
                 setCompteFournisseur({
                     ...compteFournisseur,
@@ -630,6 +695,7 @@ const AddFacturier = () => {
                     adresse_fournisseur: "",
                     telephone_fournisseur: "",
                     email_fournisseur: "",
+                    num_fournisseur: "",
                 });
             })
             .catch(e => {
@@ -659,7 +725,7 @@ const AddFacturier = () => {
                     description: response.data.description
                 });
 
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Added', life: 3000 });
                 setClientId(response.data.client_id + 1);
                 savecompteClient(response.data.client_id);
                 const logData = {
@@ -764,253 +830,65 @@ const AddFacturier = () => {
             });
     };
 
-    const onRowEditComplete = (e) => {
-        console.log(e)
-        if (e.data.from ==="libelle")   {
-            const data = {
-                id: e.data.value,
-                title: e.newData.label,
-            }
-            LibelleDataService.update(e.data.value, data)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Libelle Updated', life: 3000 });
-                    const logData = {
-                        libelle_id : e.data.libelle_id,
-                        description : "Modification d'un libelle",
-                        user_id : decoded.user_id.id,
-    
-                    }
-                    LogsDataService.create(logData)
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-                    getLibelleList();
-                }
-                )
-                .catch(e => {
-                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Libelle not updated', life: 3000 });
-                }
-                )
-
-        }
-        else if (e.data.from ==="objet")   {
-            const data = {
-                id: e.data.value,
-                title: e.newData.label,
-            }
-            ObjetDataService.update(e.data.value, data)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Objet Updated', life: 3000 });
-                    const logData = {
-                        objet_id : e.data.objet_id,
-                        description : "Modification d'un objet",
-                        user_id : decoded.user_id.id,
-
-                    }
-                    LogsDataService.create(logData)
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-                    getObjetList();
-                    setShowAlert(false);
-
-                }
-                )
-                .catch(e => {
-                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Objet not updated', life: 3000 });
-                }
-                )
-
-        }
-        else if (e.data.from ==="decompte")   {
-            console.log(e)
-            const data = {
-                decompte_id: e.data.value,
-                num_decompte: e.newData.label,
-                type : e.newData.type,
-            }
-            DecompteDataService.update(e.data.value, data)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Decompte Updated', life: 3000 });
-                    const logData = {
-                        decompte_id : e.data.decompte_id,
-                        description : "Modification d'un decompte",
-                        user_id : decoded.user_id.id,
-
-                    }
-                    LogsDataService.create(logData)
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-                    getDecompteList();
-                    setShowAlert(false);
-
-                }
-                )
-                .catch(e => {
-                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Decompte not updated', life: 3000 });
-                }
-                )
-            }
-        else if (e.data.from ==="fournisseur")   {
-            console.log(e)
-            const dataFournisseur = {
+    const onRowEditComplete = async (e) => {
+        try {
+          let apiData, logData;
+          switch (e.data.from) {
+            case 'libelle':
+              apiData = { id: e.data.value, title: e.newData.label };
+              await LibelleDataService.update(e.data.value, apiData);
+              logData = { libelle_id: e.data.libelle_id, description: "Modification d'un libelle", user_id: decoded.user_id.id };
+              await LogsDataService.create(logData);
+              getLibelleList();
+              break;
+      
+            case 'objet':
+              apiData = { id: e.data.value, title: e.newData.label };
+              await ObjetDataService.update(e.data.value, apiData);
+              logData = { objet_id: e.data.objet_id, description: "Modification d'un objet", user_id: decoded.user_id.id };
+              await LogsDataService.create(logData);
+              getObjetList();
+              setShowAlert(false);
+              break;
+      
+            case 'decompte':
+              apiData = { decompte_id: e.data.value, num_decompte: e.newData.label, type: e.newData.type };
+              await DecompteDataService.update(e.data.value, apiData);
+              logData = { decompte_id: e.data.decompte_id, description: "Modification d'un decompte", user_id: decoded.user_id.id };
+              await LogsDataService.create(logData);
+              getDecompteList();
+              setShowAlert(false);
+              break;
+      
+            case 'fournisseur':
+              const fournisseurData = {
                 name: e.newData.label,
-                adresse_fournisseur : e.newData.adresse_fournisseur,
-                telephone_fournisseur : e.newData.telephone_fournisseur,
-                email_fournisseur : e.newData.email_fournisseur,
-            }
-            const dataCompteFournisseur = {
-                numCompteFournisseur : e.newData.numCompteFournisseur,
-                num_compte_banque : e.newData.num_compte_banque,
-            }
-            FournisseurDataService.update(e.data.fournisseur_id, dataFournisseur)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Fournisseur Updated', life: 3000 });
-                    const logData = {
-                        fournisseur_id : e.data.fournisseur_id,
-                        description : "Modification d'un fournisseur",
-                        user_id : decoded.user_id.id,
-
-                    }
-                    LogsDataService.create(logData)
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-                    getFournisseurList();
-                    setShowAlert(false);
-
-                }
-                )
-                .catch(e => {
-                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Fournisseur not updated', life: 3000 });
-                }
-                )
-                compteFournisseurDataService.update(e.data.value, dataCompteFournisseur)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Fournisseur Updated', life: 3000 });
-                    const logData = {
-                        compte_fournisseur_id : e.data.compte_fournisseur_id,
-                        description : "Modification d'un compte fournisseur",
-                        user_id : decoded.user_id.id,
-
-                    }
-                    LogsDataService.create(logData)
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-                    getFournisseurList();
-                    setShowAlert(false);
-
-                }
-                )
-                .catch(e => {
-                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Compte Fournisseur not updated', life: 3000 });
-                }
-                )
-            }
-        else if (e.data.from === "client") {
-            console.log(e)
-            const dataClient = {
-                firstname: e.newData.firstname,
-                name : e.newData.name,
-                adresse_client : e.newData.adresse_client,
-                telephone_client : e.newData.telephone_client,
-                email_client : e.newData.email_client,
-
-            }
-            const dataCompteClient = {
-                numCompteClient : e.newData.numCompteClient,
-                num_compte_banque : e.newData.num_compte_banque,
-            }
-            clientDataService.update(e.data.client_id, dataClient)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Updated', life: 3000 });
-                    const logData = {
-                        client_id : e.data.client_id,
-                        description : "Modification d'un client",
-                        user_id : decoded.user_id.id,
-
-                    }
-                    LogsDataService.create(logData)
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-                    getClientList();
-                    setShowAlert(false);
-
-                }
-                )
-                .catch(e => {
-                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Client not updated', life: 3000 });
-                }
-                )
-                compteClientDataService.update(e.data.value, dataCompteClient)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Client Updated', life: 3000 });
-                    const logData = {
-                        compte_client_id : e.data.compte_client_id,
-                        description : "Modification d'un compte client",
-                        user_id : decoded.user_id.id,
-
-                    }
-                    LogsDataService.create(logData)
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-                    getClientList();
-                    setShowAlert(false);
-
-                }
-                )
-                .catch(e => {
-                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Compte Client not updated', life: 3000 });
-                }
-                )
-            
+                adresse_fournisseur: e.newData.adresse_fournisseur,
+                telephone_fournisseur: e.newData.telephone_fournisseur,
+                email_fournisseur: e.newData.email_fournisseur
+              };
+              const compteFournisseurData = {
+                numCompteFournisseur: e.newData.numCompteFournisseur,
+                num_compte_banque: e.newData.num_compte_banque
+              };
+              await FournisseurDataService.update(e.data.fournisseur_id, fournisseurData);
+              logData = { fournisseur_id: e.data.fournisseur_id, description: "Modification d'un fournisseur", user_id: decoded.user_id.id };
+              await LogsDataService.create(logData);
+              await compteFournisseurDataService.update(e.data.value, compteFournisseurData);
+              getFournisseurList();
+              setShowAlert(false);
+              break;
+      
+            default:
+              break;
+          }
+          toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: `${e.data.from} Updated`, life: 3000 });
+          toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+        } catch (error) {
+          toastAddon.current.show({ severity: 'error', summary: 'Error', detail: `${e.data.from} not updated`, life: 3000 });
         }
-        else if (e.data.from === "tva") {
-            console.log(e)
-            const dataTva = {
-                tva_value: e.newData.label,
-                tva_description : e.newData.tva_description,
-            }
-            tvaDataService.update(e.data.value, dataTva)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Tva Updated', life: 3000 });
-                    const logData = {
-                        tva_id : tva.tva_id,
-                        description : "Modification d'une tva",
-                        user_id : decoded.user_id.id,
-
-                    }
-                    LogsDataService.create(logData)
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-                    getTvaList();
-                    setShowAlert(false);
-
-                }
-                )
-                .catch(e => {
-                    toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Tva not updated', life: 3000 });
-                }
-                )
-        }
-        else if (e.data.from === 'extrait') {
-            const dataExtrait = {
-                num_extrait: e.newData.label,
-                montant : e.newData.montant,
-                date_extrait : e.newData.date
-        }
-        ExtraitDataService.update(e.data.value, dataExtrait)
-            .then(response => {
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Extrait Updated', life: 3000 });
-                const logData = {
-                    extrait_id : e.data.extrait_id,
-                    description : "Modification d'un extrait",
-                    user_id : decoded.user_id.id,
-
-                }
-                LogsDataService.create(logData)
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
-                getExtraitList();
-                setShowAlert(false);
-
-            }
-            )
-            .catch(e => {
-                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Extrait not updated', life: 3000 });
-            }
-            )
-        }
-
-    }
+      };
+      
 
     const textEditor = (options) => {
         // Message dans le dialog pour informer l'utilisateur
@@ -1019,10 +897,74 @@ const AddFacturier = () => {
 
     }
 
+    const handleFormSubmit = (event) => {
+        setLoading(true);
+        event.preventDefault();
+    
+        if (!file) {
+          alert('Please select a file.');
+          return;
+        }
+    
+        const formData = new FormData();
+        formData.append('file', file);
+    
+        axios
+          .post('/api/ocr-mindee', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          .then((response) => {
+            setResult(response.data);
+            setLoading(false);
+    
+    
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      };
+
+      const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+
+        const file = event.target.files[0];
+        console.log(file);
+        if (!file) {
+          return;
+        }
+        else {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          setFileInfo({
+            previewURL: reader.result,
+            fileName: file.name,
+            fileSize: `${(file.size / 1024).toFixed(2)} KB`
+          });
+        };
+    }
+      };
 
 
+    //   Check if the fournisseur from result.supplierName exist in the database, if not, show a message to the user to add it
+    const checkFournisseur = async (data) => {
+        const fournisseur = await FournisseurDataService.getFournisseurByName(data);
+        if (fournisseur.data.message === "This fournisseur does not exist") {
+            return false
+        }
+        return true
+    };
 
-
+    const checkClient = async (data) => {
+    
+        const client = await clientDataService.getClientByName(data);
+        if (client.data.message === "Client not found") {
+            return false
+        }
+        return true
+    };
 
 
     return (
@@ -1038,6 +980,38 @@ const AddFacturier = () => {
     mouseTrackLeft={10}
 
 />
+<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', border: '1px solid #ced4da', borderRadius: '.25rem', padding: '.375rem .75rem', marginBottom: '1rem', width: '100%' }}>
+
+  <label className="upload-btn" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+    <input
+      type="file"
+      id="file"
+      name="file"
+        className="inputfile"
+
+      onChange={handleFileChange}
+      loading={loading}
+     
+    />
+
+
+  </label>
+
+  <Button type="button" label="Upload" onClick={handleFormSubmit} />
+
+
+  {loading && (
+    <ProgressBar mode="indeterminate" className="p-progressbar" />
+  )}
+    {fileInfo && (
+  <div className="file-info-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginLeft: '1rem', width: '50%' }}>
+    <img className="file-preview" src={fileInfo.previewURL} alt="Preview" />
+    <div className="file-name">{fileInfo.fileName}</div>
+    <div className="file-size">{fileInfo.fileSize}</div>
+  </div>
+)}
+</div>
+
             <h3 class="style-section-title">Factures</h3>
             <div class="facture-section">
 
@@ -1048,7 +1022,7 @@ const AddFacturier = () => {
                         <span className="p-inputgroup-addon">
                             <i class="fa-solid fa-hashtag"></i>                            </span>
                         <span className="p-float-label">
-                            <InputText id="num_facture" type="text" value={factures.num_facture} onChange={(e) => setFactures({ ...factures, num_facture: e.target.value })} />
+                            { result && result.invoiceNumber.value ? <InputText id="num_facture" type="text" value={result.invoiceNumber.value} onChange={(e) => setResult({ ...result, invoiceNumber: { value: e.target.value } })} /> : <InputText id="num_facture" type="text" value={factures.num_facture} onChange={(e) => setFactures({ ...factures, num_facture: e.target.value })} />}
                             <label htmlFor="inputgroup">N° de facture*</label>
                         </span>
                     </div>
@@ -1067,22 +1041,35 @@ const AddFacturier = () => {
                     </div>
                 </div>
                 <div class="section-three">
+                {result && result.date.value ? 
                     <div className="p-inputgroup">
-
-                        <span className="p-float-label">
-                            <Calendar id="date_facture" value={factures.facture_date} onChange={(e) => setFactures({ ...factures, facture_date: e.target.value })} icon="pi pi-calendar" dateFormat="dd/mm/yy" showIcon />
-                            <label htmlFor="inputgroup">Date de la facture*</label>
+                            <span className="p-inputgroup-addon">
+                            <i className="pi pi-calendar"></i>
                         </span>
-                        <span></span>
+                            <span className="p-float-label">
 
+                            <InputText id="date_facture" type="text" value={result.date.value} onChange={(e) => setResult({ ...result, date: { value: e.target.value } })} />
+                            <label htmlFor="inputgroup">Date de facture*</label>
+                            </span>
                     </div>
+                    :
+                            
+                            <span className="p-float-label">
+
+                            <Calendar id="date_facture" value={factures.date_facture} onChange={(e) => setFactures({ ...factures, date_facture: e.value })} dateFormat="dd/mm/yy" showIcon />
+                            <label htmlFor="inputgroup">Date de facture*</label>
+                            </span>
+                
+                    }
                 </div>
+
+                        
                 <div class="section-three">
 
                     <div className="p-inputgroup">
 
                         <span className="p-float-label">
-                            <InputText id="montant_facture" type="numeric" value={factures.montant_facture} onChange={(e) => setFactures({ ...factures, montant_facture: e.target.value })} />
+                            {result && result.totalAmount ? <InputText id="montant_facture" type="numeric" value={result.totalAmount.value} onChange={(e) => setResult({ ...result, totalAmount: { value: e.target.value } })} /> : <InputText id="montant_facture" type="numeric" value={factures.montant_facture} onChange={(e) => setFactures({ ...factures, montant_facture: e.target.value })} />}
                             <label htmlFor="inputgroup">Montant de la facture*</label>
                         </span>
                         <span className="p-inputgroup-addon">
@@ -1102,10 +1089,11 @@ const AddFacturier = () => {
                             </span>
                             <Button onClick={(e) => onClick('displayLibelles', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             <Dialog header="Ajout d'un libéllé" className="libelleDialog" visible={displayLibelles} footer={renderFooter} onHide={() => onHide('displayLibelles')}>
-                            <Toast ref={toastAddon} />
+                            
                                 <Button onClick={(e) => onClick('displayLibellesList', 'center', e)}  className="p-button-info" tooltip="Liste des libéllés existants" tooltipOptions={{ position: 'right' }} badge={libelleList.length}>
                                     Liste des libélles existants
                                 </Button>
+                                <Toast ref={toastAddon} />
 
                                 <div class="section-three">
 
@@ -1144,12 +1132,12 @@ const AddFacturier = () => {
                         </div>
                     </div>
 
-                    <div class="section-three">
+                    <div class="section-three" style={{ minWidth: '20em' }}>
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
                                 <i className="pi pi-file"></i>
                             </span>
-                            <span className="p-float-label">
+                            <span className="p-float-label" style={{ width: '100%' }}>
                                 <Dropdown id="decompte" value={decompte.decompte} options={decompteList} onChange={(e) => setDecompte({ ...decompte, decompte: e.value })} placeholder="Choisir parmis les décomptes" />
                                 <label htmlFor="inputgroup">Décompte de la facture*</label>
                             </span>
@@ -1271,14 +1259,25 @@ const AddFacturier = () => {
                 <h3 class="style-section-title" style={{marginTop:"1em"}}>Clients et fournisseurs</h3>
                 <div class="facture-section">
                     <div class="section-three">
+                  
                         <div className="p-inputgroup">
-                            <span className="p-inputgroup-addon">
-                                <i class="fa-solid fa-file-invoice"></i>
-                            </span>
+                           
                             <span className="p-float-label">
-                            <Dropdown id="fournisseur" value={fournisseur.fournisseur} options={fournisseurList} onChange={(e) => setFournisseur({ ...fournisseur, fournisseur: e.value })} placeholder="Choisir un fournisseur" />
-                                <label htmlFor="inputgroup">Fournisseur de la facture</label>
+                                <span className="p-inputgroup-addon">
+                                    <i class="fa-solid fa-file-invoice"></i>
+                                </span>
+                                {result && checkFournisseur(result.supplierName.value) === true ? 
+                                    <InputText id="fournisseur" type="text" value={result.supplierName.value} onChange={(e) => setFactures({ ...factures, fournisseur: e.target.value })} />
+                                    :
+
+                                    <Dropdown id="fournisseur" value={factures.fournisseur} options={fournisseurList} onChange={(e) => setFactures({ ...factures, fournisseur: e.value })} placeholder="Choisir parmis les fournisseurs" />
+                                    
+                                }
                             </span>
+                           
+                            
+                            
+                            
                             <Button onClick={(e) => onClick('displayFournisseur', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             
                             <Dialog header="Ajout d'un nouveau fournisseur" className="fournisseurDialog" visible={displayFournisseur} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayFournisseur')}>
@@ -1300,6 +1299,7 @@ const AddFacturier = () => {
 
                                         </DataTable>
                                 </Dialog>
+                               
                                 <div class="facture-section">
                                     <div class="section-three">
                                         <div className="p-inputgroup" style={{ marginTop: '2em' }}>
@@ -1385,16 +1385,31 @@ const AddFacturier = () => {
                             </Dialog>
                
                         </div>
+                        {result &&
+                        checkFournisseur(result.supplierName.value) !== true && !fournisseur.fournisseur ?
+                            <p style={{color: 'red', fontSize: '0.8em', marginTop: '0.5em'}}>Le fournisseur de la facture scanné n'a pas été trouvé, veuillez le rajouter manuellement</p>
+                            :
+                            <p></p> 
+                        }
                     </div>
                     <div class="section-three">
                     <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
-                            <span className="p-float-label">
-                            <Dropdown id="client" value={client.client} options={clientList} onChange={(e) => setClient({ ...client, client: e.value })} placeholder="Select a client" />                               
-                            <label htmlFor="inputgroup">Client de la facture</label>
-                            </span>
+                            {result && checkClient(result.customerName.value) === true ?
+                                <span className="p-float-label">
+                                    <InputText id="client" type="text" value={result.customerName.value} onChange={(e) => setResult({ ...result, customerName: e.target.value })} />
+                                    <label htmlFor="client">Client*</label>
+                                </span>
+                                :
+                                <span className="p-float-label">
+                                    <Dropdown id="client" value={client.client} options={clientList} onChange={(e) => setClient({ ...client, client: e.value })} placeholder="Select a client" /> 
+                                    <label htmlFor="client">Client*</label>
+                                </span>
+}                              
+
+                            
                             <Button onClick={(e) => onClick('displayClient', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             
                             <Dialog header="Ajout d'un nouveau client" className="clientDialog" visible={displayClient} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayClient')}>
@@ -1502,7 +1517,10 @@ const AddFacturier = () => {
 
                             </Dialog>
                
-                        </div>
+                    </div>
+                    {result && checkClient(result.customerName) !== true && !client.client ?
+                    <p className="p-error" style={{textAlign:"center"}}>Le client n'existe pas. Veuillez le créer avant de continuer</p>
+                    : null}
                     </div>
                
                 </div>
@@ -1576,13 +1594,23 @@ const AddFacturier = () => {
                             <span className="p-inputgroup-addon">
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
-                            <span className="p-float-label">
-                                <Dropdown id="tva" value={factures.tva} options={tvaList} onChange={(e) => setFactures({ ...factures, tva: e.value })} placeholder="Select a tva" />
-                                <label htmlFor="inputgroup">TVA de la facture</label>
-                            </span>
-                            <span className="p-inputgroup-addon">
-                                <i className="pi pi-percentage"></i> 
-                            </span>
+                            { result && result.taxes && result.taxes.length > 0 ?
+                                <span className="p-float-label">
+                                    <InputText id="tva" type="text" value={result.taxes[0].rate} onChange={(e) => setResult({ ...result, taxes: [{ rate: e.target.value }] })} tooltip={`tvas existantes : ` + tvaList.map((tva) => tva.label + '%')} tooltipOptions={{ position: 'top'}} />
+                                    {/* Si on clique sur le bouton, on affiche le dropdown */}
+                                    
+                                </span>
+                            :
+                                <span className="p-float-label">
+                                    <Dropdown id="tva" value={factures.tva} options={tvaList} onChange={(e) => setFactures({ ...factures, tva: e.value })} placeholder="Select a tva" />
+                                    <label htmlFor="inputgroup">TVA</label>
+                                    
+                                </span>
+                                
+            
+}
+
+                        
 
                             <Button onClick={(e) => onClick('displayTva', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             <Dialog header="Ajouter une TVA" visible={displayTva} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayTva')} className="tvaDialog">
@@ -1643,13 +1671,7 @@ const AddFacturier = () => {
                     
                     <Button onClick={saveFacture} name="addFacture" disabled={checked1 ? false : true}  style={{display:"flex", justifyContent:"center", alignItems:"center", margin:"auto", width:"50%"}} className="p-button-success">Ajouter la facture</Button>
                 </div>            
-            
-
-
         </div>
-
-
-
     );
 };
 export default AddFacturier;

@@ -8,7 +8,7 @@ const Op = db.Sequelize.Op;
 const createFacture = (req, res) => {
     // Validate request
     if (!req.body.num_facture) {
-        res.status(400).send({
+        res.status(409).send({
         message: "Content can not be empty!"
         });
         return;
@@ -33,7 +33,7 @@ const createFacture = (req, res) => {
         res.send(data);
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
             err.message || "Some error occurred while creating the Facture."
         });

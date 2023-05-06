@@ -2,13 +2,12 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const {UserRoles, Role, User} = require('../models');
 const argon2 = require('argon2');
-const secretKey = 'dev/env_dev'
 
 
 const Op = db.Sequelize.Op;
 
 var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+
 
 exports.signup = async (req, res) => {
   const hashedPassword = await argon2.hash(req.body.password);

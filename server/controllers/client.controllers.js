@@ -138,10 +138,32 @@ const deleteClient = (req, res) => {
         });
     }
 
+    const getClientByName = (req, res) => {
+        const name = req.params.name;
+        const firstname = req.params.firstname;
+        const condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
+        const condition2 = firstname ? { firstname: { [Op.like]: `%${firstname}%` } } : null;
+        Clients.findAll({ where: condition, condition2 })
+            .then(data => {
+            res.send(data);
+            })
+            .catch(err => {
+            res.status(200).send({
+                message:
+                err.message || "Some error occurred while retrieving clients."
+            });
+            });
+        }
+        
+    
+
+
+
 module.exports = {
     createClient,
     findAllClients,
     findOneClient,
     updateClient,
-    deleteClient
+    deleteClient, 
+    getClientByName
 }

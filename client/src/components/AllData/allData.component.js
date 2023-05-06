@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {TabView, TabPanel} from 'primereact/tabview';
 import ExtraitDatatable from './extraitDatatable.component';
 import FactureDatatable from './factureDatatable.component';
@@ -7,14 +7,12 @@ import ClientDatatable from './clientDatatable.component';
 import FournisseurDatatable from './fournisseurDatatable.component';
 import './allData.css'
 
-import Dexie from 'dexie';
 
 const AllData = () => {
 
         return (
-                <div className="container" >
-                <div className="card" style={{width:"450em", height:"560px", borderRadius: '10px'}}>
-                <h5></h5>
+                <div className="container" id="alldata" >
+                <div className="card">
                 <TabView style={{borderRadius: '10px'}}>
                     <TabPanel header="Extrait" leftIcon="pi pi-file">
                     <ExtraitDatatable />

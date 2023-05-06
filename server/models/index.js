@@ -1,6 +1,8 @@
 const env = process.env.NODE_ENV || 'development';
 const config = require("../config/config.js")[env];
 console.log(config, env, 'config' )
+// import argon
+const argon2 = require('argon2');
 
 
 const Sequelize = require("sequelize");
@@ -78,12 +80,33 @@ db.Comments.belongsTo(db.Facturiers, {foreignKey : 'facturier_id'})
 
 // user est connecté à client_id
 db.User.belongsTo(db.Clients, {foreignKey : 'client_id'})
-
-
-
-
 db.User.belongsToMany(db.Role, { through: db.UserRoles, foreignKey: 'userId', otherKey: 'roleId' });
 db.Role.belongsToMany(db.User, { through: db.UserRoles, foreignKey: 'roleId', otherKey: 'userId' });
+
+
+// Réinitialiser la base de données si elle est vide ou si elle est modifiée et que le modèle a changé
+db.sequelize.sync({force: false}).then(() => {
+    console.log('Drop and Resync Db');
+    // initial();
+});
+
+const initial = () => {
+    db.Role.create({
+        id: 1,
+        name: "user"
+    });
+    db.Role.create({
+        id: 2,
+        name: "moderator"
+    });
+    db.Role.create({
+        id: 3,
+        name: "admin"
+    });
+
+  };
+
+
 
 
 

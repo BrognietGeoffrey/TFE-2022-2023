@@ -19,6 +19,9 @@ class tvaService {
         return axios.put(API_URL + id, tva, { headers: BASIC_HEADERS });
     }
     
+    getTvaByValue(value) {
+        return axios.get(API_URL + 'value/' + value, { headers: BASIC_HEADERS });
+    }
 
 
 }

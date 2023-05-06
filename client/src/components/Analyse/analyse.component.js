@@ -1,18 +1,11 @@
-import { Card } from 'primereact/card';
-import { classNames } from 'primereact/utils';
-import axios from 'axios';
 import './analyse.css';
 import React, { useState, useEffect, useRef } from "react";
 import FacturierDataService from "../../services/facturierService";
 import viewServices from "../../services/viewServices";
 import ViewAnalyse from "./ViewAnalyse.component";
 import LogsService from "../../services/logsService";
-import CommentService from "../../services/commentService";
-import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
-import CommentZone from './comment.component';
 
-import { Tooltip } from 'primereact/tooltip';
+import CommentZone from './comment.component';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -28,12 +21,9 @@ export const Analyse = () => {
     const [billPayed, setBillPayed] = useState([]);
     const [billNotPayed, setBillNotPayed] = useState([]);
     const [clientListWithFacture, setClientListWithFacture] = useState([]);
-    const [selectedFacture, setSelectedFacture] = useState(null);
-    const [showDetails, setShowDetails] = useState(false);
     const [showDetailsLogs, setShowDetailsLogs] = useState(false);
     const [logs, setLogs] = useState([]);
     const [selectedLog, setSelectedLog] = useState(null);
-    const [userColors, setUserColors] = useState([]);
     const toast = useRef(null);
     const [expandedRows, setExpandedRows] = useState(null);
 
@@ -326,7 +316,7 @@ const retrieveLogs = async () => {
   };
 
     return (
-      <div className="container">
+      <div className="container" id="analyse">
                 <Toast ref={toast} />
 
       <section className="features">

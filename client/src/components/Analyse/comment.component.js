@@ -5,10 +5,8 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { useForm } from 'react-hook-form';
 import { Toast } from 'primereact/toast';
-import { Card } from 'primereact/card';
-import { Divider } from 'primereact/divider';
+
 import { Checkbox } from 'primereact/checkbox';
-import {RadioButton} from 'primereact/radiobutton';
 import { Dropdown } from 'primereact/dropdown';
 import jwtDecode from 'jwt-decode';
 import {TabPanel, TabView} from 'primereact/tabview';
@@ -17,7 +15,7 @@ import FacturierService from '../../services/facturierService';
 import './analyse.css'
 
 const Comment = () => {
-  const { register, handleSubmit, errors } = useForm();
+  const { handleSubmit, errors } = useForm();
   const [facturierIdList, setFacturierIdList] = useState([]);
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
@@ -34,33 +32,35 @@ const Comment = () => {
   const getFacturierIdList = () => {
     FacturierService.getAll()
       .then((response) => {
-        setFacturierIdList(response.data);
-        console.log(response.data, 'response.data');
+        if (response.data.length === 0) {
+          toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'No facturier found', life: 3000 });
+          setFacturierIdList([]);
+        } else {
+          setFacturierIdList(response.data);
+        }
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
-  const factureList = facturierIdList.map((facturier) => {
+  
+  const factureList = facturierIdList.length > 0 ? facturierIdList.map((facturier) => {
     return (
-        {label : facturier.facture.num_facture, value : facturier.facturier_id, 'data-facturier-id': facturier.id}
+      {label : facturier.facture.num_facture, value : facturier.facturier_id, 'data-facturier-id': facturier.id}
     );
-    });
+  }) : [];
+  
 
     const getComments = () => {
         CommentService.getAll()
             .then((response) => {
-      
-                // trier les commentaires par date de création
-                response.sort((a, b) => (a.created_at > b.created_at) ? 1 : -1);
-                setComments(response);
-
-                console.log(response, 'response.data');
+                if (response.data.length === 0) {
+                    toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'No comment found', life: 3000 });
+                    setComments([]);
+                } else {
+                    setComments(response.data);
+                }
             })
-            .catch((error) => {
-                console.log(error);
-            });
     };
 
     const onSubmit = (data) => {
@@ -200,38 +200,40 @@ const Comment = () => {
             </form>
             </TabPanel>
             <TabPanel header="Liste des commentaires" >
-          {comments.map((comment) => (
-                <div className="comment-list"  >
-                  <div className="comment-item">
-                    <div className="comment-avatar">
-                      <img
-                        src="https://placehold.it/50x50"
-                        alt="Avatar"
-                      />
-                    </div>
-                    <div className="comment-content" >
-                      <div className="comment-header">
-                        <h3 className="comment-title">{comment.title}</h3>
-                        <p className="comment-meta" >
-                          Par {comment.user.username}- il y a{" "}
-                          {createdSinceComment(comment.createdAt)}
-                        </p>
-                      </div>
-                      <div className="comment-body" >
-                        <p>{comment.comments}</p>
-                        </div>
-                        {comment.facturier_id && (
-                        <div className="comment-footer">
-                            <span className="comment-reply">
-                                Ce commentaire est lié à la facture n°
-                                {comment.facturier.facture.num_facture}
-                            </span>
-                        </div>
-                        )}
-                    </div>
-                    </div>
-                </div>
-            ))}
+            {comments && comments.length > 0 ? (
+  comments.map((comment) => (
+    <div className="comment-list" key={comment.id}>
+      <div className="comment-item">
+        <div className="comment-avatar">
+          <img src="https://placehold.it/50x50" alt="Avatar" />
+        </div>
+        <div className="comment-content">
+          <div className="comment-header">
+            <h3 className="comment-title">{comment.title}</h3>
+            <p className="comment-meta">
+              Par {comment.user.username} - il y a{" "}
+              {createdSinceComment(comment.createdAt)}
+            </p>
+          </div>
+          <div className="comment-body">
+            <p>{comment.comments}</p>
+          </div>
+          {comment.facturier_id && (
+            <div className="comment-footer">
+              <span className="comment-reply">
+                Ce commentaire est lié à la facture n°
+                {comment.facturier.facture.num_facture}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  ))
+) : (
+  <p>Aucun commentaire</p>
+)}
+
             </TabPanel>
         </TabView>
     </div>

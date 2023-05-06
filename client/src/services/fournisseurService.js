@@ -30,6 +30,10 @@ class fournisseurService {
     update(id, data) {
         return axios.put(API_URL + id, data, { headers: BASIC_HEADERS });
     }
+
+    getFournisseurByName = (name) => {
+        return axios.get(API_URL + '/name/' + name, { headers: BASIC_HEADERS });
+    }
     
     
 }

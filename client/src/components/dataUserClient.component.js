@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import jwt_decode from 'jwt-decode';
 import { DataTable } from 'primereact/datatable';

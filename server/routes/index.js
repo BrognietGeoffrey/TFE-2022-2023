@@ -52,13 +52,15 @@ const {
     findOneClient,
     createClient,
     updateClient,
-    deleteClient
+    deleteClient, 
+    getClientByName
 } = require('../controllers/client.controllers');
 router.get('/clients', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllClients);
 router.get('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator', 'user']), findOneClient);
 router.post('/clients', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createClient);
 router.put('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateClient);
 router.delete('/clients/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteClient);
+router.get('/client/name/:name/firstname/:firstname', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), getClientByName);
 
 // Routes pour les comptes clients
 const {
@@ -94,13 +96,15 @@ const {
     findOneFournisseur,
     createFournisseur,
     updateFournisseur,
-    deleteFournisseur
+    deleteFournisseur, 
+    getFournisseurByName
 } = require('../controllers/infosFournisseur.controller');
 router.get('/fournisseurs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllFournisseur);
 router.get('/fournisseurs/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneFournisseur);
 router.post('/fournisseurs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createFournisseur);
 router.put('/fournisseurs/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateFournisseur);
 router.delete('/fournisseurs/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteFournisseur);
+router.get('/fournisseurs/name/:name', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), getFournisseurByName);
 
 // Routes pour les TVA
 const {
@@ -108,13 +112,16 @@ const {
     findOneTva,
     createTva,
     updateTva,
-    deleteTva
+    deleteTva, 
+    getTvaByValue
 } = require('../controllers/tva.controller');
 router.get('/tva', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAllTva);
 router.get('/tva/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findOneTva);
 router.post('/tva', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']),  createTva);
 router.put('/tva/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), updateTva);
 router.delete('/tva/:id', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteTva);
+router.get('/tva/value/:value', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), getTvaByValue);
+
 
 // Routes pour les décomptes
 const {

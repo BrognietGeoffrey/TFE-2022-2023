@@ -2,6 +2,7 @@ import axios from 'axios';
 import { BASIC_HEADERS } from '../reducers/headers';
 
 const API_URL = '/api/clients/';
+const API_URL2 = '/api/client/';
 
 
 
@@ -31,6 +32,10 @@ class clientService {
 
     update(id, client) {
         return axios.put(API_URL + id, client, { headers: BASIC_HEADERS });
+    }
+
+    getClientByName(name, firstname) {
+        return axios.get('/api/client/name/' + name + '/firstname/' + firstname, { headers: BASIC_HEADERS });
     }
     
 }

@@ -128,12 +128,27 @@ const deleteTva = (req, res) => {
     });
 }
 
+const getTvaByValue = (req, res) => {
+    const value = req.params.value;
+
+    Tva.findOne({ where: { tva_value: value }})
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Tva not found"
+        });
+    });
+}
+
 module.exports = {
     findAllTva,
     findOneTva,
     createTva,
     updateTva,
-    deleteTva
+    deleteTva, 
+    getTvaByValue
 }
 
 

@@ -1,8 +1,8 @@
 
 
 import React, { useState, useRef } from 'react';
-import { BrowserRouter as Router, Switch, Redirect, Route, NavLink } from 'react-router-dom';
-import { faTools, faUsers,faAddressBook, faCalendar,faHome, faBook, faFileContract, faHardHat, faFileSignature } from "@fortawesome/free-solid-svg-icons";
+import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
+import { faHome, faBook, faFileContract, faHardHat, faFileSignature } from "@fortawesome/free-solid-svg-icons";
 import './App.css';
 import { isLoggedIn } from './reducers/auth';
 import SideMenuBar from './components/SideMenu/sideMenu';
@@ -18,7 +18,6 @@ import Contact from './components//sendMail.component';
 import PrivateRoute from './services/PrivateRoute';
 import ReadInvoice from './components/readInvoice/readInvoice.component';
 
-import { useHistory } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import {Toast } from 'primereact/toast';
 
@@ -32,7 +31,6 @@ const App = () => {
     const menu = [
         { label: "Mes données", to: "/userData", icon: faBook, isVisible: user === 'user' ? true : false},
         { label: "Contact", to: "/contact", icon: faHome, isVisible: user === 'user' ? true : false},
-        { label: "Photos", to: "/readInvoice", icon: faFileSignature, isVisible: user === 'admin' || user === 'moderator' ? true : false},
         {label : 'Base de données', to : '/allData', icon: faFileContract, isVisible : user === 'admin' || user === 'moderator' ? true : false},
         { label: "Analyse", to: "/analyse", icon: faHome, isVisible: user === 'admin' || user === 'moderator' ? true : false},
         { label: "Facturiers", to: "/facturiers", icon: faFileSignature, isVisible: user === 'admin' || user === 'moderator' ? true : false},
@@ -51,7 +49,6 @@ const App = () => {
         const token = localStorage.getItem('access_token')
         const decoded = jwt_decode(token);
         const nowInSeconds = Math.floor(Date.now() / 1000);
-        const iatInSeconds = decoded.iat;
         const expInSeconds = decoded.exp;
         const remainingTimeInSeconds = expInSeconds - nowInSeconds;
         const remainingHours = Math.floor(remainingTimeInSeconds / 3600);
@@ -66,7 +63,7 @@ const App = () => {
         if (remainingTimeInSeconds < 0) {
             localStorage.removeItem('access_token')
             localStorage.removeItem('role')
-            window.location.reload(false);
+            window.location.reload();
         }
 
     }
@@ -102,7 +99,6 @@ const App = () => {
                             <PrivateRoute path='/allData' exact component={AllData} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/facturiers' exact component={Facturiers} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/userData' exact component={DataUserClient} roles={['user']}/>
-                            <PrivateRoute path='/readInvoice' exact component={ReadInvoice} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/contact' exact component={Contact} />
                             <PrivateRoute path="/login" exact component={Login} />
                             <PrivateRoute path='/contact' exact component={Analyse} />

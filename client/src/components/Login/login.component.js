@@ -1,12 +1,11 @@
 import './login.css'
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, {  useState, useRef } from 'react';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
 import { Password } from 'primereact/password';
-import { classNames } from 'primereact/utils';
 import { Toast } from 'primereact/toast';
 import logo from './logojv.png'
 function Login() {

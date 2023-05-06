@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import Logo from '../images/logojv.png';
 const redirectPage = () => {
   console.log('redirectPage');

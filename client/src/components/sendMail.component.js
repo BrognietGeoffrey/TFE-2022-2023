@@ -42,12 +42,19 @@ const SendEmail = () => {
       message: message
     }).then((response) => {
       console.log(response);
-      toast.current.show({ severity: 'success', summary: 'Email sent successfully', life: 3000 });
+      setSubject("")
+      setSelectedSubject("recommendation")
+      setMessage("")
+      // Durant tout l'envoie de la requête, on affiche un toast pour indiquer à l'utilisateur que l'email est en cours d'envoi
+      toast.current.show({ severity: 'info', summary: 'Envoi du mail', detail: 'Votre mail est en cours d\'envoi', life: 3000 });
     }).catch((error) => {
       console.log(error);
-      toast.current.show({ severity: 'error', summary: 'Error sending email', life: 3000 });
+      // Si une erreur est survenue, on affiche un toast pour indiquer à l'utilisateur que l'email n'a pas pu être envoyé
+      toast.current.show({ severity: 'error', summary: 'Envoi du mail', detail: 'Votre mail n\'a pas pu être envoyé', life: 3000 });
     });
   };
+    
+      
 
   return (
     <div className="send-email">
