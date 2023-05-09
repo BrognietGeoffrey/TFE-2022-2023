@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    // blob 
+    facture_img : {
+      type: DataTypes.BLOB,
+      allowNull: true,
+    },
   }, {});
 
   return Facturiers

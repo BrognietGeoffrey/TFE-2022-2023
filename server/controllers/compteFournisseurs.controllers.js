@@ -46,7 +46,7 @@ const findAllCompteFournisseur = (req, res) => {
         res.send(data);
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
             err.message || "Some error occurred while retrieving compteFournisseurs."
         });
@@ -68,30 +68,48 @@ const findOneCompteFournisseur = (req, res) => {
         });
         console.log("CompteFournisseur with id=" + id)
     }
-// Update a CompteFournisseur by the id in the request
+// Update a CompteFournisseur
 const updateCompteFournisseur = (req, res) => {
     const id = req.params.id;
     
-    compteFournisseurs.update(req.body, {
-        where: { co_fournisseur_id: id }
-        })
-        .then(num => {
-        if (num == 1) {
-            res.send({
-            message: "CompteFournisseur was updated successfully."
+    compteFournisseurs.findOne({ where: { compte_fournisseur_id: id } })
+        .then(compteFournisseur => {
+        if (!compteFournisseur) {
+            res.status(409).send({
+            message: "Cannot find CompteFournisseur with id=" + id
             });
         } else {
-            res.send({
-            message: `Cannot update CompteFournisseur with id=${id}. Maybe CompteFournisseur was not found or req.body is empty!`
+            compteFournisseurs.update(req.body, {
+            where: { compte_fournisseur_id: id }
+            })
+            .then(num => {
+                if (num == 1) {
+                res.send({
+                    message: "CompteFournisseur was updated successfully."
+                });
+                } else {
+                res.send({
+                    message: `Cannot update CompteFournisseur with id=${id}. Maybe CompteFournisseur was not found or req.body is empty!`
+                });
+                }
+            })
+            .catch(err => {
+                res.status(409).send({
+                message: "Error updating CompteFournisseur with id=" + id
+
+                });
             });
         }
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Error updating CompteFournisseur with id=" + id
+        res.status(409).send({
+            message: "Error retrieving CompteFournisseur with id=" + id
         });
         });
     }
+
+
+    
 
 // Delete a CompteFournisseur with the specified id in the request
 const deleteCompteFournisseur = (req, res) => {

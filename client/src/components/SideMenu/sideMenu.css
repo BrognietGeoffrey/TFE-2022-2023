@@ -1,3 +1,5 @@
+/* Code provenant du TFE de Madame Jaujatte Ikram. Un grand merci à elle de m'avair laissé utilisé son code ! */
+
 .side-menu {
     width: var(--side-menu-width);
     height: calc(100vh - var(--top-menu-height));

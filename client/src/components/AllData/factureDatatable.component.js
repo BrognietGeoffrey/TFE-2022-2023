@@ -3,10 +3,24 @@ import { useEffect } from 'react';
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import {InputText} from 'primereact/inputtext';
+import {Toast } from 'primereact/toast';
+import { Calendar } from 'primereact/calendar';
+import {Dropdown } from 'primereact/dropdown';
 import factureService from '../../services/factureService';
+import ObjetService from '../../services/objetService';
+import TvaService from '../../services/tva.services';
+import libelleService from '../../services/libelleService';
+
 
 const FactuerDatatable = () => {
     const [facture, setFacture] = react.useState([]);
+    const [objet, setObjet] = react.useState([]);
+    const [objetList , setObjetList] = react.useState([]);
+    const [tva, setTva] = react.useState([]);
+    const [libelle, setLibelle] = react.useState([]);
+    const [libelleList , setLibelleList] = react.useState([]);
+    const [tvaList , setTvaList] = react.useState([]);
+    const toast = react.useRef(null);
 
     const getFactures = () => {
         factureService.getFactures().then((response) => {
@@ -18,8 +32,73 @@ const FactuerDatatable = () => {
         });
     }
 
+    const getObjets = () => {
+        ObjetService.getAll().then((response) => {
+            setObjet(response.data);
+            // List avec label and value
+            const objetList = response.data.map((objet) => {
+                return {
+                    label: objet.title,
+                    value: objet.id
+                }
+            })
+            setObjetList(objetList);
+            console.log(response.data, 'response.data');
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
+    const getTvas = () => {
+        TvaService.getAll().then((response) => {
+            setTva(response.data);
+            // List avec label and value
+            const tvaList = response.data.map((tva) => {
+                return {
+                    label: tva.tva_value,
+                    value: tva.tva_id
+                }
+            })
+
+            setTvaList(tvaList);
+            console.log(response.data, 'response.data');
+        })
+
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
+    const getLibelles = () => {
+        libelleService.getAll().then((response) => {
+            setLibelle(response.data);
+            // List avec label and value
+            const libelleList = response.data.map((libelle) => {
+                return {
+                    label: libelle.title,
+                    value: libelle.id
+                }
+            })
+
+            setLibelleList(libelleList);
+
+            console.log(response.data, 'response.data');
+        })
+
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
+
+
+
     useEffect(() => {
         getFactures();
+        getObjets();
+        getTvas();
+        getLibelles();
     }, []);
 
     const statusBodyTemplate = (rowData) => {
@@ -35,22 +114,61 @@ const FactuerDatatable = () => {
     const onRowEditComplete = (e) => {
         console.log(e)
         const dataFacture = {
-            num_facture: e.newData.num_facture,
+            num_facture: e.newData.num_facture == e.data.num_facture ? e.data.num_facture : e.newData.num_facture,
+            facture_date: e.newData.facture_date,
+            num_facture_lamy: e.newData.num_facture_lamy,
+            montant: e.newData.montant,
+            due_date: e.newData.due_date,
+            objet_id: e.newData.objet_id,
+            tva_id: e.newData.tva_id,
+            libelle_id: e.newData.libelle_id,
+
+
         }
         factureService.updateFacture(e.data.facture_id, dataFacture)
             .then((response) => {
-                console.log(response.data);
+                toast.current.show({ severity: 'success', summary: 'Facture modifiée', detail: 'Facture modifiée', life: 3000 });
                 getFactures();
             }   
             )
             .catch((error) => {
                 console.log(error);
+                toast.current.show({ severity: 'error', summary: 'Facture non modifiée', detail:  error.response.data.message, life: 3000 });
             }
             );
 
 
         
 
+    }
+
+    const dueDateBodyTemplate = (rowData) => {
+        // si date 
+        if (rowData.due_date) {
+            // si date dépassée
+            if (new Date(rowData.due_date) < new Date() && rowData.estpaye === false) {
+                return (
+                    <span className="p-badge p-badge-danger">{new Date(rowData.due_date).toLocaleDateString()}</span>
+                );
+            }
+            // si date à venir
+            else if (new Date(rowData.due_date) < new Date() && rowData.estpaye === true) {
+                return (
+                    <span className="p-badge p-badge-success">{new Date(rowData.due_date).toLocaleDateString()}</span>
+                );
+            }
+            else if (new Date(rowData.due_date) > new Date() && rowData.estpaye === true) {
+                return (
+                    <span className="p-badge p-badge-success">{new Date(rowData.due_date).toLocaleDateString()}</span>
+                );
+            }
+            else if (new Date(rowData.due_date) > new Date() && rowData.estpaye === false) {
+                return (
+                    <span className="p-badge p-badge-warning">{new Date(rowData.due_date).toLocaleDateString()}</span>
+                );
+            }
+        }
+        return <span className="p-badge p-badge-info">Pas de date</span>;
     }
 
     const textEditor = (options) => {
@@ -63,21 +181,44 @@ const FactuerDatatable = () => {
         return <InputText type="number" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} tooltip="Attention ! Toutes modifications entrainera des changements sur tout le facturier" tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }} />;
     }
 
+    const dateEditor = (options) => {
+        // Message dans le dialog pour informer l'utilisateur
+        return <Calendar dateFormat="dd/mm/yy" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} tooltip="Attention ! Toutes modifications entrainera des changements sur tout le facturier" tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }} />;
+
+    }
+
+    const dropdownEditorObjet = (options) => {
+
+        return <Dropdown value={options.value} options={objetList} onChange={(e) => options.editorCallback(e.value)} tooltip="Attention ! Toutes modifications entrainera des changements sur tout le facturier" tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }} />;
+    }
+
+    const dropdownEditorLibelle = (options) => {
+
+        return <Dropdown value={options.value} options={libelleList} onChange={(e) => options.editorCallback(e.value)} tooltip="Attention ! Toutes modifications entrainera des changements sur tout le facturier" tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }} />;
+    }
+
+    const dropdownEditorTva = (options) => {
+
+        return <Dropdown value={options.value} options={tvaList} onChange={(e) => options.editorCallback(e.value)} tooltip="Attention ! Toutes modifications entrainera des changements sur tout le facturier" tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }} />;
+    }
 
     return (
         <div>
+            <Toast ref={toast} />
             
             <DataTable value={facture} editMode="row" onRowEditComplete={onRowEditComplete}>
                 <Column field="num_facture" header="Numéro de facture" editor={(options) => numberEditor(options)} sortable></Column>
-
-                <Column field="montant" header="Montant" sortable></Column>
-                <Column field="facture_date" header="Date de facture" sortable></Column>
-                <Column field="estpaye" header="Date d'échéance" body={statusBodyTemplate} sortable></Column>
-                <Column field="objet.title" header="Objet" sortable></Column>
-                <Column field="libelle.title" header="Client" sortable></Column>
-                <Column field="tva.tva_value" header="TVA" sortable></Column>
+                <Column field="num_facture_lamy" header="N° de facture Lamy" editor={(options) => textEditor(options)} sortable></Column>
+                <Column field="montant" header="Montant" sortable editor={(options) => numberEditor(options)}></Column>
+                <Column field="facture_date" header="Date de facture" editor={(options) => dateEditor(options)} body={(rowData) => new Date(rowData.facture_date).toLocaleDateString()} sortable></Column>
+                <Column field="due_date" header="Date d'échéance" sortable  editor={(options) => dateEditor(options)} body={dueDateBodyTemplate}></Column>
+                <Column field="estpaye" header="Statut de la facture" body={statusBodyTemplate} sortable></Column>
+                <Column field="objet_id" header="Objet" sortable editor={(options) => dropdownEditorObjet(options)} body={(rowData) => rowData.objet.title}></Column>
+                <Column field="libelle_id" header="Libelle" sortable editor={(options) => dropdownEditorLibelle(options)} body={(rowData) => rowData.libelle.title}></Column>
+                <Column field="tva_id" header="TVA" sortable editor={(options) => dropdownEditorTva(options)} body={(rowData) => rowData.tva.tva_value}></Column>
                 <Column rowEditor ></Column>
             </DataTable>
+
 
 
             

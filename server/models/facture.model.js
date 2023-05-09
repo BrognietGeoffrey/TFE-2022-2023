@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     num_facture: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true
 
     },
     num_facture_lamy: {
@@ -24,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     facture_date: {
         type: DataTypes.DATE
+    },
+    due_date: {
+        type: DataTypes.DATE, 
+        allowNull: true
     },
     montant: {
         type: DataTypes.INTEGER

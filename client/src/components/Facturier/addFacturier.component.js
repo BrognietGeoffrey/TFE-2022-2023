@@ -249,6 +249,7 @@ const AddFacturier = () => {
                 email_fournisseur : fournisseur.fournisseur.email_fournisseur,
                 num_compte_banque : fournisseur.num_compte_banque,
                 fournisseur_id : fournisseur.fournisseur_id,
+                description : fournisseur.fournisseur.description,
                 from : 'fournisseur'
 
 
@@ -270,6 +271,7 @@ const AddFacturier = () => {
                 numCompteClient : client.numCompteClient,
                 num_compte_banque : client.num_compte_banque, 
                 client_id : client.client.client_id,
+                description : client.client.description,
                 from : 'client'
 
             };
@@ -304,115 +306,90 @@ const AddFacturier = () => {
     }, []);
 
     const saveFacture = () => {
-        const tvaValue = result ? result.taxes[0].rate : null // remplacer par la valeur de la TVA récupérée par OCR
-        // Si la TVA n'est pas dans la liste des TVA, on l'ajoute
-        if (tvaList.find(tva => tva.label === tvaValue)) {
-            console.log(!tvaList.find(tva => tva.label === tvaValue, 'tvaValue'))
-          const tvaData = {
-            tva_value: tvaValue,
-            tva_description: 'TVA ' + tvaValue + '%'
-          };
-          tvaDataService.create(tvaData)
-            .then(response => {
-              const data = {
-                num_facture: result ? result.invoiceNumber.value : factures.num_facture,
-                facture_date: result ? result.date.value : factures.facture_date,
-                montant: result ? result.totalAmount.value : factures.montant,
-                objet_id: factures.objet,
-                libelle_id: factures.libelle,
-                estpaye: extrait.extrait ? true : false,
-                tva_id: response.data.tva_id,
-                num_facture_lamy: factures.num_facture_lamy
-              };
-        
-              FactureDataService.create(data)
-                .then(response => {
-                  setFactures({
-                    ...factures,
-                    num_facture: response.data.num_facture,
-                    facture_date: response.data.facture_date,
-                    montant: response.data.montant,
-                    objet: response.data.objet_id,
-                    libelle: response.data.libelle_id,
-                    estpaye: response.data.estpaye,
-                    tva_id: response.data.tva_id,
-                    num_facture_lamy: response.data.num_facture_lamy,
-                    submitted: true
-                  });
-                  console.log(response.data);
-                //   Ajouter dans le facturier
-                  saveFacturier(response.data.facture_id)
-                })
-                .catch(e => {
-                  console.log(e);
-                });
-            })
-            .catch(e => {
-              console.log(e);
-            });
-        } else  {
-     
-            const listTva = tvaList 
-            let tvaId = null
-            listTva.forEach(tva => {
-                if (result && tva.label === tvaValue.toString()) {
-                    tvaId = tva.value
-                    console.log(tvaId)
-                }
-            })
-
-            console.log(factures.date_facture)
-            
-            const data = {  
-                num_facture: result ? result.invoiceNumber.value : factures.num_facture,
-                facture_date: result ? result.date.value : factures.date_facture,
-                montant: result ? result.totalAmount.value : factures.montant,
-                objet_id: factures.objet,
-                libelle_id: factures.libelle,
-                estpaye: extrait.extrait ? true : false,
-                tva_id: result ? tvaId : factures.tva_id,
-                num_facture_lamy: factures.num_facture_lamy
-            };
-
-            FactureDataService.create(data)
-                .then(response => {
-                    setFactures({
-                        ...factures,
-                        num_facture: response.data.num_facture,
-                        facture_date: response.data.facture_date,
-                        montant: response.data.montant,
-                        objet: response.data.objet_id,
-                        libelle: response.data.libelle_id,
-                        estpaye: response.data.estpaye,
-                        tva_id: response.data.tva_id,
-                        num_facture_lamy: response.data.num_facture_lamy,
-                        submitted: true
-                    });
-                    console.log(response.data);
-                    //   Ajouter dans le facturier
-                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Facture Added', life: 3000 });
-
-                    saveFacturier(response.data.facture_id)
-                    
-                    
-                })
-                .catch(e => {
-                    console.log(e);
-                    toast.current.show({ severity: 'error', summary: 'Error', detail: 'Facture Not Added', life: 3000 });
-                });
+        // Vérifier que result.taxes[0] n'est pas undifined 
+        // si c'est le cas, on met on ne prends que facture.tva
+        // sinon on prends result.taxes[0].value et on récupère son id dans la liste des tva correspondant à la valeur
+        // on récupère l'id de la tva correspondant à la valeur de la tva
+        var tva_id = null;
+        console.log(file)
+        if (result.taxes[0] !== undefined) {
+            tva_id = tvaList.find(tva => tva.label === result.taxes[0].value).value;
+        } else {
+            tva_id = factures.tva
         }
+        var montantTotal = null; 
+        if (result.totalAmount.value !== undefined) {
+            // convert to string
+            const montantValue = String(result.totalAmount.value);
+        
+            // if there is a dot in the amount, replace it with a comma
+            if (montantValue.includes('.')) {
+                let montantReplace = montantValue.replace('.', ',');
+            // convert the string to a number
+                montantTotal = Number(montantReplace.replace(/\s/g, ''));
+                console.log(montantTotal)
+
+            } else {
+                montantTotal = Number(montantValue.replace(/\s/g, ''));
+            }
+        }
+        
+          
+        
+        
+        var data = {
+            num_facture : result && result.invoiceNumber.value ? result.invoiceNumber.value : factures.num_facture,
+            date_facture : result && result.date.value ? result.date.value : factures.date_facture,
+            montant: result && result.totalAmount.value ? montantTotal : factures.montant,
+            objet_id : factures.objet, 
+            libelle_id : factures.libelle,
+            estpaye : extrait.extrait ? true : false,
+            num_facture_lamy : factures.num_facture_lamy,
+            tva_id : tva_id,
+            due_date : result && result.dueDate.value ? result.dueDate.value : factures.due_date,
+        }
+        console.log(data)
+        FactureDataService.create(data)
+        .then(response => {
+          setFactures({
+            ...factures,
+            num_facture: response.data.num_facture,
+            facture_date: response.data.facture_date,
+            montant: response.data.montant,
+            objet: response.data.objet_id,
+            libelle: response.data.libelle_id,
+            estpaye: response.data.estpaye,
+            tva_id: response.data.tva_id,
+            num_facture_lamy: response.data.num_facture_lamy,
+            due_date: response.data.due_date,
+            submitted: true
+          });
+          console.log(response.data);
+        //   Ajouter dans le facturier
+          saveFacturier(response.data.facture_id)
+        })
+        .catch(e => {
+          console.log(e);
+        });
     };
+
+
+
+            
+
 
 
       
     // fonction qui crée le facturier dans la base de donnée grâce au dernier id de facture récupéré
     const saveFacturier = (facture_id) => {
+        console.log(fournisseur)
         var data = {
             facture_id: facture_id,
             decompte_id: decompte.decompte,
             co_fournisseur_id: fournisseur.fournisseur.fournisseur_id,
             extrait_id: extrait.extrait? extrait.extrait : null,
             co_client_id: client.client,
+            facture_img : file ? file : null,
         };
 
         FacturierDataService.create(data)
@@ -424,6 +401,7 @@ const AddFacturier = () => {
                     co_fournisseur_id: response.data.fournisseur_id,
                     extrait_id: response.data.extrait_id,
                     co_client_id: response.data.client_id,
+                    facture_img: response.data.facture_img,
                 });
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Facturier Added', life: 3000 });
                 //vide les champs du formulaire
@@ -438,6 +416,7 @@ const AddFacturier = () => {
                     estpaye: "",
                     tva: "",
                     num_facture_lamy: "",
+                    due_date: "",
                 });
                 setDecompte({
                     ...decompte,
@@ -458,14 +437,12 @@ const AddFacturier = () => {
                     ...extrait,
                     extrait: "",
                 });
-                // Vider le résultat de l'OCR et le fichier uploadé
                 setResult(null);
                 setFile(null);
-
-
-               
-                // set checked to false
+                setFileInfo(null);
                 setChecked1(false);
+                const file = document.getElementById('file');
+                file.value = '';
      
 
                 const logData = {
@@ -635,6 +612,7 @@ const AddFacturier = () => {
             telephone_fournisseur: fournisseur.telephone_fournisseur,
             email_fournisseur: fournisseur.email_fournisseur,
             num_fournisseur: fournisseur.num_fournisseur,
+            description: fournisseur.description,
         };
        await FournisseurDataService.create(data)
             .then(response => {
@@ -645,6 +623,7 @@ const AddFacturier = () => {
                     telephone_fournisseur: response.data.telephone_fournisseur,
                     email_fournisseur: response.data.email_fournisseur,
                     num_fournisseur: response.data.num_fournisseur,
+                    description: response.data.description,
                 });
                 console.log(response.data.fournisseur_id);
                 setFournisseurId(response.data.fournisseur_id+1);
@@ -696,6 +675,7 @@ const AddFacturier = () => {
                     telephone_fournisseur: "",
                     email_fournisseur: "",
                     num_fournisseur: "",
+                    description: "",
                 });
             })
             .catch(e => {
@@ -861,11 +841,13 @@ const AddFacturier = () => {
               break;
       
             case 'fournisseur':
+                console.log(e)
               const fournisseurData = {
                 name: e.newData.label,
                 adresse_fournisseur: e.newData.adresse_fournisseur,
                 telephone_fournisseur: e.newData.telephone_fournisseur,
-                email_fournisseur: e.newData.email_fournisseur
+                email_fournisseur: e.newData.email_fournisseur, 
+                description: e.newData.description
               };
               const compteFournisseurData = {
                 numCompteFournisseur: e.newData.numCompteFournisseur,
@@ -878,6 +860,27 @@ const AddFacturier = () => {
               getFournisseurList();
               setShowAlert(false);
               break;
+            case 'client':
+                const clientData = {
+                    name: e.newData.label,
+                    firstname: e.newData.firstname,
+                    adresse_client: e.newData.adresse_client,
+                    telephone_client: e.newData.telephone_client,
+                    email_client: e.newData.email_client,
+                    description: e.newData.description
+                };
+                const compteClientData = {
+                    numCompteClient: e.newData.numCompteClient,
+                    num_compte_banque: e.newData.num_compte_banque
+                };
+                await clientDataService.update(e.data.client_id, clientData);
+                logData = { client_id: e.data.client_id, description: "Modification d'un client", user_id: decoded.user_id.id };
+                await LogsDataService.create(logData);
+                await compteClientDataService.update(e.data.value, compteClientData);
+                getClientList();
+                setShowAlert(false);
+                break;
+
       
             default:
               break;
@@ -981,7 +984,6 @@ const AddFacturier = () => {
 
 />
 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', border: '1px solid #ced4da', borderRadius: '.25rem', padding: '.375rem .75rem', marginBottom: '1rem', width: '100%' }}>
-
   <label className="upload-btn" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
     <input
       type="file"
@@ -989,10 +991,14 @@ const AddFacturier = () => {
       name="file"
         className="inputfile"
 
+
       onChange={handleFileChange}
       loading={loading}
-     
+    //   Si fileinfo n'existe pas, on affiche le message "Choose a file"
+    //   Si fileinfo existe, on affiche le nom du fichier
     />
+
+
 
 
   </label>
@@ -1062,6 +1068,28 @@ const AddFacturier = () => {
                 
                     }
                 </div>
+                <div class="section-three">
+                {result && result.dueDate.value ? 
+                    <div className="p-inputgroup">
+                            <span className="p-inputgroup-addon">
+                            <i className="pi pi-calendar"></i>
+                        </span>
+                            <span className="p-float-label">
+
+                            <InputText id="date_facture" type="text" value={result.dueDate.value} onChange={(e) => setResult({ ...result, dueDate: { value: e.target.value } })} />
+                            <label htmlFor="inputgroup">Date de facture*</label>
+                            </span>
+                    </div>
+                    :
+                            
+                            <span className="p-float-label">
+
+                            <Calendar id="date_facture" value={factures.due_date} onChange={(e) => setFactures({ ...factures, due_date: e.value })} dateFormat="dd/mm/yy" showIcon minDate={factures.date_facture} />
+                            <label htmlFor="inputgroup">Date limite de paiement </label>
+                            </span>
+                
+                    }
+                </div>
 
                         
                 <div class="section-three">
@@ -1084,7 +1112,7 @@ const AddFacturier = () => {
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
                             <span className="p-float-label">
-                                <Dropdown id="libelle" value={factures.libelle} options={libelleList} onChange={(e) => setFactures({ ...factures, libelle: e.value })} placeholder="Choisir parmis les libéllés" />
+                                <Dropdown id="libelle" value={factures.libelle} options={libelleList} onChange={(e) => setFactures({ ...factures, libelle: e.value })} placeholder="Choisir parmis les libéllés" filter showClear />
                                 <label htmlFor="inputgroup">Libelle de la facture*</label>
                             </span>
                             <Button onClick={(e) => onClick('displayLibelles', 'center', e)} icon="pi pi-plus" className="p-button-success" />
@@ -1138,7 +1166,7 @@ const AddFacturier = () => {
                                 <i className="pi pi-file"></i>
                             </span>
                             <span className="p-float-label" style={{ width: '100%' }}>
-                                <Dropdown id="decompte" value={decompte.decompte} options={decompteList} onChange={(e) => setDecompte({ ...decompte, decompte: e.value })} placeholder="Choisir parmis les décomptes" />
+                                <Dropdown id="decompte" value={decompte.decompte} options={decompteList} onChange={(e) => setDecompte({ ...decompte, decompte: e.value })} placeholder="Choisir parmis les décomptes" filter showClear />
                                 <label htmlFor="inputgroup">Décompte de la facture*</label>
                             </span>
                             <Button onClick={(e) => onClick('displayDecompte', 'center', e)} icon="pi pi-plus" className="p-button-success" />
@@ -1211,7 +1239,7 @@ const AddFacturier = () => {
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
                             <span className="p-float-label">
-                                <Dropdown id="objet" value={factures.objet} options={objetList} onChange={(e) => setFactures({ ...factures, objet: e.value })} placeholder="Choisir parmis les objets" />
+                                <Dropdown id="objet" value={factures.objet} options={objetList} onChange={(e) => setFactures({ ...factures, objet: e.value })} placeholder="Choisir parmis les objets" filter showClear/>
                                 <label htmlFor="inputgroup">Objet de la facture*</label>
                             </span>
                             <Button onClick={(e) => onClick('displayObjets', 'center', e)} icon="pi pi-plus" className="p-button-success" />
@@ -1260,20 +1288,22 @@ const AddFacturier = () => {
                 <div class="facture-section">
                     <div class="section-three">
                   
+                  
                         <div className="p-inputgroup">
-                           
-                            <span className="p-float-label">
-                                <span className="p-inputgroup-addon">
-                                    <i class="fa-solid fa-file-invoice"></i>
-                                </span>
-                                {result && checkFournisseur(result.supplierName.value) === true ? 
-                                    <InputText id="fournisseur" type="text" value={result.supplierName.value} onChange={(e) => setFactures({ ...factures, fournisseur: e.target.value })} />
-                                    :
-
-                                    <Dropdown id="fournisseur" value={factures.fournisseur} options={fournisseurList} onChange={(e) => setFactures({ ...factures, fournisseur: e.value })} placeholder="Choisir parmis les fournisseurs" />
-                                    
-                                }
+                            <span className="p-inputgroup-addon">
+                                <i class="fa-solid fa-file-invoice"></i>
                             </span>
+                            {result && checkFournisseur(result.supplierName.value) === true ?
+                                <span className="p-float-label">
+                                    <InputText id="Fournisseur" type="text" value={result.supplierName.value} onChange={(e) => setResult({ ...result, supplierName: e.target.value })} />
+                                    <label htmlFor="Fournisseur">Fournisseur*</label>
+                                </span>
+                                :
+                                <span className="p-float-label">
+                                    <Dropdown id="fournisseur" value={fournisseur.fournisseur} options={fournisseurList} onChange={(e) => setFournisseur({ ...fournisseur, fournisseur: e.value })} placeholder="Séléctionner un fournisseur" filter showClear/> 
+                                    <label htmlFor="fournisseur">Fournisseur*</label>
+                                </span>
+}            
                            
                             
                             
@@ -1295,6 +1325,7 @@ const AddFacturier = () => {
                                             <Column field="telephone_fournisseur" header="Téléphone du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
                                             <Column field="email_fournisseur" header="Email du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
                                             <Column field="num_compte_banque" header="N° de compte en banque du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                            <Column field="description" header="Description" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
                                             <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
 
                                         </DataTable>
@@ -1379,6 +1410,17 @@ const AddFacturier = () => {
                                                 </span>
                                             </div>
                                         </div>
+                                        <div class="section-three">
+                                            <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                                <span className="p-inputgroup-addon">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </span>
+                                                <span className="p-float-label">
+                                                    <InputText id="banque" type="text" value={fournisseur.description} onChange={(e) => setFournisseur({ ...fournisseur, description: e.target.value })} />
+                                                    <label htmlFor="banque">Description du fournisseur</label>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1404,7 +1446,7 @@ const AddFacturier = () => {
                                 </span>
                                 :
                                 <span className="p-float-label">
-                                    <Dropdown id="client" value={client.client} options={clientList} onChange={(e) => setClient({ ...client, client: e.value })} placeholder="Select a client" /> 
+                                    <Dropdown id="client" value={client.client} options={clientList} onChange={(e) => setClient({ ...client, client: e.value })} placeholder="Select a client" filter showClear/> 
                                     <label htmlFor="client">Client*</label>
                                 </span>
 }                              
@@ -1428,6 +1470,7 @@ const AddFacturier = () => {
                                             <Column field="email_client" header="Email du client" sortable filter filterPlaceholder="Chercher par email" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
                                             <Column field="numCompteClient" header="Numéro de compte" sortable filter filterPlaceholder="Chercher par numéro de compte" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
                                             <Column field="num_compte_banque" header="N° de compte de banque" sortable filter filterPlaceholder="Chercher par numéro de compte de banque" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
+                                            <Column field="description" header="Description du client" sortable filter filterPlaceholder="Chercher par description" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
                                             <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
 
                                         </DataTable>
@@ -1512,6 +1555,17 @@ const AddFacturier = () => {
                                                 </span>
                                             </div>
                                         </div>
+                                        <div class="section-three">
+                                            <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                                <span className="p-inputgroup-addon">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </span>
+                                                <span className="p-float-label">
+                                                    <InputText id="description" type="text" value={client.description} onChange={(e) => setClient({ ...client, description: e.target.value })} />
+                                                    <label htmlFor="description">Description</label>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1534,7 +1588,7 @@ const AddFacturier = () => {
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
                             <span className="p-float-label">
-                                <Dropdown id="extrait" value={extrait.extrait} options={extraitList} onChange={(e) => setExtrait({ ...extrait, extrait: e.value })} placeholder="Choisir un extrait" tooltip="Ce champs n'est pas obligatoire. Si vous décidez de ne pas le remplir, la facture sera indiquée comme non payée" tooltipOptions={{ position: 'top'}} />
+                                <Dropdown id="extrait" value={extrait.extrait} options={extraitList} onChange={(e) => setExtrait({ ...extrait, extrait: e.value })} placeholder="Choisir un extrait" tooltip="Ce champs n'est pas obligatoire. Si vous décidez de ne pas le remplir, la facture sera indiquée comme non payée" tooltipOptions={{ position: 'top'}} filter showClear/>
                                 <label htmlFor="inputgroup">Extrait de la facture</label>
                             </span>
                             <Button onClick={(e) => onClick('displayExtrait', 'center', e)} icon="pi pi-plus" className="p-button-success" />
@@ -1602,7 +1656,7 @@ const AddFacturier = () => {
                                 </span>
                             :
                                 <span className="p-float-label">
-                                    <Dropdown id="tva" value={factures.tva} options={tvaList} onChange={(e) => setFactures({ ...factures, tva: e.value })} placeholder="Select a tva" />
+                                    <Dropdown id="tva" value={factures.tva} options={tvaList} onChange={(e) => setFactures({ ...factures, tva: e.value })} placeholder="Select a tva" filter showClear/>
                                     <label htmlFor="inputgroup">TVA</label>
                                     
                                 </span>

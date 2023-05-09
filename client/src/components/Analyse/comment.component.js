@@ -53,15 +53,41 @@ const Comment = () => {
 
     const getComments = () => {
         CommentService.getAll()
-            .then((response) => {
-                if (response.data.length === 0) {
+            .then((response) => {    
+                if (response.length === 0) {
                     toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'No comment found', life: 3000 });
                     setComments([]);
-                } else {
-                    setComments(response.data);
                 }
+                else {
+                  // trier par date de création
+                  const sortedComments = response.sort((a, b) => {
+                    return new Date(b.createdAt) - new Date(a.createdAt); 
+                  });
+                  setComments(sortedComments);
+                }
+
+
+
             })
+            .catch((error) => {
+
+            }
+        );
+                
     };
+
+  useEffect(() => {
+    getFacturierIdList();
+    getComments();
+  }, []);
+  const onReset = () => {
+    setMessage('');
+    setTitle('');
+    setFactureNum('');
+    setFacturierId('');
+    setChecked1(false);
+  };
+
 
     const onSubmit = (data) => {
       const comment = {
@@ -70,40 +96,21 @@ const Comment = () => {
         title: title,
         facturier_id: facturierId? facturierId : undefined
       };
-      console.log(comment);
+   
       CommentService.create(comment)
         .then((response) => {
-          console.log(response.data);
-          onReset();
           getComments();
+          onReset();
+         
           toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Comment Created', life: 3000 });
-         
-
-  
-         
-          
-  
-  
-          
         })
         .catch((error) => {
           console.log(error);
         });
     };
 
-    const onReset = () => {
-      setMessage('');
-      setTitle('');
-      setFactureNum('');
-      setFacturierId('');
-      setChecked1(false);
-    };
 
 
-  useEffect(() => {
-    getFacturierIdList();
-    getComments();
-  }, []);
 
 
 
@@ -161,7 +168,7 @@ const Comment = () => {
                     Voulez-vous lier ce commentaire à une facture ?
                     <Checkbox
                       inputId="cb1"
-                      value="Yes"
+                      value="No"
                       onChange={(e) => setChecked1(e.checked)}
                       checked={checked1}
                       style={{ marginLeft: "1em" }}
@@ -176,7 +183,6 @@ const Comment = () => {
                         value={factureNum}
                         options={factureList}
                         onChange={(e) => {
-                          console.log(factureList);
                           setFactureNum(e.value);
                           setFacturierId(e.value);
                         }}
