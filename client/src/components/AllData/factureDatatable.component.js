@@ -1,11 +1,13 @@
 import react from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import {InputText} from 'primereact/inputtext';
 import {Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
 import {Dropdown } from 'primereact/dropdown';
+import { Button } from 'primereact/button';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import factureService from '../../services/factureService';
 import ObjetService from '../../services/objetService';
 import TvaService from '../../services/tva.services';
@@ -20,6 +22,9 @@ const FactuerDatatable = () => {
     const [libelle, setLibelle] = react.useState([]);
     const [libelleList , setLibelleList] = react.useState([]);
     const [tvaList , setTvaList] = react.useState([]);
+    const [globalFilterValue1, setGlobalFilterValue1] = useState('');
+
+    const [filters1, setFilters1] = useState(null)
     const toast = react.useRef(null);
 
     const getFactures = () => {
@@ -99,6 +104,8 @@ const FactuerDatatable = () => {
         getObjets();
         getTvas();
         getLibelles();
+        initFilters1();
+
     }, []);
 
     const statusBodyTemplate = (rowData) => {
@@ -202,20 +209,81 @@ const FactuerDatatable = () => {
         return <Dropdown value={options.value} options={tvaList} onChange={(e) => options.editorCallback(e.value)} tooltip="Attention ! Toutes modifications entrainera des changements sur tout le facturier" tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }} />;
     }
 
+    const clearFilter1 = () => {
+        initFilters1();
+    }
+
+    const onGlobalFilterChange1 = (e) => {
+        const value = e.target.value;
+        let _filters1 = { ...filters1 };
+        _filters1['global'].value = value;
+
+        setFilters1(_filters1);
+        setGlobalFilterValue1(value);
+    }
+
+
+    const initFilters1 = () => {
+        setFilters1({
+            'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+            'num_facture': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'num_facture_lamy': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'montant': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            // Objet doit être trié via son title 
+            'objet.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            
+
+            'country.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+
+        });
+        setGlobalFilterValue1('');
+    }
+
+    const renderHeader1 = () => {
+        return (
+            <div className="flex justify-content-between">
+                <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
+                </span>
+            </div>
+        )
+    }
+
+    const header1 = renderHeader1();
+
+
+    const dateBodyTemplate = (rowData) => {
+        if (rowData.facture_date !== null) {
+            console.log(rowData.facture_date)
+
+            return (
+                <span className="p-badge p-badge-success">{new Date(rowData.facture_date).toLocaleDateString()}</span>
+            );
+        }
+    }
+
+
+
+
+
+
     return (
         <div>
             <Toast ref={toast} />
             
-            <DataTable value={facture} editMode="row" onRowEditComplete={onRowEditComplete}>
-                <Column field="num_facture" header="Numéro de facture" editor={(options) => numberEditor(options)} sortable></Column>
-                <Column field="num_facture_lamy" header="N° de facture Lamy" editor={(options) => textEditor(options)} sortable></Column>
-                <Column field="montant" header="Montant" sortable editor={(options) => numberEditor(options)}></Column>
-                <Column field="facture_date" header="Date de facture" editor={(options) => dateEditor(options)} body={(rowData) => new Date(rowData.facture_date).toLocaleDateString()} sortable></Column>
-                <Column field="due_date" header="Date d'échéance" sortable  editor={(options) => dateEditor(options)} body={dueDateBodyTemplate}></Column>
-                <Column field="estpaye" header="Statut de la facture" body={statusBodyTemplate} sortable></Column>
-                <Column field="objet_id" header="Objet" sortable editor={(options) => dropdownEditorObjet(options)} body={(rowData) => rowData.objet.title}></Column>
-                <Column field="libelle_id" header="Libelle" sortable editor={(options) => dropdownEditorLibelle(options)} body={(rowData) => rowData.libelle.title}></Column>
-                <Column field="tva_id" header="TVA" sortable editor={(options) => dropdownEditorTva(options)} body={(rowData) => rowData.tva.tva_value}></Column>
+            <DataTable value={facture} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['tva.tva_value', 'objet.title', 'libelle.title', 'estpaye', 'num_facture', 'num_facture_lamy', 'montant']} filters={filters1}>
+                <Column field="num_facture" header="Numéro de facture" editor={(options) => numberEditor(options)} sortable filter></Column>
+                <Column field="num_facture_lamy" header="N° de facture Lamy" editor={(options) => textEditor(options)} sortable filter></Column>
+                <Column field="montant" header="Montant" sortable editor={(options) => numberEditor(options)} filter></Column>
+                <Column field="facture_date" header="Date de facturation" sortable editor={(options) => dateEditor(options)} body={dateBodyTemplate} filter></Column>
+                 
+                <Column field="due_date" header="Date d'échéance" sortable  editor={(options) => dateEditor(options)} body={dueDateBodyTemplate} ></Column>
+                <Column field="estpaye" header="Statut de la facture" body={statusBodyTemplate} sortable filter></Column>
+                <Column field="objet_id" header="Objet" sortable editor={(options) => dropdownEditorObjet(options)} body={(rowData) => rowData.objet.title} filter></Column>
+                <Column field="libelle_id" header="Libelle" sortable editor={(options) => dropdownEditorLibelle(options)} body={(rowData) => rowData.libelle.title} filter></Column>
+                <Column field="tva_id" header="TVA" sortable editor={(options) => dropdownEditorTva(options)} body={(rowData) => rowData.tva.tva_value} filter></Column>
                 <Column rowEditor ></Column>
             </DataTable>
 
