@@ -1,7 +1,7 @@
 // Controllers for compteClient
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const { compteClients } = require("../models");
+const { compteClients, Clients } = require("../models");
 
 // Create and Save a new CompteClient
 const createCompteClient = (req, res) => {
@@ -65,19 +65,27 @@ const createCompteClient = (req, res) => {
     */
     
 const findAllComptesClients = (req, res) => {
-  
-
-    compteClients.findAll()
-        .then(data => {
+    // trouver tous les comptes clients et inclure les clients
+    compteClients.findAll({
+        include: [
+            {
+                model: Clients,
+                as: "client",
+            }]
+    })
+    .then(data => {
         res.send(data);
-        })
-        .catch(err => {
+    })
+    .catch(err => {
         res.status(200).send({
-            message:
+        message:
             err.message || "Some error occurred while retrieving compteClients."
         });
-        });
-}
+    });
+};
+
+
+
 
 // Find a single CompteClient with an id
 const findOneCompteClient = (req, res) => {
@@ -113,7 +121,7 @@ const updateCompteClient = (req, res) => {
         }
     })
     .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
         message: "Error updating CompteClient with id=" + id
         });
     }
@@ -139,7 +147,7 @@ const deleteCompteClient = (req, res) => {
         }
     })
     .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
         message: "Could not delete CompteClient with id=" + id
         });
     }

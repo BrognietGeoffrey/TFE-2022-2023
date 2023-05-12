@@ -133,9 +133,42 @@ const getAllView = async (req, res) => {
   }
 };
 
+const deleteView = async (req, res) => {
+  try {
+    const { view_name } = req.body;
+    console.log(req.body);
+    // Valider les données d'entrée
+    if (!view_name) {
+      throw new Error("Invalid input data");
+    }
+
+    // vérifier si le nom de la vue est déjà utilisé
+    const ifViewEsist = await db.sequelize.query(`SELECT * FROM pg_views WHERE viewname = '${view_name}'`, { type: db.sequelize.QueryTypes.SELECT });
+    if (ifViewEsist.length === 0) {
+      throw new Error("View name doesn't exist");
+    }
+
+    // Générer la requête SQL pour supprimer la vue
+    const sqlDeleteQuery = `
+      DROP VIEW ${view_name};
+    `;
+    console.log(sqlDeleteQuery);
+
+    // Exécuter la requête SQL pour supprimer la vue
+    await db.sequelize.query(sqlDeleteQuery, { type: db.sequelize.QueryTypes.DELETE_VIEW });
+
+    // Retourner la vue supprimée
+    res.status(200).json({ message: 'View deleted successfully.', view_name });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+};
+
 module.exports = {
   createCustomView,
-  getAllView
+  getAllView, 
+  deleteView
 };
 
 

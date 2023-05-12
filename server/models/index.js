@@ -1,4 +1,6 @@
 const env = process.env.NODE_ENV || 'development';
+// dotenv
+require('dotenv').config();
 const config = require("../config/config.js")[env];
 console.log(config, env, 'config' )
 // import argon

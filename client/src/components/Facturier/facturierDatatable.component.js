@@ -11,6 +11,12 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import {Chip} from 'primereact/chip';
+import { Tooltip } from 'primereact/tooltip';
+import { FileUpload } from 'primereact/fileupload';
+import 'jspdf-autotable';
+import { jsPDF } from "jspdf";
+
 import FacturierDataService from "../../services/facturierService";
 import FactureDataService from "../../services/factureService";
 import ExtraitDataService from "../../services/extraitService";
@@ -20,6 +26,10 @@ import {Toast} from 'primereact/toast';
 const FacturierDatatable = () => {
 
     const [loading, setLoading] = useState(true)
+    const [importedCols, setImportedCols] = useState([{ field: '', header: 'Header' }]);
+    const dt = useRef(null);
+
+
     const [facturiers, setFacturiers] = useState([]);
     const [extraitList, setExtraitList] = useState([]);
     const [displayExtraitList, setDisplayExtraitList] = useState(false);
@@ -27,6 +37,17 @@ const FacturierDatatable = () => {
 
     const toastAddon = useRef(null);
     const [user, setUser] = useState(null);
+
+    const cols = [
+        { field: 'facturier_id', header: 'ID' },
+        { field: 'facturiers.facture.num_facture_lamy', header: 'Numéro de facture' },
+        { field: 'facture.facture_date', header: 'Date de facture' },
+        {field : 'compte_fournisseur.fournisseur.name', header: 'Fournisseur'},
+        
+
+    ];
+    const exportColumns = cols.map(col => ({title: col.header, dataKey: col.field}));
+
 
     useEffect(() => {
         const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -224,6 +245,35 @@ const FacturierDatatable = () => {
     }
 
 
+    const dateBodyDueTemplate = (rowData) => {
+        // transformer la due date en date
+        const dueDate = new Date(rowData.facture.due_date)
+
+
+        if (rowData.facture.due_date !== null) {
+            console.log(rowData.facture.due_date)
+            // Si la due date est dépassée on affiche en rouge mais que la facture est payé, on affiche en vert
+            if (dueDate < new Date() && rowData.facture.estpaye === true) {
+                // Afficher en vert si la facture est payée
+                return <Chip className="mr-2 mb-2 custom-chip-payed" label={formatDate(rowData.facture.due_date)} ></Chip>;
+            }
+            else if (dueDate < new Date()) {
+                // Afficher en rouge si la facture n'est pas payée
+                return <Chip className="mr-2 mb-2 custom-chip-not-payed" label={formatDate(rowData.facture.due_date)}></Chip>;
+            }
+            else {
+                return <Chip className="mr-2 mb-2 custom-chip-wait" label={formatDate(rowData.facture.due_date)} ></Chip>;
+            }
+        }
+        else {
+            return <Chip icon="pi pi-delete" className="mr-2 mb-2 custom-chip" label="Pas de date d'échéance">Pas de due date</Chip>;
+        }
+            
+           
+        
+    }
+
+
     const balanceBodyTemplate = (rowData) => {
         return formatCurrency(rowData.facture.montant);
     }
@@ -279,20 +329,39 @@ const FacturierDatatable = () => {
 
 
 
+    const exportFileName = `facturiers-${new Date().toLocaleDateString('fr-BE', { year: 'numeric', month: 'numeric', day: 'numeric' })}`;
+
+    const exportCSV = (selectionOnly) => {
+        dt.current.exportCSV({ selectionOnly });
+      }
+      
+
+
+    const header = (
+        <div className="flex align-items-center export-buttons">
+                        <Button type="button" icon="pi pi-file" onClick={() => exportCSV(false)} className="mr-2" tooltip="Exporter toutes les données" tooltipOptions={{ position: 'top' }} />
+        </div>
+    );
+
+
+
     if (loading) {
         return <ProgressBar mode="indeterminate" style={{ height: '6px' }} />;
 
     }
     else {
         return (
-            <div className="container">
-            <div className="facturierTable">
+            
+            <div className="container" id ="facturier-container">
+            <div className="facturierTable" id="facturier">
+            <Tooltip target=".custom-chip-not-payed" content="Facture non payée" />
+            <Tooltip target=".custom-chip-wait" content="Facture en attente de paiement" />
                 <Toast ref={toastAddon} />
                 {facturiers && (
                     <DataTable  value={facturiers} paginator  rows={10}
                      rowsPerPageOptions={[10,25,50]}
-                    dataKey="id" rowHover  loading={loading}
-                    emptyMessage="Aucunes données trouvées." scrollable 
+                     rowHover  loading={loading} dataKey="id" ref={dt} exportFilename={exportFileName}
+                    emptyMessage="Aucunes données trouvées." scrollable header={header} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}>
 
                     <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ backgroundColor: '#f8f9fa' }}  />
@@ -308,9 +377,10 @@ const FacturierDatatable = () => {
                     <Column header="Montant avec TVA"  sortable dataType="numeric"  body={tvaBalanceBodyTemplate} filter filterElement={balanceFilterTemplate} sortField="facture.montant" />
                     
                     <Column field="facture.estpaye" header="Status" sortable   body={statusBodyTemplate} filter filterElement={statusFilterTemplate}/>
+                    <Column field="facture.due_date" header="Date d'échéance" sortable filterField="date" dataType="date"  body={dateBodyDueTemplate} filter filterElement={dateFilterTemplate} />
                     <Column field="extrait.num_extrait" header="N° extrait" sortable filter filterPlaceholder="Rechercher par N°"  body={numextraitBodyTemplate}  />
                     <Column field="extrait.date_extrait" header="Date extrait" sortable filterField="date" dataType="date"  body={dateBodyExtraitTemplate} filter filterElement={dateFilterTemplate} /> 
-
+                    
                 </DataTable> 
                 )}
                 <Dialog header="Ajouter un extrait" visible={displayExtrait} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtrait')} className="extraitDialog">

@@ -11,9 +11,7 @@ const getAllUsers = async (req, res) => {
                 {
                     model: Role,
                 }, 
-                {
-                    model: Clients,
-                }
+
             ]
         });
         res.send(users);
@@ -67,8 +65,31 @@ const getUserAndClient = async (req, res) => {
     }
 }
 
+const updateUser = async (req, res) => {
+    try {
+        const {id, username, password, email, clientId} = req.body;
+        const user = await User.update({
+            username: username,
+            email: email,
+            clientId: clientId
+        }, {
+            where: {
+                id: id
+            }
+        });
+        res.send(user);
+    } catch (err) {
+        res.status(409).send({
+            message:
+                err.message || "Some error occurred while retrieving users."
+        });
+    }
+}
+
+
 module.exports = {
     getAllUsers,
     getUserByUsername, 
-    getUserAndClient
+    getUserAndClient, 
+    updateUser
 }

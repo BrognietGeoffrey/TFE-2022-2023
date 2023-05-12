@@ -28,9 +28,11 @@ router.get('/userClient', [authJwt.tokenVerification], getUserAndClient);
 const {
     createCustomView, 
     getAllView, 
+    deleteView
 } = require('../controllers/view.controllers');
 router.post('/createView', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), createCustomView);
 router.get('/getViews', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), getAllView);
+router.delete('/deleteView', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), deleteView);
 
 // Routes pour le facturiers
 const {

@@ -214,6 +214,19 @@ export const CustomViewForm = () => {
           </>
         );
       };
+
+      const handleDelete = (view) => {
+        console.log (view);
+        viewServices.deleteView(view.viewname)
+            .then((response) => {
+                console.log(response);
+                retrieveAllViews();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     
       
 
@@ -415,14 +428,22 @@ export const CustomViewForm = () => {
                             }
                         }
                         // si rowData.data a une longueur supérieure à 0, on affiche les données de rowData.data
-                        if (rowData.data.length > 0) {
-                            return (
-                                <div>Il y a {rowData.data.length} données pour cette view</div>
-                            );
-                        }
-                        return (
-                            <div>Il n'y a pas de données</div>
-                        );
+        if (rowData.data.length > 0) {
+            return (
+                <div>
+                    Il y a {rowData.data.length} données pour cette view
+                    <Button icon="pi pi-trash" className="p-button-danger p-button-sm" style={{ marginLeft: '1rem' }} onClick={() => handleDelete(rowData)} />
+                </div>
+            );
+        }
+        return (
+
+            <div>Il n'y a pas de données
+                                    <Button icon="pi pi-trash" className="p-button-danger p-button-sm" style={{ marginLeft: '1rem' }} onClick={() => handleDelete(rowData)} />
+
+            </div>
+
+        );
 
                         }}></Column>
                     </DataTable>

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
-import { faHome, faBook, faFileContract, faHardHat, faFileSignature } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faBook, faFileContract, faHardHat, faFileSignature, faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import './App.css';
 import { isLoggedIn } from './reducers/auth';
 import SideMenuBar from './components/SideMenu/sideMenu';
@@ -15,11 +15,13 @@ import AllData from './components/AllData/allData.component';
 import RedirectionPage from './components/redirectPage';
 import DataUserClient from './components/dataUserClient.component';
 import Contact from './components//sendMail.component';
+import FAQ from './components/FAQ/faq.component';
+import Aide from './components/FAQ/aide.component';
 import PrivateRoute from './services/PrivateRoute';
-import ReadInvoice from './components/readInvoice/readInvoice.component';
 
 import jwt_decode from 'jwt-decode';
 import {Toast } from 'primereact/toast';
+import {PrimeIcons } from 'primereact/api';
 
 
 const App = () => {
@@ -31,9 +33,12 @@ const App = () => {
     const menu = [
         { label: "Mes données", to: "/userData", icon: faBook, isVisible: user === 'user' ? true : false},
         { label: "Contact", to: "/contact", icon: faHome, isVisible: user === 'user' ? true : false},
+        { label: "FAQ", to: "/faq", icon: faHome, isVisible: user === 'user' ? true : false},
         {label : 'Base de données', to : '/allData', icon: faFileContract, isVisible : user === 'admin' || user === 'moderator' ? true : false},
         { label: "Analyse", to: "/analyse", icon: faHome, isVisible: user === 'admin' || user === 'moderator' ? true : false},
         { label: "Facturiers", to: "/facturiers", icon: faFileSignature, isVisible: user === 'admin' || user === 'moderator' ? true : false},
+        // hash 
+        {label : 'Aide', to : '/aide', icon: faCircleQuestion , isVisible : user === 'admin' || user === 'moderator' ? true : false},
         {label : 'Profil', to : '/profile', icon: faHardHat, isVisible : true, isLast: true},
 
     ];
@@ -100,6 +105,8 @@ const App = () => {
                             <PrivateRoute path='/facturiers' exact component={Facturiers} roles={['admin', 'moderator']}/>
                             <PrivateRoute path='/userData' exact component={DataUserClient} roles={['user']}/>
                             <PrivateRoute path='/contact' exact component={Contact} />
+                            <PrivateRoute path='/FAQ' exact component={FAQ} roles = {['user']}/>
+                            <PrivateRoute path='/aide' exact component={Aide} roles = {['admin', 'moderator']}/>
                             <PrivateRoute path="/login" exact component={Login} />
                             <PrivateRoute path='/contact' exact component={Analyse} />
                             <PrivateRoute path='/redirect' exact component={RedirectionPage}/>

@@ -1,3 +1,5 @@
+/* Code provenant du TFE de Madame Jaujatte Ikram. Un grand merci à elle de m'avair laissé utilisé son code ! */
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Dexie from 'dexie';

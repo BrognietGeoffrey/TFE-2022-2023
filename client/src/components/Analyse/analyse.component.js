@@ -37,7 +37,6 @@ export const Analyse = () => {
       try {
         const response = await FacturierDataService.getAll();
         setFacturier(response.data);
-        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -63,6 +62,7 @@ export const Analyse = () => {
       const billPayed = facturier.filter((bill) => bill.facture.estpaye === true);
       const billNotPayed = facturier.filter((bill) => bill.facture.estpaye === false);
       setBillPayed(billPayed);
+      console.log(billPayed);
       setBillNotPayed(billNotPayed);
       // Faire une liste des clients avec le noms des clients et leur id 
       const clientListWithFacture = facturier.map((bill) => {
@@ -73,14 +73,12 @@ export const Analyse = () => {
         };
       }
       );
-      console.log(clientListWithFacture);
       // modifier cette liste pour qu'il n'y ait pas de doublons
       const clientListWithFactureWithoutDuplicates = clientListWithFacture.filter((client, index, self) =>
         index === self.findIndex((t) => (
           t.id === client.id
         ))
       );
-      console.log(clientListWithFactureWithoutDuplicates);
       // maintenant trouver toutes les factures payés et non payées pour chaque client
       const clientListWithFactures = clientListWithFactureWithoutDuplicates.map((client) => {
         const factures = facturier.filter((bill) => bill.compte_client.client.client_id === client.id);
@@ -92,7 +90,6 @@ export const Analyse = () => {
 
         }
       });
-      console.log(clientListWithFactures);
       setClientListWithFacture(clientListWithFactures);
     };
 
@@ -175,9 +172,9 @@ const retrieveLogs = async () => {
               className="custom-button-logs p-button-link"
               tooltip="N° de facture"
               tooltipOptions={{ position: 'left' }}
-              onClick={ rowData.facturier.facture !== undefined ? () => handleShowDetails(rowData) : null}
+              onClick={ rowData.facture !== undefined ? () => handleShowDetails(rowData) : null}
             >
-              {rowData.facturier.facture !== undefined ? rowData.facturier.facture.num_facture : "Pas de n° trouvé"}
+              {rowData.facture !== undefined ? rowData.facture.num_facture : "Pas de n° trouvé"}
               {/* {rowData.facture.num_facture}  */}
             </Button>
           </span>
@@ -193,7 +190,8 @@ const retrieveLogs = async () => {
               tooltipOptions={{ position: 'left' }}
               onClick={() => handleShowDetails(rowData)}
             >
-              {client.client_id}
+              {console.log(rowData.client)}
+              {rowData.client.firstname + " " + rowData.client.name}
             </Button>
           </span>
         );
@@ -208,7 +206,7 @@ const retrieveLogs = async () => {
               tooltipOptions={{ position: 'left' }}
               onClick={() => handleShowDetails(rowData)}
             >
-              {fournisseur.fournisseur_id}
+              {rowData.fournisseur.num_fournisseur}
             </Button>
           </span>
         );
@@ -219,11 +217,12 @@ const retrieveLogs = async () => {
           <span>
             <Button
               className="custom-button-logs p-button-link"
-              tooltip="N° de libelle"
+              tooltip="Libellé de facture "
               tooltipOptions={{ position: 'left' }}
               onClick={() => handleShowDetails(rowData)}
             >
-              {libelle.libelle_id}
+
+              {rowData.libelle.title}
             </Button>
           </span>
         );
@@ -233,11 +232,11 @@ const retrieveLogs = async () => {
           <span>
             <Button
               className="custom-button-logs p-button-link"
-              tooltip="N° de objet"
+              tooltip="Objet de facture"
               tooltipOptions={{ position: 'left' }}
               onClick={() => handleShowDetails(rowData)}
             >
-              {objet.objet_id}
+              {rowData.objet.title}
             </Button>
           </span>
         );
@@ -251,7 +250,7 @@ const retrieveLogs = async () => {
               tooltipOptions={{ position: 'left' }}
               onClick={() => handleShowDetails(rowData)}
             >
-              {extrait.extrait_id}
+              {rowData.extrait.num_extrait}
             </Button>
           </span>
         );
@@ -265,8 +264,7 @@ const retrieveLogs = async () => {
               tooltipOptions={{ position: 'left' }}
               onClick={() => handleShowDetails(rowData)}
             >
-              {tva.tva_id}
-              {console.log(tva)}
+              {rowData.tva.tva_value}
             </Button>
           </span>
         );
@@ -283,7 +281,6 @@ const retrieveLogs = async () => {
   };
 
     const onRowGroupExpand = (event) => {
-      console.log(event.data)
       toast.current.show({ severity: 'info', summary: 'Groupe agrandi', detail: 'Value: ' + event.data.nom, life: 3000 });
   }
 
@@ -306,7 +303,6 @@ const retrieveLogs = async () => {
 
   const num_factureTemplate = (rowData) => {
     const factureLength = rowData.factures.length;
-    console.log(factureLength)
     return (
       <DataTable value={rowData.factures} className="p-datatable-sm">
         <Column field="facture.num_facture" header="N° Facture"  />
@@ -335,18 +331,16 @@ const retrieveLogs = async () => {
         </div>
         <div className="card" >
         <DataTable value={logs} paginator rows={5} rowsPerPageOptions={[5,10,20]} emptyMessage="Aucun log pour le moment" style={{height : "90%"}}>
-                    {console.log(logs)}
                     <Column field="user.username" header="Utilisateur"  />
                     <Column field="date" header="Date" body={dateBodyTemplate} />
-                    <Column field="action" header="Type d'ajout" body={actionBodyTemplate} />
-                    <Column field="ajout" header="Contenu de l'ajout" body={ajoutBodyTemplate} />         
+                    <Column field="action" header="Actions" body={actionBodyTemplate} />
+                    <Column field="ajout" header="Où" body={ajoutBodyTemplate} />         
                   </DataTable>
                   <Dialog
                     header="Détails de la ligne de tableau sélectionnée"
                     visible={showDetailsLogs}
                     onHide={() => setShowDetailsLogs(false)}
                   >
-                    {console.log(selectedLog)}
                     {selectedLog && selectedLog.decompte && (
                       <div>
                         <p><b>N° de décompte : </b>{selectedLog.decompte.num_decompte}</p>
@@ -402,8 +396,28 @@ const retrieveLogs = async () => {
       <section className="blog">
         <h2>Les statistiques</h2>
         <div className="card">
-          <h3>Nombres total de factures </h3>
-          <p>{billNotPayed.length + billPayed.length}</p>
+          {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
+          <h3>Factures payées</h3>
+          {billNotPayed && billNotPayed.length > 0 && (
+            <div>
+              <p>Nombre de factures payées : {billPayed.length}</p>
+              <p>Montant total des factures non payées : {billPayed.reduce((acc, curr) => acc + curr.facture.montant, 0)} €</p>
+            </div>
+          )}
+
+
+        </div>
+        <div className="card">
+          {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
+          <h3>Factures payées</h3>
+          {billNotPayed && billNotPayed.length > 0 && (
+            <div>
+              <p>Nombre de factures non payées : {billNotPayed.length}</p>
+              <p>Montant total des factures non payées : {billNotPayed.reduce((acc, curr) => acc + curr.facture.montant, 0)} €</p>
+            </div>
+          )}
+
+
         </div>
         <div className="card">
           <h3>Les clients et leurs factures </h3>
@@ -412,13 +426,31 @@ const retrieveLogs = async () => {
                     expandableRowGroups expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
                     onRowExpand={onRowGroupExpand} onRowCollapse={onRowGroupCollapse}
                     rowGroupHeaderTemplate={headerTemplate} >
-                      {console.log(clientListWithFacture)}
-                      <Column field="" header="" ></Column>
-                    <Column field="" header="" body={num_factureTemplate}></Column>
+                      <Column ></Column>
+                    <Column body={num_factureTemplate}></Column>
               </DataTable>
           </p>
         </div>
       </section>
+      <section className="blog">
+        <h2>Les statistiques</h2>
+        <div className="card">
+
+        </div>
+        <div className="card">
+        </div>
+
+      </section>
+      <section className="blog">
+        <h2>Les statistiques</h2>
+        <div className="card">
+
+        </div>
+        <div className="card">
+ 
+        </div>
+      </section>
+
     </div>
 
     )
