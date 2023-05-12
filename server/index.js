@@ -1,5 +1,7 @@
 const upload = require('./config/upload.config');
 const express = require("express");
+const path = require('path');
+
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
@@ -58,6 +60,9 @@ const db = require('./models');
 
 const routes = require('./routes');
 app.use('/api' ,routes);
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 app.post('/api/send-email', sendEmailController);
 
 
@@ -99,6 +104,11 @@ app.post('/api/ocr-mindee', upload.single('file'), (req, res) => {
 });
 
 
+app.use(express.static(__dirname + '/build/'));
+app.get('*', (req, res) => {
+  return res.sendFile(path
+    .join(__dirname + '/build/', 'index.html'))
+});
 
 
 

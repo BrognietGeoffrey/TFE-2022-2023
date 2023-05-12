@@ -1,0 +1,14 @@
+{
+	"status": "valid",
+	"contact": [
+		"mailto:ikramjaujate@gmail.com"
+	],
+	"termsOfServiceAgreed": true,
+	"externalAccountBinding": {
+		"protected": "eyJhbGciOiJIUzI1NiIsImtpZCI6IjM0NjUyY1ZKWmxMRWNIc29LMUtVaWciLCJ1cmwiOiJodHRwczovL2FjbWUuemVyb3NzbC5jb20vdjIvRFY5MC9uZXdBY2NvdW50In0",
+		"payload": "eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6InJKWW5DVHZpNFE2bDdoazJHeEVzcTZvcG8yeG0tNEEyd29xOG1oWXM0Z3ciLCJ5IjoiNmxsY0Nid3BnQko1dDA4STgzUHkyc2NrdXJzWWZPVlByalg5MURzUUpYVSJ9",
+		"signature": "Uuegyj49ikyttn820PX8qV_QpbIiaN1cMxBdboOperw"
+	},
+	"orders": "https://acme.zerossl.com/v2/DV90/account/34652cVJZlLEcHsoK1KUig/orders",
+	"location": "https://acme.zerossl.com/v2/DV90/account/34652cVJZlLEcHsoK1KUig"
+}

@@ -1,0 +1,7 @@
+{
+  email ikramjaujate@gmail.com
+}
+
+jeanvives.be {
+  reverse_proxy 192.168.20.10:4000
+}

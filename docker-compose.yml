@@ -1,42 +1,41 @@
-version: "3"
+version: '2'
+
 services:
-  postgres:
-    image: "postgres:latest"
-    environment:
-      - POSTGRES_PASSWORD=postgres_password
-  nginx:
+
+  app:
+    image: node:latest
+    container_name: app
+    restart: unless-stopped
     depends_on:
-      - api
-      - client
-    restart: always
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./nginx
-    ports:
-      - "3050:80"
-  api:
-      build:
-        dockerfile: Dockerfile.dev
-        context: "./server"
-      volumes:
-        - /app/node_modules
-        - ./server:/app
-      environment:
-        - PGUSER=tfedb
-        - PGHOST=localhost
-        - PGDATABASE=jv10
-        - PGPASSWORD=tfedb
-        - PGPORT=5432
-      command: sh -c "while ! nc -z postgres 5432; do sleep 0.1; done; npm run dev:server"
-
-
-  client:
-    stdin_open: true
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./client
+      - "db"
     volumes:
-      - /app/node_modules
-      - ./client:/app
+      - ./server:/var/www/backend
+    networks:
+      vps-ikram-network-lan:
+        ipv4_address: 192.168.20.10
+    command: bash -c "cd /var/www/backend && npm i argon2 && npm i && npm run dev:production"
+  db:
+    image: postgres
+    container_name: database
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "test"
+      POSTGRES_DB: "test"
+    logging:
+      options:
+        max-size: 10m
+        max-file: '3'
+    networks:
+      vps-ikram-network-lan:
+        ipv4_address: 192.168.20.11
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+networks:
+  vps-ikram-network-lan:
+    name: vps-ikram-network-lan
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.20.0/24
+          gateway: 192.168.20.1
