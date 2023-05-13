@@ -226,15 +226,14 @@ const FactuerDatatable = () => {
     const initFilters1 = () => {
         setFilters1({
             'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
-            'num_facture': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'num_facture_lamy': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'montant': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            // Objet doit être trié via son title 
-            'objet.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            
-
+            'name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             'country.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-
+            'representative': { value: null, matchMode: FilterMatchMode.IN },
+            'date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+            'balance': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'status': { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'activity': { value: null, matchMode: FilterMatchMode.BETWEEN },
+            'verified': { value: null, matchMode: FilterMatchMode.EQUALS }
         });
         setGlobalFilterValue1('');
     }
@@ -278,7 +277,7 @@ const FactuerDatatable = () => {
                 <Column field="num_facture_lamy" header="N° de facture Lamy" editor={(options) => textEditor(options)} sortable filter></Column>
                 <Column field="montant" header="Montant" sortable editor={(options) => numberEditor(options)} filter></Column>
                 <Column field="facture_date" header="Date de facturation" sortable editor={(options) => dateEditor(options)} body={dateBodyTemplate} filter></Column>
-                 
+                       
                 <Column field="due_date" header="Date d'échéance" sortable  editor={(options) => dateEditor(options)} body={dueDateBodyTemplate} ></Column>
                 <Column field="estpaye" header="Statut de la facture" body={statusBodyTemplate} sortable filter></Column>
                 <Column field="objet_id" header="Objet" sortable editor={(options) => dropdownEditorObjet(options)} body={(rowData) => rowData.objet.title} filter></Column>
