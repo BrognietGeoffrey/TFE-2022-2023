@@ -1,7 +1,11 @@
 {
-  email ikramjaujate@gmail.com
+  email g.brogniet1@gmail.com
 }
 
 jeanvives.be {
+  reverse_proxy 192.168.20.10:4000
+} 
+
+www.jeanvives.be {
   reverse_proxy 192.168.20.10:4000
 }

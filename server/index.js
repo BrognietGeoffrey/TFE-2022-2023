@@ -60,9 +60,6 @@ const db = require('./models');
 
 const routes = require('./routes');
 app.use('/api' ,routes);
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
 app.post('/api/send-email', sendEmailController);
 
 

@@ -6,12 +6,14 @@ services:
     image: node:latest
     container_name: app
     restart: unless-stopped
+    ports:
+      - 8081:4000
     depends_on:
       - "db"
     volumes:
       - ./server:/var/www/backend
     networks:
-      vps-ikram-network-lan:
+      vps-geoffrey-network-lan:
         ipv4_address: 192.168.20.10
     command: bash -c "cd /var/www/backend && npm i argon2 && npm i && npm run dev:production"
   db:
@@ -27,13 +29,28 @@ services:
         max-size: 10m
         max-file: '3'
     networks:
-      vps-ikram-network-lan:
+      vps-geoffrey-network-lan:
         ipv4_address: 192.168.20.11
     volumes:
       - ./database/data:/var/lib/postgresql/data
+
+  caddy:
+    image: caddy:2.3.0
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddy/config/Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddy/config/caddy_data:/data
+      - ./Caddy/config/caddy_config:/config
+    networks:
+      vps-geoffrey-network-lan:
+        ipv4_address: 192.168.20.2
+
 networks:
-  vps-ikram-network-lan:
-    name: vps-ikram-network-lan
+  vps-geoffrey-network-lan:
     driver: bridge
     ipam:
       config:

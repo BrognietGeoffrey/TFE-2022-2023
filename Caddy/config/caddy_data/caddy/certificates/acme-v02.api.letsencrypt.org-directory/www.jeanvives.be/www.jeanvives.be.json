@@ -1,0 +1,8 @@
+{
+	"sans": [
+		"www.jeanvives.be"
+	],
+	"issuer_data": {
+		"url": "https://acme-v02.api.letsencrypt.org/acme/cert/0372489c4529a604eee072be0bf16cd1295a"
+	}
+}
