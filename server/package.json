@@ -6,6 +6,8 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "bootstrap": "^5.1.3",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
     "cors": "^2.8.5",
     "dexie": "^3.2.3",
     "dotenv": "^16.0.3",
@@ -14,8 +16,10 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "mindee": "^3.7.4",
+    "mocha": "^10.2.0",
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
+    "node-mocks-http": "^1.12.2",
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.22",
     "pg": "^8.8.0",
@@ -25,17 +29,18 @@
     "react-router-dom": "^6.4.1",
     "sequelize": "^5.21.3",
     "swagger-autogen": "^2.22.0",
-    "swagger-ui-express": "^4.5.0"
+    "swagger-ui-express": "^4.6.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.22",
+    "supertest": "^6.3.3",
     "tailwindcss": "^3.1.8"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon",
     "dev:server": "nodemon",
-    "dev:production": "nodemon backend/index.js",
-    "swagger-autogen": "node backend/swagger.js"
+    "dev:production": "nodemon server/index.js",
+    "swagger-autogen": "node swagger.js"
   }
 }

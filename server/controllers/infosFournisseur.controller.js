@@ -153,6 +153,31 @@ const getFournisseurByName = (req, res) => {
         });
     });
     }
+
+const validFormBodyLibelle = (body) => {
+    if (!body.title) {
+        throw new Error("Title can not be empty!");
+        
+    }
+    if (!body) {
+        throw new Error("Body can not be empty!");
+        
+    }
+        
+};
+
+const validFormBodyObjet = (body) => {
+    if (!body.title) {
+        throw new Error("Title can not be empty!");
+        
+    }
+    if (!body) {
+        throw new Error("Body can not be empty!");
+        
+    }
+        
+};
+
     
 
 
@@ -163,6 +188,8 @@ module.exports = {
     createFournisseur,
     updateFournisseur,
     deleteFournisseur, 
-    getFournisseurByName
+    getFournisseurByName, 
+    validFormBodyLibelle, 
+    validFormBodyObjet
 }
 

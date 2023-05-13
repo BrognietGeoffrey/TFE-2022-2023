@@ -110,7 +110,7 @@ const findOneFacture = (req, res) => {
         res.send(data);
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message: "Error retrieving Facture with id=" + id
         });
         });
@@ -171,7 +171,7 @@ const updateFacture = (req, res) => {
 
     .catch(err => {
         res.status(500).send({
-            message: "Error updating Facture with id=" + id
+            message: "Error updating Facture with id=" + id + "op or"
         });
     });
 };
@@ -265,8 +265,34 @@ const getFactureById = (req, res) => {
     });
 }
 
-                
-        
+const validFormBodyFacture = (body) => {
+    if(!body) return res.status(500).send({
+        message: "Content can not be empty!"
+        });
+
+    if (!body.num_facture || body.num_facture === "") {
+        throw new Error("Numéro de facture obligatoire");
+    }
+    if (!body.num_facture_lamy || body.num_facture_lamy === "") {
+        throw new Error("Numéro de facture Lamy obligatoire");
+    }
+    if (!body.facture_date || body.facture_date === "") {
+        throw new Error("Date de facture obligatoire");
+    }
+    if (body.libelle_id === "" || !body.libelle_id) {
+        throw new Error("Libellé obligatoire");
+    }
+    if (body.objet_id === "" || !body.objet_id) {
+        throw new Error("Objet obligatoire");
+    }
+    if (body.tva_id === "" || !body.tva_id) {
+        throw new Error("TVA obligatoire");
+    }
+    if (!body.montant|| body.montant=== "") {
+        throw new Error("Montant obligatoire");
+    }
+}
+
     
 
 
@@ -279,7 +305,8 @@ module.exports = {
     updateFacture,
     deleteFacture,
     getLastIdFacture, 
-    getFactureById
+    getFactureById, 
+    validFormBodyFacture
 }
 
 

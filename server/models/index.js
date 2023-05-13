@@ -2,9 +2,7 @@ const env = process.env.NODE_ENV || 'development';
 // dotenv
 require('dotenv').config();
 const config = require("../config/config.js")[env];
-console.log(config, env, 'config' )
 // import argon
-const argon2 = require('argon2');
 
 
 const Sequelize = require("sequelize");
@@ -87,10 +85,10 @@ db.Role.belongsToMany(db.User, { through: db.UserRoles, foreignKey: 'roleId', ot
 
 
 // Réinitialiser la base de données si elle est vide ou si elle est modifiée et que le modèle a changé
-db.sequelize.sync({force: false}).then(() => {
-    console.log('Drop and Resync Db');
-    // initial();
-});
+// db.sequelize.sync({force: false}).then(() => {
+//     console.log('Drop and Resync Db');
+//     // initial();
+// });
 
 const initial = () => {
     db.Role.create({
@@ -116,6 +114,5 @@ const initial = () => {
 
 // Roles are created automatically when the server starts not in the array
 db.ROLES = ["user", "admin", "moderator"];
-console.log("db.ROLES = " + db.ROLES);
 module.exports = db;
 

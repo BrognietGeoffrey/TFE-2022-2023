@@ -20,4 +20,18 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+# ne pas include cypress
+**/cypress
+**/cypress.json
+**/cypress.env.json
+**/cypress.env.js
+**/cypress/plugins
+**/cypress/fixtures
+**/cypress/integration
+**/cypress/support
+**/cypress/screenshots
+**/cypress/videos
+
+# ne pas include les fichiers de test
+
 README.md

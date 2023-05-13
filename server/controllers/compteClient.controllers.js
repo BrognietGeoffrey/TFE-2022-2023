@@ -51,18 +51,7 @@ const createCompteClient = (req, res) => {
 };
 
 // Retrieve all compteClients from the database.
-  // Swagger 
-  /* 
-    * @swagger
-    * /api/compteClients:
-    *   
-    *  get:
-    *   description: Use to request all compteClients
-    *  responses:
-    *  '200':
-    *  description: A successful response
-    * 
-    */
+
     
 const findAllComptesClients = (req, res) => {
     // trouver tous les comptes clients et inclure les clients

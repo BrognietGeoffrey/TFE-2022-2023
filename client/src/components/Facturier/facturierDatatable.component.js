@@ -113,8 +113,7 @@ const FacturierDatatable = () => {
     };
 
     const saveExtrait = (rowData) => {
-        console.log(extrait.facture.facture_id)
-        console.log(extrait)
+
         var data = {
             num_extrait: extrait.num_extrait,
             date_extrait: extrait.date_extrait,
@@ -158,6 +157,8 @@ const FacturierDatatable = () => {
                 // mettre à jour le estpaye de la facture
                 var data = {
                     estpaye: true,
+                    num_facture : extrait.facture.num_facture,
+                    num_facture_lamy : extrait.facture.num_facture_lamy
                 }
                 FactureDataService.update(extrait.facture.facture_id, data)
                 .then(response => {

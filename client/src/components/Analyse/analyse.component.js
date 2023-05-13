@@ -172,9 +172,9 @@ const retrieveLogs = async () => {
               className="custom-button-logs p-button-link"
               tooltip="N° de facture"
               tooltipOptions={{ position: 'left' }}
-              onClick={ rowData.facture !== undefined ? () => handleShowDetails(rowData) : null}
+              onClick={ rowData !== undefined ? () => handleShowDetails(rowData) : null}
             >
-              {rowData.facture !== undefined ? rowData.facture.num_facture : "Pas de n° trouvé"}
+              {/* {rowData !== undefined ? rowData.facture.num_facture : "Pas de n° trouvé"} */}
               {/* {rowData.facture.num_facture}  */}
             </Button>
           </span>

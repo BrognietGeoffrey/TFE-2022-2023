@@ -13,7 +13,5 @@ module.exports = {
             idle : 10000
         }
     },
-    production: {
-        // Informations de connexion pour la production
-    }
+
 };

@@ -2,10 +2,8 @@ const db = require('../models');
 const { Op } = db.Sequelize;
 
 const createCustomView = async (req, res) => {
-  console.log("createCustomView")
   try {
     const { table, filters, joins, view_name } = req.body; // table: nom de la table, filters: tableau contenant les critères de filtrage, joins: tableau contenant les jointures
-    console.log(req.body);
     // Valider les données d'entrée
     if (!table || !view_name || !filters || !joins) {
       throw new Error("Invalid input data");
@@ -23,7 +21,6 @@ const createCustomView = async (req, res) => {
     if (filters.length > 0) {
       whereClause = "WHERE ";
       filters.forEach((filter, index) => {
-        console.log(filter);
         // Ajouter l'opérateur logique "AND" entre les clauses de filtrage
         if (index !== 0) {
           whereClause += " AND ";
@@ -34,7 +31,6 @@ const createCustomView = async (req, res) => {
           whereClause += `${filter.attribute} ${filter.operator} ? AND ?`;
           values.push(filter.value[0]);
           values.push(filter.value[1]);
-          console.log(values)
         } else {
           // Ajouter la clause de filtrage en fonction de l'opérateur spécifié dans chaque élément du tableau
           whereClause += `${filter.attribute} ${filter.operator} ?`;
@@ -42,7 +38,6 @@ const createCustomView = async (req, res) => {
         }
       });
     }
-    console.log(whereClause);
 
     // Générer la clause JOIN dynamiquement
     let joinClause = "";
@@ -50,7 +45,6 @@ const createCustomView = async (req, res) => {
   
     if (joins.length > 0) {
       joins.forEach((join, index) => {
-        console.log(join.condition);
         // si pas de condition, on ne fait pas de jointure
         if (join.condition === undefined) {
           joinClause = "";
@@ -60,7 +54,6 @@ const createCustomView = async (req, res) => {
         }
       });
     }
-    console.log(joinClause);
 
     // Générer la requête SQL pour créer la vue
     const sqlCreateQuery = `
@@ -69,7 +62,6 @@ const createCustomView = async (req, res) => {
       ${whereClause}
       ORDER BY ${table} DESC;
     `;
-    console.log(sqlCreateQuery);
 
     // Exécuter la requête SQL pour créer la vue
     await db.sequelize.query(sqlCreateQuery, {
@@ -103,18 +95,15 @@ const createCustomView = async (req, res) => {
 const getAllView = async (req, res) => {
   try {
     const view = await db.sequelize.query(`SELECT * FROM pg_views WHERE schemaname = 'public'`, { type: db.sequelize.QueryTypes.SELECT });
-    console.log(view);
     // trouver le nom de la table associée à la vue
     for (let i = 0; i < view.length; i++) {
       // chercher le premier FROM dans la requête
       const from = view[i].definition.indexOf('FROM');
-      console.log(from, 'from')
       // et indiquer le nom de la table après le FROM
       const table = view[i].definition.substring(from + 5, view[i].definition.indexOf(' ', from + 5))
       // enlever les deux derniers caractères
       view[i].table = table.substring(0, table.length - 1);
     }
-    console.log(view, 'ici');
     // variable qui montre le résultat de toutes les vues
     const resultView = [];
     // boucle pour récupérer les données de chaque vue associée aux vues
@@ -136,7 +125,6 @@ const getAllView = async (req, res) => {
 const deleteView = async (req, res) => {
   try {
     const { view_name } = req.body;
-    console.log(req.body);
     // Valider les données d'entrée
     if (!view_name) {
       throw new Error("Invalid input data");
@@ -152,7 +140,6 @@ const deleteView = async (req, res) => {
     const sqlDeleteQuery = `
       DROP VIEW ${view_name};
     `;
-    console.log(sqlDeleteQuery);
 
     // Exécuter la requête SQL pour supprimer la vue
     await db.sequelize.query(sqlDeleteQuery, { type: db.sequelize.QueryTypes.DELETE_VIEW });

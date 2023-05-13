@@ -10,6 +10,7 @@ const {
     findAll,
     create
 } = require('../controllers/logs.controller');
+
 router.get('/logs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), findAll);
 router.post('/logs', [authJwt.tokenVerification], checkRolePermission(['admin', 'moderator']), create);
 

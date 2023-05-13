@@ -81,7 +81,6 @@ const createTva = (req, res) => {
 
 const updateTva = (req, res) => {
     const id = req.params.id;
-    console.log(id)
 
     Tva.update(req.body, {
         where: { tva_id: id }
@@ -142,13 +141,25 @@ const getTvaByValue = (req, res) => {
     });
 }
 
+const validFormBodyTva = (body) => {
+    if (!body.tva_value) {
+        throw new Error("Value can not be empty!");
+        
+    }
+    if (!body) {
+        throw new Error("Body can not be empty!"); 
+    }
+        
+};
+
 module.exports = {
     findAllTva,
     findOneTva,
     createTva,
     updateTva,
     deleteTva, 
-    getTvaByValue
+    getTvaByValue, 
+    validFormBodyTva
 }
 
 

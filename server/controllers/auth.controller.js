@@ -21,7 +21,6 @@ exports.signup = async (req, res) => {
   })
     .then((user) => {
       if (req.body.role) {
-        console.log(req.body.role);
         Role.findOne({
           where: {
             name: req.body.role,
@@ -70,7 +69,6 @@ exports.signin = async (req, res) => {
       ]
    
     });
-    console.log(userRole.role.dataValues, "userRole");
     if (!user) {
       return res.status(404).send('User Not Found.');
     }
@@ -93,8 +91,6 @@ exports.signin = async (req, res) => {
         expiresIn: "3h",
       }
     );
-    console.log(token, "token, login");
-    console.log(userRole.user, "userRole, login");
 
     res.header('Authorization', token).json({
       error: null,
