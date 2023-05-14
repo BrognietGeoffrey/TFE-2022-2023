@@ -1,0 +1,37 @@
+#facturier-container {
+    /* Card */
+        background-color: #fff;
+        border-radius: 5px;
+        margin: 0 auto;
+        max-width: 100%;
+        padding: 20px;
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        height : 100%;
+    }
+    
+    .custom-chip-payed
+    {
+        background-color: #40C55E;
+        /* écriture en blanc */
+        color: #fff;
+    
+       
+       
+    }
+    
+    .custom-chip-not-payed
+    {
+        background-color: #F44336;
+        color: #fff;
+       
+    }
+    
+    .custom-chip-wait 
+    {
+        background-color: #FFC107;
+        color: #fff;
+       
+    }
+    
