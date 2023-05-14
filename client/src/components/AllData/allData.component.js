@@ -5,6 +5,7 @@ import ExtraitDatatable from './extraitDatatable.component';
 import FactureDatatable from './factureDatatable.component';
 import ClientDatatable from './clientDatatable.component';
 import FournisseurDatatable from './fournisseurDatatable.component';
+import UsersDatatable from './userDatatable.component';
 import './allData.css'
 
 
@@ -26,6 +27,9 @@ const AllData = () => {
                     <TabPanel header="Fournisseurs" leftIcon="pi pi-file">
                     <FournisseurDatatable />
                     </TabPanel>
+                        <TabPanel header="Utilisateurs" leftIcon="pi pi-file">
+                        <UsersDatatable />
+                        </TabPanel>
                    
 
                 </TabView>
