@@ -29,13 +29,13 @@ const UsersDatatable = () => {
     }, []);
 
     const onRowEditComplete = (e) => {
-        console.log(e)
+        console.log(e.data)
         const data = {
-            username: e.newData.username,
-            email: e.newData.email,
-            role: e.newData.role
+            username: e.newData["user.username"],
+            email: e.newData["user.email"],
+            
         }
-        userService.update(e.data.user_id, data)
+        userService.update(e.data.userId, data)
         .then((response) => {
             console.log(response.data);
             getUsers();

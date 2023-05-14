@@ -66,16 +66,16 @@ const getUserAndClient = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
+    const id = req.params.id;
+    const {username, email, password, clientId} = req.body;
     try {
-        const {id, username, password, email, clientId} = req.body;
         const user = await User.update({
             username: username,
             email: email,
+            password: password,
             clientId: clientId
         }, {
-            where: {
-                id: id
-            }
+            where: {id: id}
         });
         res.send(user);
     } catch (err) {
@@ -87,9 +87,11 @@ const updateUser = async (req, res) => {
 }
 
 
+
 module.exports = {
     getAllUsers,
     getUserByUsername, 
     getUserAndClient, 
     updateUser
 }
+

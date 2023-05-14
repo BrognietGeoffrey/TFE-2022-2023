@@ -17,12 +17,14 @@ router.post('/logs', [authJwt.tokenVerification], checkRolePermission(['admin', 
 const {
     getAllUsers,
     getUserByUsername, 
-    getUserAndClient
+    getUserAndClient, 
+    updateUser,
 }
 = require('../controllers/user.controller');
 router.get('/users', getAllUsers);
 router.get('/users/:username', [authJwt.tokenVerification], getUserByUsername);
 router.get('/userClient', [authJwt.tokenVerification], getUserAndClient);
+router.put('/users/:id', [authJwt.tokenVerification], updateUser);
 
 // Routes pour les views
 const {

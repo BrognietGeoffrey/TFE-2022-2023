@@ -311,14 +311,14 @@ const AddFacturier = () => {
         // sinon on prends result.taxes[0].value et on récupère son id dans la liste des tva correspondant à la valeur
         // on récupère l'id de la tva correspondant à la valeur de la tva
         var tva_id = null;
-        console.log(file)
-        if (result.taxes[0] !== undefined) {
+        console.log(factures.tva)
+        if (result && result.taxes[0] !== undefined) {
             tva_id = tvaList.find(tva => tva.label === result.taxes[0].value).value;
         } else {
             tva_id = factures.tva
         }
         var montantTotal = null; 
-        if (result.totalAmount.value !== undefined) {
+        if (result && result.totalAmount.value !== undefined) {
             // convert to string
             const montantValue = String(result.totalAmount.value);
         
@@ -340,7 +340,7 @@ const AddFacturier = () => {
         var data = {
             num_facture : result && result.invoiceNumber.value ? result.invoiceNumber.value : factures.num_facture,
             date_facture : result && result.date.value ? result.date.value : factures.date_facture,
-            montant: result && result.totalAmount.value ? montantTotal : factures.montant,
+            montant_facture: result && result.totalAmount.value ? montantTotal : factures.montant_facture,
             objet_id : factures.objet, 
             libelle_id : factures.libelle,
             estpaye : extrait.extrait ? true : false,
@@ -355,7 +355,7 @@ const AddFacturier = () => {
             ...factures,
             num_facture: response.data.num_facture,
             facture_date: response.data.facture_date,
-            montant: response.data.montant,
+            montant_facture: response.data.montant_facture,
             objet: response.data.objet_id,
             libelle: response.data.libelle_id,
             estpaye: response.data.estpaye,
@@ -370,9 +370,9 @@ const AddFacturier = () => {
         })
         .catch(e => {
           console.log(e);
+          toast.current.show({ severity: 'error', summary: 'Erreur', detail: e.response.data.message, life: 3000 });
         });
     };
-
 
 
             
@@ -1538,13 +1538,11 @@ const AddFacturier = () => {
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </span>
                                                 <span className="p-float-label">
-                                                    <label htmlFor="num_compte">Numéro de compte du client*</label>
-                                                    <InputText id="num_compte" type="text" value={compteClient.numCompteClient} onChange={(e) => setCompteClient({ ...compteClient, numCompteClient: e.target.value })} />
-
+                                                    <InputText id="numCompteClient" type="text" value={client.numCompteClient} onChange={(e) => setCompteClient({ ...compteClient, numCompteClient: e.target.value })} />
+                                                    <label htmlFor="Email du client">N° du compte client*</label>
                                                 </span>
                                             </div>
-                                        </div>
-                                        <div class="section-three">
+                                        </div>                                        <div class="section-three">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
