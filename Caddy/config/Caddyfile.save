@@ -5,27 +5,23 @@
 jeanvives.be {
   reverse_proxy 192.168.20.10:4000
   header {
-        # Active la politique de sécurité des transports stricts (HSTS) pour 6 mois
-        Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
-        
-        # Configure la directive de politique de référence
+        # Désactive la détection de MIME type basée sur le contenu du fichier
+        Content-Security-Policy "default-src 'self'; base-uri 'self'; font-src 'self'; img-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com https://unpkg.com/primereact@8.0.2/themes/;"
+
         Referrer-Policy "same-origin"
-        
-        # Active la politique des autorisations pour les fonctionnalités expérimentales
-        Permissions-Policy "camera=(), microphone=(), geolocation=()"
-        
         X-Content-Type-Options "nosniff"
         X-Frame-Options "DENY"
         X-XSS-Protection "1; mode=block"
-    }
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  }
 } 
 
 www.jeanvives.be {
   reverse_proxy 192.168.20.10:4000
   header {
         # Désactive la détection de MIME type basée sur le contenu du fichier
-
-	Content-Security-Policy "default-src 'self'; style-src 'self' https://stackpath.bootstrapcdn.com https://unpkg.com https://cdn.jsdelivr.net 'sha256-7akPC+mQaxUzTy/yBVxkR7jjP27nUVGfEx9LF1Bf0Zw=';"
+        Content-Security-Policy "default-src 'self'; base-uri 'self'; font-src 'self'; img-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
         Referrer-Policy "same-origin"
         X-Content-Type-Options "nosniff"
         X-Frame-Options "DENY"
