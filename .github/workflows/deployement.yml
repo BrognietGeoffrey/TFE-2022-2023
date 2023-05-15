@@ -87,7 +87,7 @@ jobs:
   VPS-deploiement:
     runs-on: ubuntu-latest
     steps:
-<<<<<<< HEAD
+
       - uses: actions/checkout@v2
       - name: Setup Node 16.x
         uses: actions/setup-node@v1
@@ -131,14 +131,3 @@ jobs:
             docker rmi node:16
             docker-compose up -d
             
-=======
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-
->>>>>>> f3eef616c6e7f66ebf78cb23d41a337186480b2f
