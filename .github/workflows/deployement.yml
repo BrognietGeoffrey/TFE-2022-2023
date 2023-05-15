@@ -56,28 +56,23 @@ jobs:
           CI= npm run build
 
       - name: Application folder to remote
-        uses: garygrossgarten/github-action-scp@release
+        uses: appleboy/scp-action@master
         with:
-          local: Application
-          remote: Application
+          source: Application/
+          target: /home/geoffreyb/TFE-2022-2023/Application
           host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_PORT}}
           username: ${{ secrets.VPS_USER }}
-          privateKey: ${{ secrets.VPS_PRIVATEKEY }}
+          key: ${{ secrets.VPS_PRIVATEKEY }}
 
       - name: Restart services
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_PORT}}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_PRIVATEKEY }}
           script: |
-            cp .env Application/www/backend
-            cp .env Application
-            cd Application
-            docker stop app
-            docker rm app
-            docker rmi node:16
+            cp .env /home/geoffreyb/TFE-2022-2023/Application/www/backend
+            cp .env /home/geoffreyb/TFE-2022-2023/Application
+            cd /home/geoffreyb/TFE-2022-2023/Application
+            docker-compose down
             docker-compose up -d
-            
