@@ -52,7 +52,7 @@ jobs:
         working-directory: .
         run: |
           cd client 
-          npm install
+          npm install --force
           CI= npm run build
 
       - name: Application folder to remote
