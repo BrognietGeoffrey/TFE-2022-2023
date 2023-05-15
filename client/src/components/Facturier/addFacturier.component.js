@@ -339,7 +339,7 @@ const AddFacturier = () => {
         
         var data = {
             num_facture : result && result.invoiceNumber.value ? result.invoiceNumber.value : factures.num_facture,
-            date_facture : result && result.date.value ? result.date.value : factures.date_facture,
+            date_facture : result && result.date.value ? result.date.value : factures.date_facture.toLocaleDateString( 'fr-FR'),
             montant_facture: result && result.totalAmount.value ? montantTotal : factures.montant_facture,
             objet_id : factures.objet, 
             libelle_id : factures.libelle,
@@ -354,8 +354,8 @@ const AddFacturier = () => {
           setFactures({
             ...factures,
             num_facture: response.data.num_facture,
-            facture_date: response.data.facture_date,
-            montant_facture: response.data.montant_facture,
+            facture_date: response.data.date_facture,
+            montant: response.data.montant_facture,
             objet: response.data.objet_id,
             libelle: response.data.libelle_id,
             estpaye: response.data.estpaye,
