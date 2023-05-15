@@ -172,9 +172,9 @@ const retrieveLogs = async () => {
               className="custom-button-logs p-button-link"
               tooltip="N° de facture"
               tooltipOptions={{ position: 'left' }}
-              onClick={ rowData.facture !== undefined ? () => handleShowDetails(rowData) : null}
+              onClick={ rowData.facture !== null ? () => handleShowDetails(rowData) : "null"}
             >
-              {rowData.facture !== undefined ? rowData.facture.num_facture : "Pas de n° trouvé"}
+              {rowData.facture !== null ? rowData.facture.num_facture : "Pas de n° trouvé"}
               {/* {rowData.facture.num_facture}  */}
             </Button>
           </span>
@@ -337,10 +337,13 @@ const retrieveLogs = async () => {
                     <Column field="ajout" header="Où" body={ajoutBodyTemplate} />         
                   </DataTable>
                   <Dialog
-                    header="Détails de la ligne de tableau sélectionnée"
+                     header="Détails"
+
                     visible={showDetailsLogs}
                     onHide={() => setShowDetailsLogs(false)}
+                    style = {{width : "30vw", position : "absolute", textAlign : "center"}}
                   >
+                    {console.log(selectedLog)}
                     {selectedLog && selectedLog.decompte && (
                       <div>
                         <p><b>N° de décompte : </b>{selectedLog.decompte.num_decompte}</p>
@@ -372,8 +375,8 @@ const retrieveLogs = async () => {
                     {selectedLog && selectedLog.facturier && (
                       <div>
                         <p><b>N° de facturier : </b>{selectedLog.facturier_id}</p>
-                        <p><b>N° de facture : </b>{selectedLog.facture.num_facture}</p>
-                        <p><b>Date de facturation : </b>{selectedLog.facture.facture_date}</p>
+                        <p><b>N° de facture : </b>{selectedLog.facture.num_facture ? selectedLog.facture.num_facture : "N/A"}</p>
+                        <p><b>Date de facturation : </b>{selectedLog.facture.facture_date ? selectedLog.facture.facture_date.substring(0,10) : "N/A"}</p>
                         <p><b>Montant : </b>{selectedLog.facture.montant}</p>
                       </div>
                     )}
@@ -390,6 +393,20 @@ const retrieveLogs = async () => {
                         <p><b>Description : </b>{selectedLog.tva.tva_description}</p>
                       </div>
                     )}
+                    {selectedLog && selectedLog.libelle && (
+                      <div>
+                        <p><b>Titre du libellé : </b>{selectedLog.libelle.title}</p>
+                        <p><b>Modifié le : </b>{selectedLog.libelle.updatedAt.toString().substring(0,10)}</p>
+                      </div>
+                    )}
+                    {selectedLog && selectedLog.objet && (
+                      <div>
+                        <p><b>Titre du libellé : </b>{selectedLog.objet.title}</p>
+                        <p><b>Modifié le : </b>{selectedLog.objet.updatedAt.toString().substring(0,10)}</p>
+                      </div>
+                    )}
+
+
                     </Dialog>
         </div>
       </section>
@@ -425,7 +442,7 @@ const retrieveLogs = async () => {
                     sortMode="single" sortField="nom" sortOrder={1} responsiveLayout="scroll"
                     expandableRowGroups expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
                     onRowExpand={onRowGroupExpand} onRowCollapse={onRowGroupCollapse}
-                    rowGroupHeaderTemplate={headerTemplate} >
+                    rowGroupHeaderTemplate={headerTemplate} style={{maxHeight: '523px', overflow: 'auto'}}>
                       <Column ></Column>
                     <Column body={num_factureTemplate}></Column>
               </DataTable>

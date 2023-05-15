@@ -22,7 +22,7 @@ const Comment = () => {
   const [factureNum, setFactureNum] = useState('');
   const [facturierId, setFacturierId] = useState('');
   const toast = useRef(null);
-  const [checked1, setChecked1] = useState(true);
+  const [checked1, setChecked1] = useState(false);
   const [comments, setComments] = useState([]);
 
   const token = localStorage.getItem('access_token');
@@ -211,7 +211,12 @@ const Comment = () => {
     <div className="comment-list" key={comment.id}>
       <div className="comment-item">
         <div className="comment-avatar">
-          <img src="https://placehold.it/50x50" alt="Avatar" />
+          {/* Put an blue icon if the owner of the comment is connected */}
+          {comment.user.id === user_id ? (
+            <i className="pi pi-user" style={{ fontSize: "2.3em", backgroundColor: '#a2a8d3', borderRadius: '50%', padding: '0.2em' }}></i>
+          ) : (
+            <i className="pi pi-user" style={{ fontSize: "2.3em", backgroundColor: '#f2f2f2', borderRadius: '50%', padding: '0.2em' }}></i>
+          )}
         </div>
         <div className="comment-content">
           <div className="comment-header">

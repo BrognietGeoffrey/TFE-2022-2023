@@ -1,15 +1,17 @@
 import react from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {InputText} from 'primereact/inputtext';
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import userService from '../../services/userService';
 
 const UsersDatatable = () => {
     const [users, setUsers] = react.useState([]);
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
+    const toast = useRef(null);
 
     const [filters1, setFilters1] = useState(null)
 
@@ -29,16 +31,21 @@ const UsersDatatable = () => {
     }, []);
 
     const onRowEditComplete = (e) => {
-        console.log(e.data)
+        console.log(e)
         const data = {
-            username: e.newData["user.username"],
-            email: e.newData["user.email"],
-            
+            username: e.newData.username,
+            email: e.newData.email,
+            role: e.newData.role
         }
-        userService.update(e.data.userId, data)
+        userService.update(e.data.user_id, data)
         .then((response) => {
             console.log(response.data);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Utilisateur modifié', life: 3000 });
             getUsers();
+            // add logs
+
+
+
         }
         )
         .catch((error) => {
@@ -94,6 +101,7 @@ const UsersDatatable = () => {
 
     return (
         <div>
+            <Toast ref={toast} />
             <DataTable value={users} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['user.username', 'user.email', 'role.name', 'user.createdAt']} filters={filters1}>
                 <Column field="user.username" header="Nom d'utilisateur" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="user.email" header="Email" sortable editor={(options) => textEditor(options)} filter></Column>

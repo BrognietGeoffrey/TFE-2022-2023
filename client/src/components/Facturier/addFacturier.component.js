@@ -332,15 +332,15 @@ const AddFacturier = () => {
             } else {
                 montantTotal = Number(montantValue.replace(/\s/g, ''));
             }
+        } else {
+            montantTotal = factures.montant_facture
+
         }
-        
-          
-        
         
         var data = {
             num_facture : result && result.invoiceNumber.value ? result.invoiceNumber.value : factures.num_facture,
-            date_facture : result && result.date.value ? result.date.value : factures.date_facture.toLocaleDateString( 'fr-FR'),
-            montant_facture: result && result.totalAmount.value ? montantTotal : factures.montant_facture,
+            facture_date : result && result.date.value ? result.date.value : factures.date_facture,
+            montant: result && result.totalAmount.value ? montantTotal : factures.montant_facture,
             objet_id : factures.objet, 
             libelle_id : factures.libelle,
             estpaye : extrait.extrait ? true : false,
@@ -348,14 +348,16 @@ const AddFacturier = () => {
             tva_id : tva_id,
             due_date : result && result.dueDate.value ? result.dueDate.value : factures.due_date,
         }
+        console.log(factures)
         console.log(data)
         FactureDataService.create(data)
         .then(response => {
+            console.log(response.data);
           setFactures({
             ...factures,
             num_facture: response.data.num_facture,
             facture_date: response.data.date_facture,
-            montant: response.data.montant_facture,
+            montant: response.data.montant,
             objet: response.data.objet_id,
             libelle: response.data.libelle_id,
             estpaye: response.data.estpaye,
@@ -743,13 +745,7 @@ const AddFacturier = () => {
                 });
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Client Added', life: 3000 });
                 //vide les champs du formulaire
-                setCompteClient({
-                    ...compteClient,
-                    numCompteClient: "",
-                    num_compte_banque: "",
-                    banque_id: "",
-                    description: ""
-                });
+                
                 setClient({
                     ...client,
                     name: "",
@@ -757,8 +753,17 @@ const AddFacturier = () => {
                     adresse_client: "",
                     telephone_client: "",
                     email_client: "",
+                    description: "", 
+
+                });
+                setCompteClient({
+                    ...compteClient,
+                    numCompteClient: "",
+                    client_id: "",
+                    num_compte_banque: "",
                     description: ""
                 });
+                console.log(compteClient)
                 // raffraichir la liste des clients
                 getClientList();
                 // ajouter l'id du client dans la table des logs 
@@ -1094,17 +1099,33 @@ const AddFacturier = () => {
                         
                 <div class="section-three">
 
+                {result && result.totalAmount.value ? 
                     <div className="p-inputgroup">
+                            <span className="p-inputgroup-addon">
+                            <i className="pi pi-euro"></i>
+                        </span>
+                            <span className="p-float-label">
 
-                        <span className="p-float-label">
-                            {result && result.totalAmount ? <InputText id="montant_facture" type="numeric" value={result.totalAmount.value} onChange={(e) => setResult({ ...result, totalAmount: { value: e.target.value } })} /> : <InputText id="montant_facture" type="numeric" value={factures.montant_facture} onChange={(e) => setFactures({ ...factures, montant_facture: e.target.value })} />}
+                            <InputText id="montant" type="text" value={result.totalAmount.value} onChange={(e) => setResult({ ...result, totalAmount: { value: e.target.value } })} />
                             <label htmlFor="inputgroup">Montant de la facture*</label>
-                        </span>
-                        <span className="p-inputgroup-addon">
-                            <i class="fa-solid fa-euro-sign"></i>
-                        </span>
+                            </span>
                     </div>
+                    :
+                    <div className="p-inputgroup">
+                            <span className="p-inputgroup-addon">
+                            <i className="pi pi-euro"></i>
+                        </span>
+                           
+                            <span className="p-float-label">
+                            <InputText id="montant" type="text" value={factures.montant_facture} onChange={(e) => setFactures({ ...factures, montant_facture: e.target.value })} />
+                            <label htmlFor="inputgroup">Montant de la facture* </label>
+                            </span>
+                            
+                    </div>
+                
+                    }
                 </div>
+                
                 <div class="facture-section" style={{ marginTop: '1em' }}>
                     <div class="section-three">
                         <div className="p-inputgroup">
@@ -1538,7 +1559,7 @@ const AddFacturier = () => {
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </span>
                                                 <span className="p-float-label">
-                                                    <InputText id="numCompteClient" type="text" value={client.numCompteClient} onChange={(e) => setCompteClient({ ...compteClient, numCompteClient: e.target.value })} />
+                                                    <InputText id="numCompteClient" type="text" value={compteClient.numCompteClient} onChange={(e) => setCompteClient({ ...compteClient, numCompteClient: e.target.value })} />
                                                     <label htmlFor="Email du client">N° du compte client*</label>
                                                 </span>
                                             </div>
@@ -1617,12 +1638,12 @@ const AddFacturier = () => {
                                     </div>
                                 </div>
                                 <div class="section-three">
-                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                    <div className="p-inputgroup" style={{ marginTop: '2em', width: '97%', marginLeft: '1.5%' }}>
                                         <span className="p-inputgroup-addon">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </span>
                                         <span className="p-float-label">
-                                            <Calendar id="date_extrait" type="text" value={extrait.date_extrait} onChange={(e) => setExtrait({ ...extrait, date_extrait: e.target.value })} />
+                                            <Calendar id="date_extrait" type="text" value={extrait.date_extrait} onChange={(e) => setExtrait({ ...extrait, date_extrait: e.target.value })} dateFormat="dd/mm/yy" />
                                             <label htmlFor="date_extrait">Date d'extrait</label>
                                         </span>
                                     </div>

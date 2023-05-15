@@ -69,8 +69,8 @@ export const CustomViewForm = () => {
             setColumns([
               { label: 'Date', value: 'facture_date', type: 'date', joinsTable: 'factures' },
               { label: 'Montant', value: 'montant', type: 'number', joinsTable: 'factures' },
-              { label: 'Payé', value: 'estpaye', type: 'boolean', joinsTable: 'factures' },
-              { label: 'Libélle', value: 'libelleTitle', valueQuery: "title", type: "string", joinsTable: 'libelles', conditionJoins: "factures.libelle_id = libelles.id" },
+              { label: 'Facture payée ', value: 'estpaye', type: 'boolean', joinsTable: 'factures' },
+              { label: 'Libellé', value: 'libelleTitle', valueQuery: "title", type: "string", joinsTable: 'libelles', conditionJoins: "factures.libelle_id = libelles.id" },
               { label: 'Objets', value: 'title', type: "string", joinsTable: 'objets', conditionJoins: "factures.objet_id = objets.id" },
               { label: 'Tva', value: 'tva_value', type: 'string', joinsTable: 'tvas', conditionJoins: "factures.tva_id = tvas.tva_id" }
             ]);
