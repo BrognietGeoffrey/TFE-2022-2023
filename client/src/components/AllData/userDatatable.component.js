@@ -33,11 +33,11 @@ const UsersDatatable = () => {
     const onRowEditComplete = (e) => {
         console.log(e)
         const data = {
-            username: e.newData['user.username']
+            username: e.newData['user.username'],
             email: e.newData['user.email']
            
         }
-        userService.update(e.data.user_id, data)
+        userService.update(e.data.user.id, data)
         .then((response) => {
             console.log(response.data);
             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Utilisateur modifié', life: 3000 });
