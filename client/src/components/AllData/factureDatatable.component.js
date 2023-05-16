@@ -193,6 +193,22 @@ const FactuerDatatable = () => {
         return <Calendar dateFormat="dd/mm/yy" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} tooltip="Attention ! Toutes modifications entrainera des changements sur tout le facturier" tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }} />;
 
     }
+    const dueDateEditor = (options) => {
+        // Message dans le dialog pour informer l'utilisateur
+        console.log(options, 'options.value');
+        const factureDate = new Date(options.rowData.facture_date);
+      
+        return (
+          <Calendar
+            dateFormat="dd/mm/yy"
+            value={options.value}
+            onChange={(e) => options.editorCallback(e.target.value)}
+            tooltip="Attention ! Toutes modifications entraînera des changements sur tout le facturier"
+            tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }}
+            minDate={factureDate}
+          />
+        );
+      };
 
     const dropdownEditorObjet = (options) => {
 
@@ -256,15 +272,12 @@ const FactuerDatatable = () => {
 
     const dateBodyTemplate = (rowData) => {
         if (rowData.facture_date !== null) {
-            console.log(rowData.facture_date)
 
             return (
                 <span className="p-badge p-badge-success">{new Date(rowData.facture_date).toLocaleDateString()}</span>
             );
         }
     }
-
-
 
 
 
@@ -278,8 +291,7 @@ const FactuerDatatable = () => {
                 <Column field="num_facture_lamy" header="N° de facture Lamy" editor={(options) => textEditor(options)} sortable filter></Column>
                 <Column field="montant" header="Montant" sortable editor={(options) => numberEditor(options)} filter></Column>
                 <Column field="facture_date" header="Date de facturation" sortable editor={(options) => dateEditor(options)} body={dateBodyTemplate} filter></Column>
-                 
-                <Column field="due_date" header="Date d'échéance" sortable  editor={(options) => dateEditor(options)} body={dueDateBodyTemplate} ></Column>
+                <Column field="due_date" header="Date d'échéance" sortable  editor={(options) => dueDateEditor(options)} body={dueDateBodyTemplate} filter></Column>
                 <Column field="estpaye" header="Statut de la facture" body={statusBodyTemplate} sortable filter></Column>
                 <Column field="objet_id" header="Objet" sortable editor={(options) => dropdownEditorObjet(options)} body={(rowData) => rowData.objet.title} filter></Column>
                 <Column field="libelle_id" header="Libelle" sortable editor={(options) => dropdownEditorLibelle(options)} body={(rowData) => rowData.libelle.title} filter></Column>

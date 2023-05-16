@@ -20,6 +20,8 @@ import FactureDataService from "../../services/factureService";
 import ExtraitDataService from "../../services/extraitService";
 import LogsDataService from "../../services/logsService";
 import {Toast} from 'primereact/toast';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+
 
 const FacturierDatatable = () => {
 
@@ -31,6 +33,9 @@ const FacturierDatatable = () => {
     const [extraitList, setExtraitList] = useState([]);
     const [displayExtraitList, setDisplayExtraitList] = useState(false);
     const [extrait, setExtrait] = useState({ facture: {} })
+    const [globalFilterValue1, setGlobalFilterValue1] = useState('');
+
+    const [filters1, setFilters1] = useState(null)
 
     const toastAddon = useRef(null);
     const [user, setUser] = useState(null);
@@ -49,6 +54,7 @@ const FacturierDatatable = () => {
         const currentUser = JSON.parse(localStorage.getItem('user'));
         setUser(currentUser);
         getExtraitList();
+  
     }, []);
 
     const [position, setPosition] = useState('center');
@@ -192,6 +198,7 @@ const FacturierDatatable = () => {
 
     useEffect(() => {
         fetchData();
+        initFilters1();
     }, []);
 
         
@@ -340,6 +347,54 @@ const FacturierDatatable = () => {
     );
 
 
+    const clearFilter1 = () => {
+        initFilters1();
+    }
+
+    const onGlobalFilterChange1 = (e) => {
+        const value = e.target.value;
+        let _filters1 = { ...filters1 };
+        _filters1['global'].value = value;
+
+        setFilters1(_filters1);
+        setGlobalFilterValue1(value);
+    }
+
+
+    const initFilters1 = () => {
+        setFilters1({
+            'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+            'facture.num_facture_lamy': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'compte_fournisseur.fournisseur.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'compte_fournisseur.fournisseur.num_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'facture.objet.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'facture.num_facture': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'facture.libelle.title': { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'decompte.num_decompte': {  operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'facture.montant' : { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'extrait.num_extrait' : { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+
+
+        });
+        setGlobalFilterValue1('');
+    }
+
+    const renderHeader1 = () => {
+        return (
+            <div className="flex justify-content-between">
+                <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
+                </span>
+                <div className="flex align-items-center export-buttons">
+                        <Button type="button" icon="pi pi-file" onClick={() => exportCSV(false)} className="mr-2" tooltip="Exporter toutes les données" tooltipOptions={{ position: 'top' }} />
+        </div>
+            </div>
+        )
+    }
+
+    const header1 = renderHeader1();
 
     if (loading) {
         return <ProgressBar mode="indeterminate" style={{ height: '6px' }} />;
@@ -357,8 +412,9 @@ const FacturierDatatable = () => {
                     <DataTable  value={facturiers} paginator  rows={10}
                      rowsPerPageOptions={[10,25,50]}
                      rowHover  loading={loading} dataKey="id" ref={dt} exportFilename={exportFileName}
-                    emptyMessage="Aucunes données trouvées." scrollable header={header} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}>
+                    emptyMessage="Aucunes données trouvées." scrollable header={header1} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}
+                    filterDisplay="menu" globalFilterFields={['facture.num_facture_lamy', 'compte_fournisseur.fournisseur.name', , 'compte_fournisseur.fournisseur.num_fournisseur', 'facture.objet.title','facture.num_facture', 'facture.libelle.title', 'decompte.num_decompte', 'facture.montant', 'extrait.num_extrait']} filters={filters1}>
 
                     <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ backgroundColor: '#f8f9fa' }}  />
                     <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom"  />
