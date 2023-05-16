@@ -33,9 +33,9 @@ const UsersDatatable = () => {
     const onRowEditComplete = (e) => {
         console.log(e)
         const data = {
-            username: e.newData.username,
-            email: e.newData.email,
-            role: e.newData.role
+            username: e.newData['user.username']
+            email: e.newData['user.email']
+           
         }
         userService.update(e.data.user_id, data)
         .then((response) => {
