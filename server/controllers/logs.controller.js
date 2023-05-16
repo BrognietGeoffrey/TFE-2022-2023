@@ -16,6 +16,7 @@ const create = async (req, res) => {
         facture_id : req.body.facture_id || null,
         extrait_id : req.body.extrait_id || null,
         tva_id : req.body.tva_id || null,
+        userMdifiedId : req.body.userModifiedId || null,
         }
     })
     .then(data => {
@@ -33,6 +34,7 @@ const create = async (req, res) => {
             facture_id : req.body.facture_id,
             extrait_id : req.body.extrait_id,
             tva_id : req.body.tva_id,
+            userModifiedId : req.body.userModifiedId,
         };
 
         // Save log in the database

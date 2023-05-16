@@ -13,9 +13,7 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import {Chip} from 'primereact/chip';
 import { Tooltip } from 'primereact/tooltip';
-import { FileUpload } from 'primereact/fileupload';
 import 'jspdf-autotable';
-import { jsPDF } from "jspdf";
 
 import FacturierDataService from "../../services/facturierService";
 import FactureDataService from "../../services/factureService";
@@ -26,7 +24,6 @@ import {Toast} from 'primereact/toast';
 const FacturierDatatable = () => {
 
     const [loading, setLoading] = useState(true)
-    const [importedCols, setImportedCols] = useState([{ field: '', header: 'Header' }]);
     const dt = useRef(null);
 
 
@@ -46,7 +43,6 @@ const FacturierDatatable = () => {
         
 
     ];
-    const exportColumns = cols.map(col => ({title: col.header, dataKey: col.field}));
 
 
     useEffect(() => {
@@ -113,7 +109,6 @@ const FacturierDatatable = () => {
     };
 
     const saveExtrait = (rowData) => {
-        console.log(extrait.facture.facture_id)
         console.log(extrait)
         var data = {
             num_extrait: extrait.num_extrait,
@@ -158,8 +153,11 @@ const FacturierDatatable = () => {
                 // mettre à jour le estpaye de la facture
                 var data = {
                     estpaye: true,
+                    num_facture_lamy : extrait.facture.num_facture_lamy,
+                    num_facture_fournisseur : extrait.facture.num_facture
+
                 }
-                FactureDataService.update(extrait.facture.facture_id, data)
+                FactureDataService.update(extrait.facture_id, data)
                 .then(response => {
                     toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Facture Updated', life: 3000 });
                 })
@@ -213,7 +211,6 @@ const FacturierDatatable = () => {
 
     }
     const numfactureLamyBodyTemplate = (rowData) => {
-        console.log(rowData.facture.num_facture_lamy)
         if (rowData.facture.num_facture_lamy === null) {
             return 'Pas de numéro';
         }
@@ -251,7 +248,6 @@ const FacturierDatatable = () => {
 
 
         if (rowData.facture.due_date !== null) {
-            console.log(rowData.facture.due_date)
             // Si la due date est dépassée on affiche en rouge mais que la facture est payé, on affiche en vert
             if (dueDate < new Date() && rowData.facture.estpaye === true) {
                 // Afficher en vert si la facture est payée
@@ -390,7 +386,6 @@ const FacturierDatatable = () => {
                                     <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitDialog">
                                         <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive scrollable scrollHeight="200px" className="p-datatable-customers" dataKey="id" rowHover filterDisplay="menu" loading={loading} emptyMessage="Aucunes données trouvées." currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }} 
                                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" search>
-                                            {console.log(extraitList)}
                                             <Column field="label" header="N° de l'extrait" />
                                             <Column field="date" header="Date de l'extrait" />
                                             <Column field="montant" header="Montant de l'extrait" />

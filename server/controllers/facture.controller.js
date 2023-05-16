@@ -121,60 +121,28 @@ const findOneFacture = (req, res) => {
 // Update a Facture by the id in the request
 const updateFacture = (req, res) => {
     const id = req.params.id;
-    
-    // Vérifie si la nouvelle données existe déjà dans la base de données
-    Factures.findOne({
-        where: {
-            [Op.or]: [
-                {num_facture: req.body.num_facture},
-                {num_facture_lamy: req.body.num_facture_lamy}
-            ]
-        }
-    })
-    // si num_facture ou num_facture_lamy existe déjà mais que c'est le même que _previousDataValues alors on peut le modifier
-    .then(facture => {
-        if (facture) {
-            if (facture.num_facture === facture._previousDataValues.num_facture || facture.num_facture_lamy === facture._previousDataValues.num_facture_lamy) {
-                Factures.update(req.body, {
-                    where: { facture_id: id }
-                })
 
-                .then(num => {
-                    if (num == 1) {
-                    res.send({
-                        message: "Facture was updated successfully."
-                    });
-                    } else {
-                    res.send({
-                        message: `Cannot update Facture with id=${id}. Maybe Facture was not found or req.body is empty!`
-                    });
-                    }
-                })
-                .catch(err => {
-                    res.status(500).send({
-                    message: "Error updating Facture with id=" + id
-                    });
-                });
-            }
-            else {
-                res.status(409).send({
-                    message: "Cette facture existe déjà !",
-                });
-            }
-        }
-        else {
-            res.status(409).send({
-                message: "Cette facture existe déjà !",
+    Factures.update(req.body, {
+        where: { facture_id: id }
+        })
+        .then(num => {
+        if (num == 1) {
+            res.send({
+            message: "Facture was updated successfully."
+            });
+        } else {
+            res.send({
+            message: `Cannot update Facture with id=${id}. Maybe Facture was not found or req.body is empty!`
             });
         }
-    })
-
-    .catch(err => {
+        })
+        .catch(err => {
         res.status(500).send({
             message: "Error updating Facture with id=" + id
         });
-    });
-};
+        });
+    };
+    
 
 
 

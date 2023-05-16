@@ -37,6 +37,11 @@ class clientService {
     getClientByName(name, firstname) {
         return axios.get('/api/client/name/' + name + '/firstname/' + firstname, { headers: BASIC_HEADERS });
     }
+
+    delete(id) {
+        return axios.delete(API_URL + id, { headers: BASIC_HEADERS });
+    }
+    
     
 }
 export default new clientService();
