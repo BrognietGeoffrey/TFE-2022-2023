@@ -47,9 +47,10 @@ const UsersDatatable = () => {
             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Utilisateur modifié', life: 3000 });
             getUsers();
             // add logs
+            console.log(e)
             const logData = {
-                userModifiedId : response.data.tva_id,
                 description : "Modification d'un utilisateur",
+                userModifiedId : e.data.userId,
                 user_id : decoded.user_id.id,
 
             }

@@ -16,7 +16,7 @@ const create = async (req, res) => {
         facture_id : req.body.facture_id || null,
         extrait_id : req.body.extrait_id || null,
         tva_id : req.body.tva_id || null,
-        userMdifiedId : req.body.userModifiedId || null,
+        userModifiedId : req.body.userModifiedId || null,
         }
     })
     .then(data => {
