@@ -13,7 +13,7 @@ const redirectPage = () => {
       <p><a href="mailto:jeanvives10@hotmail.com">Contactez-nous</a></p>
 
       <p>Si il ne s'agit pas d'une erreur, veuillez retourner sur la page de garde en cliquant sur ce lien</p>
-      <p><a href="/">Retourner sur la page de garde</a></p>
+      <p><a href="/login">Retourner sur la page de connexion</a></p>
    
     </div>
   );
