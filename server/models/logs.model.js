@@ -54,6 +54,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: true
         },
+        userModifiedId : {
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
 
     });
     return Logs;

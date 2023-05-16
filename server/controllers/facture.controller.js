@@ -13,32 +13,63 @@ const createFacture = (req, res) => {
         });
         return;
     }
-    
-    // Create a Facture
-    const facture = {
-        num_facture: req.body.num_facture,
-        facture_date: req.body.facture_date,
-        num_facture_lamy: req.body.num_facture_lamy,
-        montant: req.body.montant,
-        description: req.body.description,
-        estpaye: req.body.estpaye,
-        objet_id: req.body.objet_id,
-        libelle_id: req.body.libelle_id,
-        tva_id : req.body.tva_id
-    };
-    
-    // Save Facture in the database
-    Factures.create(facture)
-        .then(data => {
-        res.send(data);
-        })
-        .catch(err => {
-        res.status(409).send({
+
+    // si le numero de facture existe déjà et/ou si le numero de facture lamy existe déjà
+    Factures.findOne({
+        where: {
+            [Op.or]: [
+                {num_facture: req.body.num_facture},
+                {num_facture_lamy: req.body.num_facture_lamy}
+            ]
+        }
+    })
+    .then(facture => {
+        if (facture) {
+            res.status(409).send({
+                message: "Cette facture existe déjà !", 
+
+            });
+        }
+        else {
+            // Create a Facture
+            const facture = {
+                num_facture: req.body.num_facture,
+                facture_date: req.body.facture_date,
+                num_facture_lamy: req.body.num_facture_lamy,
+                // POur le montant, si il y a un point dans le montant, on le remplace par une virgule
+                montant: req.body.montant,
+                description: req.body.description,
+                estpaye: req.body.estpaye,
+                objet_id: req.body.objet_id,
+                libelle_id: req.body.libelle_id,
+                tva_id : req.body.tva_id, 
+                due_date : req.body.due_date,
+                facture_img : req.body.facture_img,
+            };
+
+            // Save Facture in the database
+            Factures.create(facture)
+                .then(data => {
+                res.send(data);
+                })
+                .catch(err => {
+                res.status(500).send({
+                    message:
+                    err.message || "Some error occurred while creating the Facture."
+                });
+                });
+            }
+        }
+    )
+    .catch(err => {
+        res.status(500).send({
             message:
             err.message || "Some error occurred while creating the Facture."
         });
-        });
-    }
+    });
+};
+
+
 
 // Retrieve all Factures from the database.
 const findAllFacture = async (req, res) => {
@@ -91,26 +122,64 @@ const findOneFacture = (req, res) => {
 const updateFacture = (req, res) => {
     const id = req.params.id;
     
-    Factures.update(req.body, {
-        where: { facture_id: id }
-        })
-        .then(num => {
-        if (num == 1) {
-            res.send({
-            message: "Facture was updated successfully."
-            });
-        } else {
-            res.send({
-            message: `Cannot update Facture with id=${id}. Maybe Facture was not found or req.body is empty!`
+    // Vérifie si la nouvelle données existe déjà dans la base de données
+    Factures.findOne({
+        where: {
+            [Op.or]: [
+                {num_facture: req.body.num_facture},
+                {num_facture_lamy: req.body.num_facture_lamy}
+            ]
+        }
+    })
+    // si num_facture ou num_facture_lamy existe déjà mais que c'est le même que _previousDataValues alors on peut le modifier
+    .then(facture => {
+        if (facture) {
+            if (facture.num_facture === facture._previousDataValues.num_facture || facture.num_facture_lamy === facture._previousDataValues.num_facture_lamy) {
+                Factures.update(req.body, {
+                    where: { facture_id: id }
+                })
+
+                .then(num => {
+                    if (num == 1) {
+                    res.send({
+                        message: "Facture was updated successfully."
+                    });
+                    } else {
+                    res.send({
+                        message: `Cannot update Facture with id=${id}. Maybe Facture was not found or req.body is empty!`
+                    });
+                    }
+                })
+                .catch(err => {
+                    res.status(500).send({
+                    message: "Error updating Facture with id=" + id
+                    });
+                });
+            }
+            else {
+                res.status(409).send({
+                    message: "Cette facture existe déjà !",
+                });
+            }
+        }
+        else {
+            res.status(409).send({
+                message: "Cette facture existe déjà !",
             });
         }
-        })
-        .catch(err => {
+    })
+
+    .catch(err => {
         res.status(500).send({
             message: "Error updating Facture with id=" + id
         });
-        });
-    }
+    });
+};
+
+
+
+
+
 
 // Delete a Facture with the specified id in the request
 const deleteFacture = (req, res) => {

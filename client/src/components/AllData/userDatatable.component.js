@@ -7,11 +7,15 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import userService from '../../services/userService';
+import LogsDataService from "../../services/logsService";
+import jwt_decode from "jwt-decode";
 
 const UsersDatatable = () => {
     const [users, setUsers] = react.useState([]);
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
     const toast = useRef(null);
+    const token = localStorage.getItem("access_token");
+    const decoded = jwt_decode(token);
 
     const [filters1, setFilters1] = useState(null)
 
@@ -43,6 +47,15 @@ const UsersDatatable = () => {
             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Utilisateur modifié', life: 3000 });
             getUsers();
             // add logs
+            const logData = {
+                userModifiedId : response.data.tva_id,
+                description : "Modification d'un utilisateur",
+                user_id : decoded.user_id.id,
+
+            }
+            LogsDataService.create(logData)
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+
 
 
 
