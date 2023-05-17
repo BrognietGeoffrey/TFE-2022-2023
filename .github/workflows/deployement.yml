@@ -1,4 +1,4 @@
-name: deployement
+name: deployment
 
 on:
   push:
@@ -18,31 +18,24 @@ jobs:
         working-directory: client
 
       - name: Build client
-        run: 
-
-          npm run build
+        run: npm run build
         continue-on-error: true
-
-
         working-directory: client
 
       - name: Remove previous build in the server
         run: |
-          ssh ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}}:${{secrets.VPS_PORT}} "rm -rf server/build"
-
-
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} -p ${{ secrets.VPS_PORT }} "rm -rf server/build"
 
       - name: Move build to server
         run: |
-          scp -r client/build ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}}:server
+          scp -r client/build ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:server
 
       - name: SSH into VPS and run Docker Compose
         uses: appleboy/ssh-action@master
         with:
-          host: ${{secrets.VPS_HOST}}
-          username: ${{secrets.VPS_USER}}
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_PRIVATEKEY }}
           script: |
             cd /server
             docker-compose up -d
-            
