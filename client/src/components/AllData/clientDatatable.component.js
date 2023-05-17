@@ -18,33 +18,36 @@ const ClientDatatable = () => {
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
 
     const [filters1, setFilters1] = useState(null)
-    const getClients = () => {
-        ClientDataService.getAll().then((response) => {
+    const getClients = useCallback(() => {
+        ClientDataService.getAll()
+          .then((response) => {
             setClients(response.data);
             console.log(response.data, 'response.data');
-        })
-        .catch((error) => {
+          })
+          .catch((error) => {
             console.log(error);
-        });
-    }
-
-    const getCompteClient = () => {
-        compteClientService.getAll().then((response) => {
+          });
+      }, []);
+      
+      const getCompteClient = useCallback(() => {
+        compteClientService.getAll()
+          .then((response) => {
             setCompteClient(response);
             console.log(response, 'response.data');
-        })
-        .catch((error) => {
+          })
+          .catch((error) => {
             console.log(error);
-        });
-    }
-    useEffect(() => {
-        getClients()
-    }, [clients]);
+          });
+      }, []);
+      
+      useEffect(() => {
+        getClients();
+      }, [getClients]);
+      
+      useEffect(() => {
+        getCompteClient();
+      }, [getCompteClient]);
 
-    useEffect(() => {
-        getCompteClient()
-    }, [compteClient]);
-    
 
     useEffect(() => {
         initFilters1();
