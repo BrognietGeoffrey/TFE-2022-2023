@@ -16,4 +16,5 @@ jobs:
           ls
           cd TFE-2022-2023
           git pull origin develop
+          Diana1998
           git status
