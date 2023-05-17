@@ -42,8 +42,7 @@ const ClientDatatable = () => {
         getClients();
         getCompteClient();
         initFilters1();
-
-    }, [clients, compteClient]);
+      }, [getClients, getCompteClient, clients, compteClient]);
 
     const onRowEditComplete = (e) => {
         console.log(e)
