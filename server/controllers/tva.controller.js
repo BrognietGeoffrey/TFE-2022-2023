@@ -81,7 +81,6 @@ const createTva = (req, res) => {
 
 const updateTva = (req, res) => {
     const id = req.params.id;
-    console.log(id)
 
     Tva.update(req.body, {
         where: { tva_id: id }

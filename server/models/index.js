@@ -103,6 +103,5 @@ const initial = () => {
 
 // Roles are created automatically when the server starts not in the array
 db.ROLES = ["user", "admin", "moderator"];
-console.log("db.ROLES = " + db.ROLES);
 module.exports = db;
 
