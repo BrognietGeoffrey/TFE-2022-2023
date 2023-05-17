@@ -300,6 +300,19 @@ const retrieveLogs = async () => {
     }
   };
 
+  getUserModifiedInfo = (id)  => {
+    axios.get(`/api/users/${id}`)
+    .then(res => {
+      console.log(res.data)
+      return res.data
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+
+
+
 
   const num_factureTemplate = (rowData) => {
     const factureLength = rowData.factures.length;
@@ -405,6 +418,12 @@ const retrieveLogs = async () => {
                         <p><b>Modifié le : </b>{selectedLog.objet.updatedAt.toString().substring(0,10)}</p>
                       </div>
                     )}
+                    {selectedLog && selectedLog.userModifiedId && (
+                      <div>
+                        <p><b>Utilisateur : </b>{getUserModifiedInfo(selectedLog.userModifiedId)}</p>
+                      </div>
+                    )}
+
 
 
                     </Dialog>
