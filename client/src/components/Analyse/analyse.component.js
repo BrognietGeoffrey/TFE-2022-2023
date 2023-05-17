@@ -408,11 +408,6 @@ const retrieveLogs = async () => {
                         <p><b>Modifié le : </b>{selectedLog.objet.updatedAt.toString().substring(0,10)}</p>
                       </div>
                     )}
-                    {selectedLog && selectedLog.userModifiedId && (
-                      <div>
-                        <p><b>Utilisateur : </b>{selectedLog.userModifiedId</b></p>
-		     </div>
-		    )}
 
                     </Dialog>
         </div>
