@@ -17,8 +17,10 @@ jobs:
         run: npm i --force
         working-directory: client
 
-      - name: Build client
-        run: npm run build
+      - name: Build client          
+        run: |
+          # eslint-disable-next-line
+          npm run build
         working-directory: client
 
       - name: Remove previous build
@@ -32,8 +34,8 @@ jobs:
       - name: SSH into VPS and run Docker Compose
         uses: appleboy/ssh-action@master
         with:
-          host: your-vps-ip
-          username: user
+          host: ${{secrets.VPS_HoST}}
+          username: ${{secrets.VPS_USER}}
           key: ${{ secrets.VPS_PRIVATEKEY }}
           script: |
             cd /server
