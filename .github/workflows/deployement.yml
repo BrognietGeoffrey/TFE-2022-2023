@@ -1,78 +1,40 @@
-name: Deploiment
+name: CI/CD
+
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
-  unit-tests-frontend :
+  deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Node 16.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
-        
-  unit-tests-backend :
-    runs-on: ubuntu-latest
-    
-    services:
-      postgres:
-        image: postgres:13
-        env:
-          POSTGRES_DB: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Node 16.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
 
-  VPS-deploiement:
-    runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - uses: actions/checkout@v2
-      - name: Setup Node 16.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./TFE-2022-2023/client
 
-      - name: Build application
-        working-directory: .
+      - name: Build client
+        run: npm run build
+        working-directory: ./TFE-2022-2023/client
+
+      - name: Remove previous build
         run: |
-          cd client 
-          npm install --force
-          CI= npm run build
+          ssh ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}} 'rm -rf /home/user/TFE-2022-2023/server/build'
 
-      - name: Application folder to remote
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          source: Application
-          target: /home/TFE-2022-2023/Application
-          port: ${{ secrets.VPS_PORT }}
+      - name: Move build to server
+        run: |
+          scp -r ./TFE-2022-2023/client/build ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}}:/home/user/TFE-2022-2023/server
 
-      - name: Restart services
+      - name: SSH into VPS and run Docker Compose
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_PORT}}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
+          host: your-vps-ip
+          username: user
+          key: ${{ secrets.VPS_PRIVATEKEY }}
           script: |
-            cd /home/TFE-2022-2023/Application
-            docker-compose down
+            cd /home/user/TFE-2022-2023/server
             docker-compose up -d
