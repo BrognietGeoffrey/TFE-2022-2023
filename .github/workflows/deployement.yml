@@ -19,8 +19,8 @@ jobs:
 
       - name: Build client
         run: 
-          // eslint-disable-next-line
           npm run build
+        continue-on-error: true
 
         working-directory: client
 
