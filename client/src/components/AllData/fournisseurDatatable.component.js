@@ -42,7 +42,7 @@ const FournisseurDatatable = () => {
         getFournisseurs()
         getCompteFournisseur()
         initFilters1();
-    }, []);
+    }, [fournisseur, compteFournisseur]);
 
     const onRowEditComplete = (e) => {
         console.log(e)
@@ -59,7 +59,7 @@ const FournisseurDatatable = () => {
             num_compte_banque: e.newData.num_compte_banque,
         }
         // si au moins une data de data a été modifié alors on fait appel à la fonction update
-        if (e.data.name != e.newData["fournisseur.name"] || e.data.email_fournisseur != e.newData["fournisseur.email_fournisseur"] || e.data.adresse_fournisseur != e.newData["fournisseur.adresse_fournisseur"] || e.data.telephone_fournisseur != e.newData["fournisseur.telephone_fournisseur"] || e.data.num_fournisseur != e.newData["fournisseur.num_fournisseur"] || e.data.description != e.newData["fournisseur.description"]) {
+        if (e.data.name !== e.newData["fournisseur.name"] || e.data.email_fournisseur !== e.newData["fournisseur.email_fournisseur"] || e.data.adresse_fournisseur !== e.newData["fournisseur.adresse_fournisseur"] || e.data.telephone_fournisseur !== e.newData["fournisseur.telephone_fournisseur"] || e.data.num_fournisseur !== e.newData["fournisseur.num_fournisseur"] || e.data.description !== e.newData["fournisseur.description"]) {
         fournisseurService.update(e.data.fournisseur_id, data)
         .then((response) => {   
             console.log(response.data);
@@ -145,7 +145,7 @@ const FournisseurDatatable = () => {
     return (
         <div>
             <Toast ref={toast} />
-            <DataTable value={compteFournisseur} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['fournisseur.name', 'numCompteFournisseur', , 'fournisseur.adresse_fournisseur', 'fournisseur.telephone_fournisseur','num_compte_banque', 'fournisseur.email_fournisseur', 'fournisseur.description', 'createdAt']} filters={filters1}>
+            <DataTable value={compteFournisseur} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['fournisseur.name', 'numCompteFournisseur', 'fournisseur.adresse_fournisseur', 'fournisseur.telephone_fournisseur','num_compte_banque', 'fournisseur.email_fournisseur', 'fournisseur.description', 'createdAt']} filters={filters1}>
                 <Column field="fournisseur.name" header="Nom" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="fournisseur.email_fournisseur" header="Email" sortable editor={(options) => textEditor(options)} filter ></Column>
                 <Column field="fournisseur.adresse_fournisseur" header="Adresse" sortable editor={(options) => textEditor(options)} filter> </Column>

@@ -21,7 +21,6 @@ import PrivateRoute from './services/PrivateRoute';
 
 import jwt_decode from 'jwt-decode';
 import {Toast } from 'primereact/toast';
-import {PrimeIcons } from 'primereact/api';
 
 
 const App = () => {

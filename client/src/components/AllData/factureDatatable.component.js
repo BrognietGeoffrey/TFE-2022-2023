@@ -106,7 +106,7 @@ const FactuerDatatable = () => {
         getLibelles();
         initFilters1();
 
-    }, []);
+    }, [objet, tva, libelle, facture]);
 
     const statusBodyTemplate = (rowData) => {
         if (rowData.estpaye === false) {
@@ -121,7 +121,7 @@ const FactuerDatatable = () => {
     const onRowEditComplete = (e) => {
         console.log(e)
         const dataFacture = {
-            num_facture: e.newData.num_facture == e.data.num_facture ? e.data.num_facture : e.newData.num_facture,
+            num_facture: e.newData.num_facture === e.data.num_facture ? e.data.num_facture : e.newData.num_facture,
             facture_date: e.newData.facture_date,
             num_facture_lamy: e.newData.num_facture_lamy,
             montant: e.newData.montant,

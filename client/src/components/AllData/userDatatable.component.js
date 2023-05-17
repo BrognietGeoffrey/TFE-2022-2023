@@ -32,7 +32,7 @@ const UsersDatatable = () => {
     useEffect(() => {
         getUsers();
         initFilters1();
-    }, []);
+    }, [users]);
 
     const onRowEditComplete = (e) => {
         console.log(e)

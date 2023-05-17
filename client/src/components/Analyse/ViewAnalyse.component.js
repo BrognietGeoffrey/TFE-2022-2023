@@ -12,7 +12,7 @@ import viewServices from '../../services/viewServices';
 import './analyse.css';
 export const CustomViewForm = () => {
     const [table, setTable] = useState(null);
-    const [tables, setTables] = useState([
+    const [tables] = useState([
         { label: 'Facture', value: 'factures' },
         { label: 'Client', value: 'clients' },
         { label: 'Facturiers', value: 'facturiers' },
@@ -43,20 +43,8 @@ export const CustomViewForm = () => {
     const [responseView, setResponseView] = useState(null);
     const [allViews, setAllViews] = useState([]);
     const [displayAllViews, setDisplayAllViews] = useState(false);
-    const [position, setPosition] = useState('center');
-    const dialogFuncMap = {
-        'displayAllViews': setDisplayAllViews,
-    };
 
-    const onClick = (name, position, e) => {
-        e.preventDefault(); // add this line to prevent the default behavior
 
-        dialogFuncMap[`${name}`](true);
-
-        if (position) {
-            setPosition(position);
-        }
-    };
 
 
     const handleTableChange = (e) => {
@@ -125,7 +113,7 @@ export const CustomViewForm = () => {
 
     useEffect( () => {
          retrieveAllViews();
-    }, []);
+    }, [responseView]);
 
 
     // selon la table sélectionnée, on récupère les colonnes de la table

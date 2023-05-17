@@ -43,7 +43,7 @@ const ClientDatatable = () => {
         getCompteClient();
         initFilters1();
 
-    }, []);
+    }, [clients, compteClient]);
 
     const onRowEditComplete = (e) => {
         console.log(e)
@@ -72,7 +72,7 @@ const ClientDatatable = () => {
             console.log(error);
         }
         );
-        if (e.data.numCompteClient != e.newData.numCompteClient || e.data.num_compte_banque != e.newData.num_compte_banque) {
+        if (e.data.numCompteClient !== e.newData.numCompteClient || e.data.num_compte_banque !== e.newData.num_compte_banque) {
         compteClientService.update(e.data.co_client_id, dataCompteClient)
         .then((response) => {
             console.log(response.data);
