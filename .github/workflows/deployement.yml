@@ -26,7 +26,7 @@ jobs:
 
       - name: Remove previous build
         run: |
-          ssh geoffreyb@$162.132.226.48:50250 'rm -rf server/build'
+          ssh geoffreyb@162.132.226.48:50250 'rm -rf server/build'
 
       - name: Move build to server
         run: |
