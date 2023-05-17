@@ -299,16 +299,7 @@ const retrieveLogs = async () => {
     }
   };
 
-  const getUserModifiedInfo = (id)  => {
-    axios.get(`/api/users/${id}`)
-    .then(res => {
-      console.log(res.data)
-      return res.data
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  }
+  
 
 
 
@@ -419,11 +410,9 @@ const retrieveLogs = async () => {
                     )}
                     {selectedLog && selectedLog.userModifiedId && (
                       <div>
-                        <p><b>Utilisateur : </b>{getUserModifiedInfo(selectedLog.userModifiedId)}</p>
-                      </div>
-                    )}
-
-
+                        <p><b>Utilisateur : </b>{selectedLog.userModifiedId</b></p>
+		     </div>
+		    )}
 
                     </Dialog>
         </div>
