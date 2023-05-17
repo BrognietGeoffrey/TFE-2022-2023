@@ -12,4 +12,7 @@ jobs:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
         password: ${{ secrets.PASSWORD }}
-        script: whoami
+        script: |
+          cd ~/home/geoffreyb/TFE-2022-2023
+          git pull origin develop
+          git status
