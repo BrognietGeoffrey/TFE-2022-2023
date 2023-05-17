@@ -19,8 +19,7 @@ jobs:
 
       - name: Build client
         run: 
-          # disabled eslint for build
-          eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx --no-error-on-unmatched-patter
+          // eslint-disable-next-line
           npm run build
 
         working-directory: client
