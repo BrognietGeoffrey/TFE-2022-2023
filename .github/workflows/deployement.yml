@@ -22,7 +22,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.VPS_PRIVATE_KEY }}
+        key: ${{ secrets.VPS_PRIVATEKEY }}
         port: 22
         script: |
           cd ~/home/geoffreyb/TFE-2022-2023
