@@ -15,19 +15,19 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: ./TFE-2022-2023/client
+        working-directory: client
 
       - name: Build client
         run: npm run build
-        working-directory: ./TFE-2022-2023/client
+        working-directory: client
 
       - name: Remove previous build
         run: |
-          ssh ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}} 'rm -rf /home/user/TFE-2022-2023/server/build'
+          ssh ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}} 'rm -rf server/build'
 
       - name: Move build to server
         run: |
-          scp -r ./TFE-2022-2023/client/build ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}}:/home/user/TFE-2022-2023/server
+          scp -r client/build ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}}:server
 
       - name: SSH into VPS and run Docker Compose
         uses: appleboy/ssh-action@master
@@ -36,6 +36,6 @@ jobs:
           username: user
           key: ${{ secrets.VPS_PRIVATEKEY }}
           script: |
-            cd /home/user/TFE-2022-2023/server
+            cd /server
             docker-compose up -d
             
