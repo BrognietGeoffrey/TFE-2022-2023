@@ -17,7 +17,7 @@ jobs:
           cd TFE-2022-2023
           git pull origin develop
           git status
-          cd /client && npm i 
+          cd client && npm i 
           cd ../server && npm i
           rm -rf build 
           cd ../client && npm run build && mv build/ ../server
