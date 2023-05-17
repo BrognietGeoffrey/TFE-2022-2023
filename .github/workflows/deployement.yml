@@ -18,9 +18,11 @@ jobs:
         working-directory: client
 
       - name: Build client
-        run: |
-          # eslint-disable-next-line
+        run: 
+          # disabled eslint for build
+          eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx --no-error-on-unmatched-patter
           npm run build
+
         working-directory: client
 
       - name: Remove previous build
