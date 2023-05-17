@@ -54,7 +54,6 @@ const AddFacturier = () => {
     const [fournisseur, setFournisseur] = useState([]);
     const [client, setClient] = useState([]);
     const [tva, setTva] = useState([]);
-    const [tvaId , setTvaId] = useState(null);
     const [compteFournisseur, setCompteFournisseur] = useState([]);
     const [compteClient, setCompteClient] = useState([]);
     const [factureId, setFactureId] = useState(null);

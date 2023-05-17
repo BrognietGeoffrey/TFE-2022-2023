@@ -15,7 +15,6 @@ const Profile = () => {
   console.log(decoded, "decoded");
 
 const nowInSeconds = Math.floor(Date.now() / 1000);
-const iatInSeconds = decoded.iat;
 const expInSeconds = decoded.exp;
 const remainingTimeInSeconds = expInSeconds - nowInSeconds;
 const remainingHours = Math.floor(remainingTimeInSeconds / 3600);
@@ -31,7 +30,7 @@ const goToUserData = () => {
 
 const clientData = () => {
   const dataClient = decoded.user_id.client_id;
-  const response = ClientService.getClientById(dataClient)
+  ClientService.getClientById(dataClient)
   .then((response) => {
     setDataClient(response.data);
     console.log(response.data, "response.data");
@@ -44,7 +43,7 @@ const clientData = () => {
 
 useEffect(() => {
   clientData();
-}, []);
+}, [clientData]);
 
 
   return (

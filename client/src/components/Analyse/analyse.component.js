@@ -11,7 +11,6 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
-import {Chart } from 'primereact/chart';
 import axios from "axios";
 
 

@@ -7,7 +7,6 @@ import './sendMail.css'
 
 const SendEmail = () => {
   const [loading, setLoading] = useState(false);
-  const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('recommendation'); // par défaut, le sujet recommandation est sélectionné
@@ -17,9 +16,6 @@ const SendEmail = () => {
   console.log(decoded);
   const userMail = decoded.user_id.email;
 
-  const handleToChange = (event) => {
-    setTo(event.target.value);
-  };
 
   const handleSubjectChange = (event) => {
     setSubject(event.target.value);

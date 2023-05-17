@@ -2,7 +2,6 @@ import axios from 'axios';
 import { BASIC_HEADERS } from '../reducers/headers';
 
 const API_URL = '/api/clients/';
-const API_URL2 = '/api/client/';
 
 
 

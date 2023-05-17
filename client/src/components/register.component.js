@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { ToggleButton } from 'primereact/togglebutton';
 import { Dropdown } from 'primereact/dropdown';
-import { classNames } from 'primereact/utils';
 import logo from '../images/logojv.png';
 import '../components/Login/login.css'
 import compteClientDataService from "../services/compteClientService";
@@ -23,7 +22,6 @@ function Register() {
   const [lastname, setLastname] = useState('');
   const [telephone, setTelephone] = useState('');
   const [address, setAddress] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
   const [client, setClient] = useState(false);
   const [numCompteClient, setNumCompteClient] = useState('');
   const [num_compte_banque, setNum_compte_banque] = useState('');
@@ -31,7 +29,6 @@ function Register() {
   const [infosClients, setInfosClients] = useState([]);
   const [infosCompteClients, setInfosCompteClients] = useState([]);
   const [userId, setUserId] = useState('');
-  const [clientList, setClientList] = useState([]);
   const [role, setRole] = useState('');
   const roles = [
     { label: 'Admin', value: 'admin' },

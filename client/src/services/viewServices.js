@@ -16,12 +16,12 @@ class viewService {
           view_name
         };
         console.log(data);
-        return axios.post(`${API_URL}`+ 'createView', data, { headers: BASIC_HEADERS });
+        return axios.post(API_URL + 'createView', data, { headers: BASIC_HEADERS });
         
       }
     
       deleteView(view_name) {
-        return axios.delete(`${API_URL}`+ 'deleteView', { headers: BASIC_HEADERS, data: { view_name } });
+        return axios.delete(API_URL + 'deleteView', { headers: BASIC_HEADERS, data: { view_name } });
       }
 }
 

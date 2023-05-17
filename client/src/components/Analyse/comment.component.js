@@ -15,7 +15,7 @@ import FacturierService from '../../services/facturierService';
 import './analyse.css'
 
 const Comment = () => {
-  const { handleSubmit, errors } = useForm();
+  const { handleSubmit} = useForm();
   const [facturierIdList, setFacturierIdList] = useState([]);
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import authHeader from './authHeader';
 import { BASIC_HEADERS } from '../reducers/headers';
 const API_URL = '/api/libelle/';
 
