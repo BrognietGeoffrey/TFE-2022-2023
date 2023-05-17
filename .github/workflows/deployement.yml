@@ -1,48 +1,35 @@
-name: CI/CD
+# This is a basic workflow to help you get started with Actions
 
+name: Deployement
+
+# Controls when the action will run. 
 on:
+  # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches:
-      - develop
+    branches: [ develop ]
 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  deploy:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: npm i --force
-        working-directory: client
-
-      - name: Build client
-        run: 
-
-          npm run build
-        continue-on-error: true
-
-
-        working-directory: client
-
-      - name: Remove previous build in the server
-        run: |
-          ssh ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}}:${{secrets.VPS_PORT}} "rm -rf server/build"
-
-
-
-      - name: Move build to server
-        run: |
-          scp -r client/build ${{secrets.VPS_USER}}@${{secrets.VPS_HOST}}:server
-
-      - name: SSH into VPS and run Docker Compose
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{secrets.VPS_HOST}}
-          username: ${{secrets.VPS_USER}}
-          key: ${{ secrets.VPS_PRIVATEKEY }}
-          script: |
-            cd /server
-            docker-compose up -d
-            
+    - name: Deploy using ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_PRIVATEKEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: |
+          cd ~/home/geoffreyb/TFE-2022-2023
+          git pull origin develop
+          git status
+          cd /client && npm i 
+          cd ../server && npm i
+          rm -rf build 
+          cd ../client && npm run build && mv build/ ../server
+          cd .. && docker-compose up
