@@ -17,7 +17,7 @@ jobs:
         run: npm i --force
         working-directory: client
 
-      - name: Build client          
+      - name: Build client
         run: |
           # eslint-disable-next-line
           npm run build
