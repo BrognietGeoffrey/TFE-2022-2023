@@ -23,7 +23,7 @@ jobs:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USERNAME }}
         key: ${{ secrets.VPS_PRIVATEKEY }}
-        port: ${{ secrets.VPS_PORT }}
+        port: 50250
         script: |
           cd ~/home/geoffreyb/TFE-2022-2023
           git pull origin develop
