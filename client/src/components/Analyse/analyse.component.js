@@ -436,7 +436,7 @@ const retrieveLogs = async () => {
           {billNotPayed && billNotPayed.length > 0 && (
             <div>
               <p>Nombre de factures payées : {billPayed.length}</p>
-              <p>Montant total des factures non payées : {billPayed.reduce((acc, curr) => acc + curr.facture.montant, 0)} €</p>
+              <p>Montant total des factures payées : {billPayed.reduce((acc, curr) => acc + curr.facture.montant, 0)} €</p>
             </div>
           )}
 
@@ -444,7 +444,7 @@ const retrieveLogs = async () => {
         </div>
         <div className="card">
           {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
-          <h3>Factures payées</h3>
+          <h3>Factures non payées</h3>
           {billNotPayed && billNotPayed.length > 0 && (
             <div>
               <p>Nombre de factures non payées : {billNotPayed.length}</p>
