@@ -1,5 +1,5 @@
 import react from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {InputText} from 'primereact/inputtext';
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
@@ -18,7 +18,7 @@ const ClientDatatable = () => {
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
 
     const [filters1, setFilters1] = useState(null)
-    const getClients = () => {
+    const getClients = useCallback( () => {
         ClientDataService.getAll().then((response) => {
             setClients(response.data);
             console.log(response.data, 'response.data');
@@ -26,9 +26,9 @@ const ClientDatatable = () => {
         .catch((error) => {
             console.log(error);
         });
-    }
+    })
 
-    const getCompteClient = () => {
+    const getCompteClient =useCallback(() => {
         compteClientService.getAll().then((response) => {
             setCompteClient(response);
             console.log(response, 'response.data');
@@ -36,13 +36,13 @@ const ClientDatatable = () => {
         .catch((error) => {
             console.log(error);
         });
-    }
+    })
 
     useEffect(() => {
         getClients();
         getCompteClient();
         initFilters1();
-      }, [getClients, getCompteClient, clients, compteClient]);
+      }, [clients, compteClient]);
 
     const onRowEditComplete = (e) => {
         console.log(e)
