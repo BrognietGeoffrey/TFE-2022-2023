@@ -12,7 +12,7 @@ import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import {Chart } from 'primereact/chart';
-
+import axios from "axios";
 
 
 export const Analyse = () => {
@@ -300,7 +300,7 @@ const retrieveLogs = async () => {
     }
   };
 
-  getUserModifiedInfo = (id)  => {
+  const getUserModifiedInfo = (id)  => {
     axios.get(`/api/users/${id}`)
     .then(res => {
       console.log(res.data)
