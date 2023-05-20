@@ -20,6 +20,7 @@ jobs:
             ls
             cd TFE-2022-2023
             git pull origin develop
+            docker-compose down
             cd server
             mocha --exit
       - name: Deploy application
@@ -38,7 +39,3 @@ jobs:
             rm -rf build 
             cd ../client && npm run build && mv build/ ../server
             cd .. && docker-compose up -d 
-
-
-
-            
