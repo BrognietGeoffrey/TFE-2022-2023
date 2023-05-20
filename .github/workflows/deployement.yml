@@ -13,10 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test
-        run: |
-          echo "Test"
-          sleep 10
-          echo "Test done"
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.PASSWORD }}
+          script : |
+            cd TFE-2022-2023
+            git pull
+            cd server
+            mocha --exit
 
   deploy:
     needs: test
