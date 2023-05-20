@@ -24,7 +24,7 @@ jobs:
             git pull
             docker-compose up -d
             cd server
-            mocha test/integration_test.test.js
+            mocha test/integration_test.test.js --exit
   Unit_Tests:
     needs: [Integration_Tests]
     runs-on: ubuntu-latest
