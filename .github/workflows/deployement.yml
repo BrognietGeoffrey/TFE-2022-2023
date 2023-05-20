@@ -21,7 +21,7 @@ jobs:
             git pull origin develop
             git status
             cd server && npm install
-            mocha # Étape de test avec Mocha
+            mocha --exit
             
             # Vérifier si les tests ont réussi
             if [ $? -eq 0 ]; then
