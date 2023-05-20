@@ -17,5 +17,5 @@ jobs:
           cd TFE-2022-2023
           git pull origin develop
           cd server
-          mocha 
+          mocha --exit
           
