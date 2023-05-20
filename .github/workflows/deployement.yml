@@ -23,7 +23,7 @@ jobs:
             git status
             cd server && npm install
             # lancé les tests de mocha
-            mocha
+            mocha --exit
             # Si mocha passe on lance le script de déploiement
             if [ $? -eq 0 ]; then
               cd rm -rf build
