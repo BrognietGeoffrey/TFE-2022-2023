@@ -1,23 +1,17 @@
-name: Deploiement with test
+name: Deploiement
 on:
-  push:
-    branches:
-      - develop
+  workflow_run:
+    workflows: ["Integration and Unit tests"]
+    types:
+      - completed
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run tests
-        uses: ./.github/workflows/test.yml
-
-  deploy:
+  build:
     name: Build and Deploy
-    needs: test
     runs-on: ubuntu-latest
+    needs: [test]
     steps:
-      - name: Deploy application
+      - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
