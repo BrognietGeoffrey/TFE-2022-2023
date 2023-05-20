@@ -6,36 +6,25 @@ on:
 
 jobs:
 
-  deploy:
-    name: Build and Deploy
+# 2 jobs, one who test and other who deploy. The deploy jobs need the test job
+# to be finished before starting
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Execute all backend test
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            ls
-            cd TFE-2022-2023
-            git pull origin develop
-            docker-compose down
-            cd server
-            mocha --exit
-      - name: Deploy application
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            ls
-            cd TFE-2022-2023
-            git pull origin develop
-            git status
-            cd client && npm i 
-            cd ../server && npm i
-            rm -rf build 
-            cd ../client && npm run build && mv build/ ../server
-            cd .. && docker-compose up -d 
+      - uses: actions/checkout@v2
+      - name: Test
+        run: |
+          echo "Test"
+          sleep 10
+          echo "Test done"
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy
+        run: |
+          echo "Deploy"
+          sleep 10
+          echo "Deploy done"
