@@ -20,7 +20,9 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script : |
             cd TFE-2022-2023
+            
             git pull
+            docker-compose up
             cd server
             mocha test/integration_test.test.js
   Unit_Tests:
