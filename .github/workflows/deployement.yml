@@ -1,4 +1,4 @@
-name: remote ssh command
+name: Deploiement with test
 on:
   push:
     branches:
@@ -9,25 +9,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Check if test succeeded
-        id: test_status
-        uses: actions/github-script@v4
-        with:
-          script: |
-            const { data } = await github.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_file_name: '.github/workflows/integration_unit_test.yml',
-              status: 'success',
-              branch: context.ref
-            });
-            console.log(data.total_count);
-            if (data.total_count === 0) {
-              process.exit(1);
-            }
-
-      - name: executing remote ssh commands using password
-        if: steps.test_status.outputs.result == 'true'
+      - name: deploy and test
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -38,8 +20,17 @@ jobs:
             cd TFE-2022-2023
             git pull origin develop
             git status
-            cd client && npm i 
-            cd ../server && npm i
-            rm -rf build 
-            cd ../client && npm run build && mv build/ ../server
-            cd .. && docker-compose up -d
+            cd server && npm install
+            mocha # Étape de test avec Mocha
+            
+            # Vérifier si les tests ont réussi
+            if [ $? -eq 0 ]; then
+              cd ../client && npm install
+              npm run build # Étape de construction du build
+              cd ../server && rm -rf build
+              mv build/ ../server
+
+              cd .. && docker-compose up -d # Étape de mise en ligne avec Docker
+            else
+              echo "Tests failed. Skipping build and deployment."
+            fi
