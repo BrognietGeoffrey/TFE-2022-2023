@@ -3,7 +3,7 @@ on: [push]
 jobs:
 
   build:
-    name: Build
+    name: test
     runs-on: ubuntu-latest
     steps:
     - name: Execute all backend test
