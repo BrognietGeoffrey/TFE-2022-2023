@@ -1,17 +1,34 @@
-name: Deploiement
+name: Deploiement with test
 on:
-  workflow_run:
-    workflows: ["Integration and Unit tests"]
-    types:
-      - completed
+  push:
+    branches:
+      - develop
 
 jobs:
-  build:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests
+        uses: ./.github/workflows/test.yml
+
+  deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
-    needs: [test]
     steps:
-      - name: executing remote ssh commands using password
+      - name: Execute all backend test
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            ls
+            cd TFE-2022-2023
+            git pull origin develop
+            cd server
+            mocha --exit
+      - name: Deploy application
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
