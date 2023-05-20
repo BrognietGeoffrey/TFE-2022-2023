@@ -8,11 +8,11 @@ jobs:
 
 # 2 jobs, one who test and other who deploy. The deploy jobs need the test job
 # to be finished before starting
-  test:
+  Integration_Tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Test
+      - name: Integration tests
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -22,15 +22,40 @@ jobs:
             cd TFE-2022-2023
             git pull
             cd server
-            mocha --exit
+            mocha test/integration_test.test.js
+  Unit_Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Integration tests
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.PASSWORD }}
+          script : |
+            cd TFE-2022-2023
+            git pull
+            cd server
+            mocha test/unit_test.test.js --exit
 
   deploy:
-    needs: test
+    needs: [Integration_Tests, Unit_Tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Deploy
-        run: |
-          echo "Deploy"
-          sleep 10
-          echo "Deploy done"
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            ls
+            cd TFE-2022-2023
+            git pull origin develop
+            git status
+            cd client && npm i 
+            cd ../server && npm i
+            rm -rf build 
+            cd ../client && npm run build && mv build/ ../server
+            cd .. && docker-compose up -d 
