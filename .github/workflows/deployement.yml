@@ -1,3 +1,4 @@
+
 name: Deploiement with test
 on:
   push:
@@ -21,16 +22,14 @@ jobs:
             git pull origin develop
             git status
             cd server && npm install
-            mocha 
-            
-            # Vérifier si les tests ont réussi
+            # lancé les tests de mocha
+            mocha
+            # Si mocha passe on lance le script de déploiement
             if [ $? -eq 0 ]; then
-              cd ../client && npm install
-              npm run build # Étape de construction du build
-              cd ../server && rm -rf build
+              cd rm -rf build
+              cd ..client && npm run build
               mv build/ ../server
-
-              cd .. && docker-compose up -d # Étape de mise en ligne avec Docker
-            else
-              echo "Tests failed. Skipping build and deployment."
+              cd .. && docker-compose up -d
+            else 
+              echo "Les tests ont échoués"
             fi
