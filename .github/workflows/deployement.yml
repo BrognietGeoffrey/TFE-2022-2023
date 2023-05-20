@@ -1,4 +1,3 @@
-
 name: Deploiement with test
 on:
   push:
@@ -6,11 +5,19 @@ on:
       - develop
 
 jobs:
-  build:
-    name: Build
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
-      - name: deploy and test
+      - name: Run tests
+        uses: ./.github/workflows/test.yml
+
+  deploy:
+    name: Build and Deploy
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy application
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -21,15 +28,8 @@ jobs:
             cd TFE-2022-2023
             git pull origin develop
             git status
-            cd server && npm install
-            # lancé les tests de mocha
-            mocha --exit
-            # Si mocha passe on lance le script de déploiement
-            if [ $? -eq 0 ]; then
-              cd rm -rf build
-              cd ..client && npm run build
-              mv build/ ../server
-              cd .. && docker-compose up -d
-            else 
-              echo "Les tests ont échoués"
-            fi
+            cd client && npm i 
+            cd ../server && npm i
+            rm -rf build 
+            cd ../client && npm run build && mv build/ ../server
+            cd .. && docker-compose up -d 
