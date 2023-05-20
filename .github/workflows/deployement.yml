@@ -22,7 +22,7 @@ jobs:
             cd TFE-2022-2023
             
             git pull
-            docker-compose up
+            docker-compose up -d
             cd server
             mocha test/integration_test.test.js
   Unit_Tests:
