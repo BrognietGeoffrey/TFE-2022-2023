@@ -1,5 +1,7 @@
 name: remote ssh command
 on: [push]
+needs: [integration_unit_test]
+
 jobs:
 
   build:
