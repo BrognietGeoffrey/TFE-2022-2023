@@ -3,8 +3,7 @@
 // ***************************************** TEST CREATE FACTURE ***********************************
 // *************************************************************************************************
 const {validFormBodyFacture} = require('../controllers/facture.controller');
-const {validFormBodyLibelle} = require('../controllers/infosFournisseur.controller');
-const {validFormBodyObjet} = require('../controllers/infosFournisseur.controller');
+const {validFormBodyLibelle, validFormBodyObjet} = require('../controllers/facturedetails.controller');
 const {validFormBodyTva} = require('../controllers/tva.controller');
 var httpMocks = require('node-mocks-http');
 var assert = require('assert');
