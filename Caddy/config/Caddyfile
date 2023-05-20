@@ -25,7 +25,6 @@ www.jeanvives.be {
   header {
         # Désactive la détection de MIME type basée sur le contenu du fichier
 
-	Content-Security-Policy "default-src 'self'; style-src 'self' https://stackpath.bootstrapcdn.com https://unpkg.com https://cdn.jsdelivr.net 'sha256-7akPC+mQaxUzTy/yBVxkR7jjP27nUVGfEx9LF1Bf0Zw=';"
         Referrer-Policy "same-origin"
         X-Content-Type-Options "nosniff"
         X-Frame-Options "DENY"

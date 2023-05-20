@@ -41,12 +41,12 @@ describe('Facturiers routes', function() {
   });
   describe('GET /api/facturiers/:id', function() {
     it('should fetch one facturier successfully', function(done) {
-    request.get('/api/facturiers/1')
+    request.get('/api/facturiers/5')
         .set('Authorization', `Bearer ${token}`)
         .end(function(err, res) {
             expect(res).to.have.status(200);
 
-        res.body.facture_id.should.be.equal(15);
+        res.body.facture_id.should.be.equal(5);
         done();
         });
     });
@@ -139,8 +139,8 @@ describe('------- Factures routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.montant.should.be.equal(2385)
-            res.body.libelle_id.should.be.equal(3)
+            res.body.montant.should.be.equal(4)
+            res.body.libelle_id.should.be.equal(1)
             done();
             });
         });
@@ -272,13 +272,13 @@ describe('------- extraits routes -----------', function() {
 describe('------- extraits routes -----------', function() {
     describe('GET /api/extraits/:id', function() {
         it('should fetch one extrait successfully', function(done) {
-        request.get('/api/extraits/1')
+        request.get('/api/extraits/3')
             .set('Authorization', `Bearer ${token}`)
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.num_extrait.should.be.equal(1)
-            res.body.montant.should.be.equal(1)
+            res.body.num_extrait.should.be.equal(7843)
+            res.body.montant.should.be.equal(43043)
            
             done();
             });
@@ -349,8 +349,8 @@ describe('------- fournisseur routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.name.should.be.equal("Aqua1")
-            res.body.num_fournisseur.should.be.equal(123211)
+            res.body.name.should.be.equal("Geoffrey Brogniet1")
+            res.body.num_fournisseur.should.be.equal(1)
            
             done();
             });
@@ -393,6 +393,7 @@ describe('------- clients routes -----------', function() {
     });
     }
 );
+
 
 
 
