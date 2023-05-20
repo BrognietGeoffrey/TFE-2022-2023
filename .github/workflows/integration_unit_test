@@ -1,0 +1,21 @@
+name: Integration and Unit tests
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Execute all backend test
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          ls
+          cd TFE-2022-2023
+          git pull origin develop
+          cd server
+          mocha 
+          
