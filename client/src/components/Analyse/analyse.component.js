@@ -66,7 +66,7 @@ export const Analyse = () => {
       // Faire une liste des clients avec le noms des clients et leur id 
       const clientListWithFacture = facturier.map((bill) => {
         return {
-          id: bill.compte_client.client.client_id,
+          id: bill.compte_client.client_id,
           nom: bill.compte_client.client.name, 
           prenom : bill.compte_client.client.firstname
         };
