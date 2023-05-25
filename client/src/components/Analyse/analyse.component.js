@@ -11,7 +11,8 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
-import axios from "axios";
+import {Chart } from 'primereact/chart';
+
 
 
 export const Analyse = () => {
@@ -25,6 +26,8 @@ export const Analyse = () => {
     const [selectedLog, setSelectedLog] = useState(null);
     const toast = useRef(null);
     const [expandedRows, setExpandedRows] = useState(null);
+    const [previousWeekFactures, setPreviousWeekFactures] = useState([]);
+    const [weekFactures, setWeekFactures] = useState([]);
 
 
     const handleShowDetails = (rowData) => {
@@ -66,7 +69,7 @@ export const Analyse = () => {
       // Faire une liste des clients avec le noms des clients et leur id 
       const clientListWithFacture = facturier.map((bill) => {
         return {
-          id: bill.compte_client.client_id,
+          id: bill.compte_client.client.client_id,
           nom: bill.compte_client.client.name, 
           prenom : bill.compte_client.client.firstname
         };
@@ -171,9 +174,9 @@ const retrieveLogs = async () => {
               className="custom-button-logs p-button-link"
               tooltip="N° de facture"
               tooltipOptions={{ position: 'left' }}
-              onClick={ rowData.facture !== null ? () => handleShowDetails(rowData) : "null"}
+              onClick={ rowData.facture !== undefined ? () => handleShowDetails(rowData) : null}
             >
-              {rowData.facture !== null ? rowData.facture.num_facture : "Pas de n° trouvé"}
+              {rowData.facture !== undefined ? rowData.facture.num_facture : "Pas de n° trouvé"}
               {/* {rowData.facture.num_facture}  */}
             </Button>
           </span>
@@ -299,10 +302,6 @@ const retrieveLogs = async () => {
     }
   };
 
-  
-
-
-
 
   const num_factureTemplate = (rowData) => {
     const factureLength = rowData.factures.length;
@@ -314,24 +313,202 @@ const retrieveLogs = async () => {
     );
   };
 
+  const previousWeekFacturation = () => {
+    const facture = billPayed;
+    const today = new Date();
+   const lastMonday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (today.getDay() + 6) % 7 - 7);
+    console.log(lastMonday);
+    const lastSunday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (today.getDay() + 6) % 7 + 6 - 7);
+    console.log(lastSunday);
+    const previousWeekFactures = facture.filter((facture) => {
+      const factureDate = new Date(facture.createdAt);
+      return factureDate > lastMonday && factureDate < lastSunday;
+    });
+    
+  
+    setPreviousWeekFactures(previousWeekFactures);
+    console.log(previousWeekFactures);
+  };
+
+  const weekFacturation = () => {
+    // return all factures from this week. So find from today to the start of the week (monday)
+    const facture = billPayed
+    const today = new Date();
+    // monday is always the start of the week, so check what day is today and substract the difference
+    const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (today.getDay() - 1));
+    console.log(monday);
+
+    const weekFactures = facture.filter((facture) => {
+      const factureDate = new Date(facture.createdAt);
+      return factureDate > monday;
+    }
+    );
+    setWeekFactures(weekFactures);
+    console.log(weekFactures);
+  };
+
+  useEffect(() => {
+    previousWeekFacturation();
+    weekFacturation();
+  }, [ billPayed]);
+
+
+  const [lightOptions] = useState({
+    maintainAspectRatio: false,
+    aspectRatio: .6,
+    plugins: {
+        legend: {
+            labels: {
+                color: '#495057'
+            }
+        }
+    },
+    scales: {
+        x: {
+            ticks: {
+                color: '#495057'
+            },
+            grid: {
+                color: '#ebedef'
+            }
+        },
+        y: {
+            ticks: {
+                color: '#495057'
+            },
+            grid: {
+                color: '#ebedef'
+            }
+        }
+    }
+});
+
+
+
+
+  // ZONE DE RETURN DIV ----------------------------------------------
+
     return (
       <div className="container" id="analyse">
                 <Toast ref={toast} />
+       
 
       <section className="features">
-        <h2>Les fonctionnalités</h2>
-        <div className="card">
-          <h3>Vues</h3>
-          <p><ViewAnalyse/></p>
+      <div className="card">
+          {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
+          <h3>Statuts des factures au total</h3>
+          {billNotPayed && billNotPayed.length > 0 && (
+            <div>
+              <Chart type="pie" data={
+                {
+                  labels: ['Factures payées', 'Factures non payées'],
+                  datasets: [
+                    {
+                      data: [billPayed.length, billNotPayed.length],
+                      backgroundColor: [
+                        "#FF6384",
+                        "#36A2EB"
+                      ],
+                      hoverBackgroundColor: [
+                        "#FF6384",
+                        "#36A2EB"
+                      ]
+                    }]
+                }
+              } />
+            </div>
+          )}
+
+
         </div>
+      
+        <div className="card">
+          {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
+          <h3>Total de factures sur l'année </h3>
+          {billNotPayed && billNotPayed.length > 0 && (
+            <div>
+
+              {console.log(billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 4))}
+              <Chart type="line" data={
+                {
+                  // For each facturier, we count the number of bill for each month
+                  labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', "Octobre", "Novembre", "Décembre"],
+                  datasets: [
+                    {
+                    
+                      label : 'Nombre de factures',
+                      data: [billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 0).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 1).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 2).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 3).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 4).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 5).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 6).length , billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 7).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 8).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 9).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 10).length, billPayed.filter(bill => new Date(bill.facture.facture_date).getMonth() === 11).length],
+                      fill: false,
+                      backgroundColor: 'rgb(255, 99, 132)',
+                      borderColor: 'rgba(255, 99, 132, 0.2)',
+                    },
+                  ]
+                }
+              }/>
+            </div>
+          )}
+
+
+        </div>
+        <div className="card">
+          {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
+          <h3>Total de facture cette semaine</h3>
+          {billNotPayed && billNotPayed.length > 0 && (
+            <div>
+        
+                <Chart type="bar" data={ 
+                  {
+                    labels: ['Nombre de factures'],
+                    datasets: [
+                      {
+                        label: 'Semaine précédente',
+                        data: [previousWeekFactures.length > 0 ? previousWeekFactures.length : 0],
+                        fill: false,
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgba(255, 99, 132, 0.2)',
+                      },
+                      {
+                        label: 'Semaine actuelle',
+                        data: [ weekFactures.length > 0 ? weekFactures.length : 0],
+                        fill: false,
+                        backgroundColor: 'rgb(54, 162, 235)',
+                        borderColor: 'rgba(54, 162, 235, 0.2)',
+
+
+
+                      }
+                    ],
+                  }
+                } />
+              
+
+            </div>
+          )}
+
+
+        </div>
+
+
+
 
 
       </section>
       <section className="testimonials">
-        <h2>Commentaires et historiques</h2>
-        <div className="card">
-          <CommentZone/>
+
+        <div className="card" style={{maxHeight: '500px', overflow: 'auto'}}>
+          <h3>Les clients et leurs factures </h3>
+          <p> <DataTable value={clientListWithFacture} rowGroupMode="subheader" groupRowsBy="nom"
+                    sortMode="single" sortField="nom" sortOrder={1} responsiveLayout="scroll"
+                    expandableRowGroups expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
+                    onRowExpand={onRowGroupExpand} onRowCollapse={onRowGroupCollapse}
+                    rowGroupHeaderTemplate={headerTemplate} >
+                      <Column ></Column>
+                    <Column body={num_factureTemplate}></Column>
+              </DataTable>
+          </p>
         </div>
+
+
         <div className="card" >
         <DataTable value={logs} paginator rows={5} rowsPerPageOptions={[5,10,20]} emptyMessage="Aucun log pour le moment" style={{height : "90%"}}>
                     <Column field="user.username" header="Utilisateur"  />
@@ -340,13 +517,10 @@ const retrieveLogs = async () => {
                     <Column field="ajout" header="Où" body={ajoutBodyTemplate} />         
                   </DataTable>
                   <Dialog
-                     header="Détails"
-
+                    header="Détails de la ligne de tableau sélectionnée"
                     visible={showDetailsLogs}
                     onHide={() => setShowDetailsLogs(false)}
-                    style = {{width : "30vw", position : "absolute", textAlign : "center"}}
                   >
-                    {console.log(selectedLog)}
                     {selectedLog && selectedLog.decompte && (
                       <div>
                         <p><b>N° de décompte : </b>{selectedLog.decompte.num_decompte}</p>
@@ -378,8 +552,8 @@ const retrieveLogs = async () => {
                     {selectedLog && selectedLog.facturier && (
                       <div>
                         <p><b>N° de facturier : </b>{selectedLog.facturier_id}</p>
-                        <p><b>N° de facture : </b>{selectedLog.facture.num_facture ? selectedLog.facture.num_facture : "N/A"}</p>
-                        <p><b>Date de facturation : </b>{selectedLog.facture.facture_date ? selectedLog.facture.facture_date.substring(0,10) : "N/A"}</p>
+                        <p><b>N° de facture : </b>{selectedLog.facture.num_facture}</p>
+                        <p><b>Date de facturation : </b>{selectedLog.facture.facture_date}</p>
                         <p><b>Montant : </b>{selectedLog.facture.montant}</p>
                       </div>
                     )}
@@ -396,81 +570,26 @@ const retrieveLogs = async () => {
                         <p><b>Description : </b>{selectedLog.tva.tva_description}</p>
                       </div>
                     )}
-                    {selectedLog && selectedLog.libelle && (
-                      <div>
-                        <p><b>Titre du libellé : </b>{selectedLog.libelle.title}</p>
-                        <p><b>Modifié le : </b>{selectedLog.libelle.updatedAt.toString().substring(0,10)}</p>
-                      </div>
-                    )}
-                    {selectedLog && selectedLog.objet && (
-                      <div>
-                        <p><b>Titre du libellé : </b>{selectedLog.objet.title}</p>
-                        <p><b>Modifié le : </b>{selectedLog.objet.updatedAt.toString().substring(0,10)}</p>
-                      </div>
-                    )}
-
                     </Dialog>
         </div>
       </section>
       <section className="blog">
-        <h2>Les statistiques</h2>
-        <div className="card">
-          {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
-          <h3>Factures payées</h3>
-          {billNotPayed && billNotPayed.length > 0 && (
-            <div>
-              <p>Nombre de factures payées : {billPayed.length}</p>
-              <p>Montant total des factures payées : {billPayed.reduce((acc, curr) => acc + curr.facture.montant, 0)} €</p>
-            </div>
-          )}
 
+      <div className="card">
+          <h3>Vues</h3>
+          <p><ViewAnalyse/></p>
+        </div>
 
-        </div>
         <div className="card">
-          {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
-          <h3>Factures non payées</h3>
-          {billNotPayed && billNotPayed.length > 0 && (
-            <div>
-              <p>Nombre de factures non payées : {billNotPayed.length}</p>
-              <p>Montant total des factures non payées : {billNotPayed.reduce((acc, curr) => acc + curr.facture.montant, 0)} €</p>
-            </div>
-          )}
+          <CommentZone/>
+        </div>
 
-
-        </div>
-        <div className="card">
-          <h3>Les clients et leurs factures </h3>
-          <p> <DataTable value={clientListWithFacture} rowGroupMode="subheader" groupRowsBy="nom"
-                    sortMode="single" sortField="nom" sortOrder={1} responsiveLayout="scroll"
-                    expandableRowGroups expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
-                    onRowExpand={onRowGroupExpand} onRowCollapse={onRowGroupCollapse}
-                    rowGroupHeaderTemplate={headerTemplate} style={{maxHeight: '523px', overflow: 'auto'}}>
-                      <Column ></Column>
-                    <Column body={num_factureTemplate}></Column>
-              </DataTable>
-          </p>
-        </div>
-      </section>
-      <section className="blog">
-        <h2>Les statistiques</h2>
-        <div className="card">
-
-        </div>
-        <div className="card">
-        </div>
 
       </section>
-      <section className="blog">
-        <h2>Les statistiques</h2>
-        <div className="card">
 
-        </div>
-        <div className="card">
- 
-        </div>
-      </section>
 
     </div>
+
 
     )
 }

@@ -1,36 +1,119 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Card } from 'primereact/card';
+import {TabView, TabPanel} from 'primereact/tabview';
+const HelpPage = () => {
+  const [activeTab, setActiveTab] = useState(null);
 
-function HelpPage() {
+  const handleCardClick = (tabIndex) => {
+    setActiveTab(tabIndex);
+  };
+
   return (
-    <div className="help-page">
-      <h1>Aide d'utilisation du site</h1>
+    <div>
 
-      <section>
-        <h2>Introduction</h2>
-        <p>Bienvenue sur la page d'aide du site. Cette page a été conçue pour vous aider à naviguer sur le site et à utiliser toutes ses fonctionnalités.</p>
-      </section>
+      <div className="card-container">
+        <Card title="Ajout d'un facturier" onClick={() => handleCardClick(0)} id="cardAide">
+          <TabView >
+            <TabPanel header="Comment faire ?">
+              <div>
+                <span>Pour ajouter un facturier, il vous suffit d'être connectez avec un compte administrateur ou modérateur.</span>
+                <br/>
+                <span>Ensuite, vous devez cliquer sur le bouton 'Ajouter un facturier' dans la page 'Facturiers'.</span>
+                <br/>
+                <span>Ensuite vous devez cliquez sur le bouton "Ajout d'un facturier" et remplir les champs demandés.</span>
+                <br/>
+                <span>Une fois les champs remplis, vous devez cliquer sur le bouton de confirmation des données et enfin cliquez sur le bouton "Ajouter". 
+                </span>
+              <br/>
+              <span>Vous pouvez également pré-remplir les champs grâce à une photo ou un document. Pour cela vous devez cliqué sur "Choose a file", puis importer. </span>
 
-      <section>
-        <h2>Navigation</h2>
-        <p>Pour naviguer sur le site, vous pouvez utiliser le menu de navigation situé en haut de la page. Ce menu vous permet d'accéder à toutes les pages principales du site. Pour trouver des informations supplémentaires sur une page spécifique, vous pouvez consulter la section d'aide correspondante.</p>
-      </section>
+              </div>
+            </TabPanel>
+            <TabPanel header="Vidéo explicative">
+              <div>
+                <h3>Vidéo explicative</h3>
+                <iframe width="1100" height="620" src="https://www.youtube.com/embed/tb1uF6cXjhw?cc_load_policy=1&cc_lang_pref=fr"  title="Ajout d&#39;un facturier" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              </div>
+            </TabPanel>
+          </TabView>
+        </Card>
 
-      <section>
-        <h2>Compte utilisateur</h2>
-        <p>Si vous souhaitez créer un compte sur le site, vous pouvez cliquer sur le bouton "S'inscrire" situé en haut de la page. Une fois que vous avez créé un compte, vous pouvez vous connecter en cliquant sur le bouton "Se connecter". Vous pouvez également gérer vos informations de compte en accédant à la page "Mon compte".</p>
-      </section>
+        <br/>
 
-      <section>
-        <h2>Fonctionnalités principales</h2>
-        <p>Le site propose plusieurs fonctionnalités principales, telles que la recherche, le panier d'achat et la liste de souhaits. Pour utiliser ces fonctionnalités, il vous suffit de cliquer sur les boutons correspondants et de suivre les instructions à l'écran.</p>
-      </section>
+        <Card title="Consulter la base de données" onClick={() => handleCardClick(0)} id="cardAide">
+          <TabView>
+            <TabPanel header="Comment faire ?">
+              <div>
+                <span>Afin de voir ce qu'il y a dans la base de données, vous pouvez vous rendre dans l'onglet "Base de données" dans la barre de navigation.</span>
+                <br/>
+                <span>Une fois la, vous aurez le choix entre voir tous les extraits, toutes les factures, tous les clients et tous les fournisseurs</span>
+                <br/>
+                <span>Vous pouvez également faire une recherche dans la barre de recherche en haut à droite de la page.</span>
+                <br/>
+                <span>Et enfin, vous pouvez modifier les éléments de la base de données. En ce qui concerne les factures, tout est modifiable sauf le statut qui se modifie dans le facturier même.</span>
 
-      <section>
-        <h2>Contact</h2>
-        <p>Si vous avez besoin d'aide supplémentaire, vous pouvez contacter l'équipe de support du site en envoyant un e-mail à support@nomdusite.com ou en utilisant le formulaire de contact disponible sur la page "Nous contacter". Nous ferons de notre mieux pour répondre à toutes vos questions dans les plus brefs délais.</p>
-      </section>
+              </div>
+            </TabPanel>
+            <TabPanel header="Vidéo explicative">
+              <div>
+                <h3>Vidéo explicative</h3>
+                <iframe width="1100" height="620" src="https://www.youtube.com/embed/j69ecT7DMrY?cc_load_policy=1&cc_lang_pref=fr" title="Consulter la base de données" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>              
+                </div>
+            </TabPanel>
+          </TabView>
+        </Card>
+
+        <br/>
+
+        <Card title="Ajouter un nouvel utilisateur" onClick={() => handleCardClick(0)} id="cardAide">
+          <TabView>
+            <TabPanel header="Comment faire ?">
+              <div>
+                <span>Pour ajouter un nouvel utilisateur, vous pouvez vous rendre dans le profil d'un compte administrateur. Une fois là, vous pouvez cliquer sur le bouton "Ajouter un utilisateur".  </span>
+                <br/>
+                <span>Ensuite, vous devez remplir les champs demandés. Vous pouvez également lier cet utilisateur à un compte client. Pour ce faire vous pouvez cliquer sur le bouton "Appuyer pour lier l'utilisateur à un compte client".</span>
+
+              </div>
+            </TabPanel>
+            <TabPanel header="Vidéo explicative">
+              <div>
+                <h3>Vidéo explicative</h3>
+                <iframe width="1100" height="620" src="https://www.youtube.com/embed/Ig1dS8ZuF1Q?cc_load_policy=1&cc_lang_pref=fr" title="Ajouter un utilisateur" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>               
+                 </div>
+            </TabPanel>
+          </TabView>
+        </Card>
+
+        <br/>
+
+        <Card title="Créer une vue" onClick={() => handleCardClick(0)} id="cardAide">
+          <TabView>
+            <TabPanel header="Comment faire ?">
+              <div>
+                <span>Une vue est un tri dans une base de données. Elle permet de créer des tableaux virtuels avec le tri choisis.</span>
+                <br/>
+                <span>Pour créer une vue, vous devez vous rendre dans la page "Analyse". Vous verrez un onglet "Vues".</span>
+                <br/>
+                <span>Une fois là, vous pouvez indiquer le nom de la vue, sur quelles données faire le trie, comment faire le tri et enfin vous pouvez créer la vue. </span>
+
+              </div>
+            </TabPanel>
+            <TabPanel header="Vidéo explicative">
+              <div>
+                <h3>Vidéo explicative</h3>
+                <iframe width="1440" height="620" src="https://www.youtube.com/embed/f30USUh1MlY?cc_load_policy=1&cc_lang_pref=fr" title="Création d&#39;une vue" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                 </div>
+            </TabPanel>
+          </TabView>
+        </Card>
+
+
+      </div>
     </div>
   );
-}
+};
 
 export default HelpPage;
+
+
+

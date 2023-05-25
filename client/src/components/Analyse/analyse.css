@@ -1,89 +1,112 @@
+
 #analyse {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    /* distance entre les card */
-    padding : 10px;
-    max-width: fit-content;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  /* distance entre les card */
+  padding : 10px;
+  max-width: fit-content;
+  /* add wave-heikei as background image */
 }
 
 /* distance enrte les section */
 #analyse > section {
-    margin: 10px;
+  margin: 10px;
 }
 
+/* Reduire tous les éléments et mettre en column quand la page devient trop petite  */
+@media screen and (max-width: 800px) {
+  #analyse {
+      flex-direction: column;
+      max-height : 90%; 
+      padding-bottom: 30%;
+  }
 
-
-
+  #analyse > section {
+      margin: 10px;
+  }
+}
 
 .comment-section {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .comment-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .comment-item {
-    display: flex;
-    margin-bottom: 30px;
-  }
-  
-  .comment-avatar {
-    flex-shrink: 0;
-    margin-right: 20px;
-  }
-  
-  .comment-avatar img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
-  
-  .comment-content {
-    flex-grow: 1;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .comment-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  
-  .comment-title {
-    margin: 0;
-    font-size: 16px;
-  }
-  
-  .comment-meta {
-    margin: 0;
-    color: #999;
-    font-size: 14px;
-  }
-  
-  .comment-body {
-    padding: 10px;
-    margin: 0;
-  }
-  
-  .comment-footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 10px;
-    border-top: 1px solid #f0f0f0;
-  }
-  
-  .comment-reply {
-    cursor: pointer;
-    color: #007bff;
-  }
-  
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.comment-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.comment-item {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.comment-avatar {
+  flex-shrink: 0;
+  margin-right: 20px;
+}
+
+.comment-avatar img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.comment-content {
+  flex-grow: 1;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.comment-title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.comment-meta {
+  margin: 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.comment-body {
+  padding: 10px;
+  margin: 0;
+}
+
+.comment-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.comment-reply {
+  cursor: pointer;
+  color: #007bff;
+}
+
+/* Box shadow on hover card */
+.comment-item:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.19);
+  border-radius: 5px;
+}
+
+.card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.40);
+  border-radius: 5px;
+  /* temps d'apparition du shade */
+  transition: 0.5s;
+}
