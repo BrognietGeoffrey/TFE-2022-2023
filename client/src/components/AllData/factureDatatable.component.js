@@ -106,7 +106,7 @@ const FactuerDatatable = () => {
         getLibelles();
         initFilters1();
 
-    }, [objet, tva, libelle, facture]);
+    }, []);
 
     const statusBodyTemplate = (rowData) => {
         if (rowData.estpaye === false) {

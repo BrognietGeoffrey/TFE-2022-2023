@@ -176,8 +176,7 @@ const retrieveLogs = async () => {
               tooltipOptions={{ position: 'left' }}
               onClick={ rowData.facture !== undefined ? () => handleShowDetails(rowData) : null}
             >
-              {rowData.facture !== undefined ? rowData.facture.num_facture : "Pas de n° trouvé"}
-              {/* {rowData.facture.num_facture}  */}
+              
             </Button>
           </span>
         );
