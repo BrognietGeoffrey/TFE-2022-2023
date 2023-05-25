@@ -48,7 +48,6 @@ services:
     networks:
       vps-geoffrey-network-lan:
         ipv4_address: 192.168.20.2
-
 networks:
   vps-geoffrey-network-lan:
     driver: bridge
