@@ -5,12 +5,10 @@ import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { ToggleButton } from 'primereact/togglebutton';
 import { Dropdown } from 'primereact/dropdown';
-import logo from '../images/logojv.png';
-import '../components/Login/login.css'
-import compteClientDataService from "../services/compteClientService";
-import auhtService from "../services/authService";
-
-import ClientDataService from '../services/clientService';
+import compteClientDataService from "../../services/compteClientService";
+import auhtService from "../../services/authService";
+import ClientDataService from '../../services/clientService';
+import logo from '../../images/logojv.png';
 
 function Register() {
   const toast = useRef(null);
@@ -22,6 +20,7 @@ function Register() {
   const [lastname, setLastname] = useState('');
   const [telephone, setTelephone] = useState('');
   const [address, setAddress] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const [client, setClient] = useState(false);
   const [numCompteClient, setNumCompteClient] = useState('');
   const [num_compte_banque, setNum_compte_banque] = useState('');
@@ -31,83 +30,78 @@ function Register() {
   const [userId, setUserId] = useState('');
   const [role, setRole] = useState('');
   const roles = [
-    { label: 'Admin', value: 'admin' },
-    { label: 'Moderator', value: 'moderator' }, 
-    { label: 'User', value: 'user' }
+    { label: 'Administrateur', value: 'admin' },
+    { label: 'Comptable/Moderateur', value: 'moderator' }, 
+    { label: 'Utilisateur/habitant', value: 'user' }
   ];
+  // const getClientList = async () => {
+  //   const clientList = await compteClientDataService.getAll();
+  //   setClientList(clientList.map(client => {
+  //       return {
+  //           label: client.client.name + " " + client.client.firstname,
+  //           value: client.co_client_id, 
+  //           name : client.client.name,
+  //           firstname : client.client.firstname, 
+  //           adresse_client : client.client.adresse_client,
+  //           telephone_client : client.client.telephone_client,
+  //           email_client : client.client.email_client,
+  //           numCompteClient : client.numCompteClient,
+  //           num_compte_banque : client.num_compte_banque
 
+  //       };
+  //   }).sort((a, b) => a.label.localeCompare(b.label)));
+  // };
+
+  
 
   const registerUser = (event) => {
     event.preventDefault();
-  
-    if (!client) {
-      // Si client n'est pas créé, seule la création de l'utilisateur est effectuée
-      const dataUser = {
-        username: username,
-        password: password,
-        email: email,
-        role: role,
-      };
-  
-      auhtService.register(dataUser)
-        .then(response => {
-          console.log(response.data);
-          setUserId(response.data.user_id);
-          toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
-          setUsername('');
-          setPassword('');
-          setConfirmPassword('');
-          setEmail('');
-          setRole('');
-        })
-        .catch(e => {
-          console.log(e);
-          toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'User Not Created', life: 3000 });
-        });
-  
-      return;
-    }
-  
-    // Création du client
-    const data = {
+    if (client === true) {
+
+    event.preventDefault();
+    setErrorMsg('');
+     // Create client
+     const data = {
       name: lastname,
       firstname: firstname,
       adresse_client: address,
       telephone_client: telephone,
       email_client: email
     };
-  
     ClientDataService.create(data)
       .then(response => {
         console.log(response.data);
         setInfosClients(response.data);
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Created', life: 3000 });
+        setLastname('');
+        setFirstname('');
+        setAddress('');
+        setTelephone('');
+        setEmail('');
 
-  
-        // Création du compte client uniquement si le client a été créé avec succès
+        // create compte client
         const dataCompteClient = {
           numCompteClient: numCompteClient,
           num_compte_banque: num_compte_banque,
           descriptionClient: descriptionClient,
           client_id: response.data.client_id
         };
-  
+        const dataUser = {
+          username: username,
+          password: password,
+          email: email,
+          role: role,
+          client_id: response.data.client_id
+        };
         compteClientDataService.create(dataCompteClient)
           .then(response => {
             console.log(response.data);
             setInfosCompteClients(response.data);
             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Client Created', life: 3000 });
-
-  
-            // Création de l'utilisateur uniquement si le compte client a été créé avec succès
-            const dataUser = {
-              username: username,
-              password: password,
-              email: email,
-              role: role,
-              client_id: response.data.client_id
-            };
-  
+            setNumCompteClient('');
+            setNum_compte_banque('');
+            setDescriptionClient('');
+            // create user
             auhtService.register(dataUser)
               .then(response => {
                 console.log(response.data);
@@ -118,146 +112,52 @@ function Register() {
                 setConfirmPassword('');
                 setEmail('');
                 setRole('');
-                setNumCompteClient('');
-                setNum_compte_banque('');
-                setDescriptionClient('');
-                setLastname('');
-                setFirstname('');
-                setAddress('');
-                setTelephone('');
-                setEmail('');
-              })
+                
+              }
+              )
               .catch(e => {
                 console.log(e);
                 toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'User Not Created', life: 3000 });
               });
-          })
+          }
+          )
           .catch(e => {
             console.log(e);
             toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Compte Client Not Created', life: 3000 });
-            // delete client
-            ClientDataService.delete(response.data.client_id)
-              .then(response => {
-                console.log(response.data);
-                toast.current.show({ severity: 'error', summary: 'Successful', detail: 'Suite à une erreur de création, le client a été supprimé', life: 3000 });
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Veuillez réessayer', life: 3000 });
-              }
-              )
           });
-      })
+      }
+      )
       .catch(e => {
         console.log(e);
         toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Client Not Created', life: 3000 });
       });
-  };
-
-
-  
-
-  // const registerUser = (event) => {
-  //   event.preventDefault();
-  //   if (client === true) {
-
-  //   event.preventDefault();
-  //   setErrorMsg('');
-  //    // Create client
-  //    const data = {
-  //     name: lastname,
-  //     firstname: firstname,
-  //     adresse_client: address,
-  //     telephone_client: telephone,
-  //     email_client: email
-  //   };
-  //   ClientDataService.create(data)
-  //     .then(response => {
-  //       console.log(response.data);
-  //       setInfosClients(response.data);
-  //       toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Created', life: 3000 });
-  //       setLastname('');
-  //       setFirstname('');
-  //       setAddress('');
-  //       setTelephone('');
-  //       setEmail('');
-
-  //       // create compte client
-  //       const dataCompteClient = {
-  //         numCompteClient: numCompteClient,
-  //         num_compte_banque: num_compte_banque,
-  //         descriptionClient: descriptionClient,
-  //         client_id: response.data.client_id
-  //       };
-  //       const dataUser = {
-  //         username: username,
-  //         password: password,
-  //         email: email,
-  //         role: role,
-  //         client_id: response.data.client_id
-  //       };
-  //       compteClientDataService.create(dataCompteClient)
-  //         .then(response => {
-  //           console.log(response.data);
-  //           setInfosCompteClients(response.data);
-  //           toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Client Created', life: 3000 });
-  //           setNumCompteClient('');
-  //           setNum_compte_banque('');
-  //           setDescriptionClient('');
-  //           // create user
-  //           auhtService.register(dataUser)
-  //             .then(response => {
-  //               console.log(response.data);
-  //               setUserId(response.data.user_id);
-  //               toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
-  //               setUsername('');
-  //               setPassword('');
-  //               setConfirmPassword('');
-  //               setEmail('');
-  //               setRole('');
-                
-  //             }
-  //             )
-  //             .catch(e => {
-  //               console.log(e);
-  //               toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'User Not Created', life: 3000 });
-  //             });
-  //         }
-  //         )
-  //         .catch(e => {
-  //           console.log(e);
-  //           toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Compte Client Not Created', life: 3000 });
-  //         });
-  //     }
-  //     )
-  //     .catch(e => {
-  //       console.log(e);
-  //       toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Client Not Created', life: 3000 });
-  //     });
-  //   } else {
-  //     const dataUser = {
-  //       username: username,
-  //       password: password,
-  //       email: email,
-  //       role: role,
-  //     };
-  //     auhtService.register(dataUser)
-  //       .then(response => {
-  //         console.log(response.data);
-  //         setUserId(response.data.user_id);
-  //         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
-  //         setUsername('');
-  //         setPassword('');
-  //         setConfirmPassword('');
-  //         setEmail('');
-  //         setRole('');
+    } else {
+      const dataUser = {
+        username: username,
+        password: password,
+        email: email,
+        role: role,
+      };
+      auhtService.register(dataUser)
+        .then(response => {
+          console.log(response.data);
+          setUserId(response.data.user_id);
+          toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+          setUsername('');
+          setPassword('');
+          setConfirmPassword('');
+          setEmail('');
+          setRole('');
           
-  //       }
-  //       )
-  //       .catch(e => {
-  //         console.log(e);
-  //         toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'User Not Created', life: 3000 });
-  //       }
-  //       );
-  //   }
-  // };
+        }
+        )
+        .catch(e => {
+          console.log(e);
+          toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'User Not Created', life: 3000 });
+        }
+        );
+    }
+  };
 
 
 
@@ -272,14 +172,15 @@ function Register() {
 
 
   return (
-    <>
+    <div className="p-grid p-fluid" >
       <Toast ref={toast}  />
+      
       <div className="login" id="login">
-      <img src={logo} alt="logo" className="logo" style={{width: '50%', height: '50%'}}/>
 
 
-        <form className="p-fluid" >
-          
+        <form className="card" id="form" style={{maxHeight: '55vh', overflowY: 'auto'}} onSubmit={registerUser}>
+        <img src={logo} alt="Logo" className="logo" style = {{marginLeft: 'auto', marginRight: 'auto', display: 'block'}} />
+
           <div className="facture-section">
           <div className="section-three">
             <span className="p-input-icon-right">
@@ -377,7 +278,7 @@ function Register() {
             </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -20,7 +20,6 @@
   max-width: 800px;
   margin: 0 auto;
 
-  flex-wrap: wrap;
 
 }
 
@@ -32,11 +31,18 @@
 
 .profileCard {
   display: flex;
-  flex-wrap: wrap;
+
   width: 100%; /* Ajustez la largeur selon vos besoins */
 
 }
 
+@media (max-width: 991.98px) {
+  .col-md-4,
+  .col-md-8 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
 
 
 

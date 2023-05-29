@@ -4,6 +4,7 @@ import { Button } from 'primereact/button';
 import { Avatar } from 'primereact/avatar';
 import { Divider } from 'primereact/divider';
 import {Dialog } from 'primereact/dialog';
+
 import Register from "../components/Register/register.component";
 
 
@@ -21,11 +22,9 @@ const Profile = () => {
   const [dataClient, setDataClient] = React.useState([]);
   const [displayDialogRegister, setDisplayDialogRegister] = React.useState(false);
 
-
   const openDialogRegister = () => {
-  setDisplayDialogRegister(true);
-}
-
+    setDisplayDialogRegister(true);
+  }
 
   const facturesData = () => {
     const dataClient = decoded.user_id.client_id;
@@ -155,6 +154,8 @@ return (
                          ))}
             </div>
 
+            
+
           </div>
             </div>
 
@@ -235,42 +236,46 @@ return (
             </div>
             </div>
             </div>
+
+
         </div>
 
         
       ) : (
-        <div style={{width : '25%', position : 'relative', left : '50%', transform : 'translateX(-50%)'}}>
-          <div className="col-md-4" style={{height : 'fit-content', width : '100%', position: 'relative', left: '50%', transform: 'translateX(-50%)'}}>
-            {/* changer le style si decoder.user est tel ou un tel */}
-            <div className="card mb-4">
+        <div className="col-md-4" style={{height : 'fit-content', position : 'relative', left : '50%', transform : 'translateX(-50%)'}}>
+        {/* changer le style si decoder.user est tel ou un tel */}
+        <div className="card mb-4">
 
-          <div className="p-text-center">
-          <Avatar
-              
-              shape="circle"
-              size="xlarge"
-              className="p-mb-2"
-              style={{ width: '100px', height: '100px', position: 'relative', left: '50%', transform: 'translateX(-50%)' }}
-            ><i className="pi pi-user" style={{ fontSize: '50px' }}></i></Avatar>
-            
-            <p className="p-text-muted p-mb-1" style={{ textAlign: 'center', marginBottom:'5px' }}>Membre du conseil de gérance</p>
-            <p className="p-text-muted" style={{ textAlign: 'center' }}>Membre depuis ***</p>
-            <div className="p-d-flex p-justify-center p-mb-2" style={{ textAlign: 'center' }}>
-                 <Button label="Ajouter un utilisateur" onClick={openDialogRegister} className="p-button-success p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
-                 <Dialog header="Ajouter un utilisateur" visible={displayDialogRegister} onHide={() => setDisplayDialogRegister(false)} maximizable style={{ width: '50vh', height:'100vh' }}>
-  <Register  />
-</Dialog>
-            </div>
-            
-
-          </div>
+      <div className="p-text-center">
+        <Avatar
           
+          shape="circle"
+          size="xlarge"
+          className="p-mb-2"
+          style={{ width: '100px', height: '100px', position: 'relative', left: '50%', transform: 'translateX(-50%)' }}
+        ><i className="pi pi-user" style={{ fontSize: '50px' }}></i></Avatar>
+        
+        <p className="p-text-muted p-mb-1" style={{ textAlign: 'center' }}>{decoded.role == "user" ? "Propriétaire/locataire" : "Membre du conseil de gérance"}</p>
+        <p className="p-text-muted" style={{ textAlign: 'center' }}>Membre depuis 2019</p>
+        <div className="p-d-flex p-justify-center p-mb-2" style={{ textAlign: 'center' }}>
+          {decoded && decoded.role == "user" ? (
+            <span>
+          <Button label="Supprimer mes données" className="p-button-danger p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
+          <Button label="Contacter un membre du conseil de gérance" className="p-button-success p-ml-1" style={{ width: '100%' }} />
+          </span>
+          ) : ( decoded && decoded.role == "admin" ? (
+             <Button label="Ajouter un utilisateur" onClick={openDialogRegister} className="p-button-success p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
 
-          </div>
+          ) : (null
+                     ))}
+        </div>
+        {/* Dialog with the component register */}
+        
 
-          </div>
-          
-          </div>
+      </div>
+        </div>
+
+      </div>
           
       )}
 
@@ -280,6 +285,13 @@ return (
 
       </div>
     </section>
+    <div className="p-grid" style={{}}>
+    <Dialog header="Ajouter un utilisateur" visible={displayDialogRegister} onHide={() => setDisplayDialogRegister(false)} maximizable style={{ width: '50vh', height:'70vh' }}>
+
+  <Register  />
+
+</Dialog>
+</div>
     
     </div>
     
