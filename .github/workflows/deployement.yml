@@ -18,6 +18,8 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.PASSWORD }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+
           script : |
             cd TFE-2022-2023
             
@@ -36,6 +38,8 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.PASSWORD }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+
           script : |
             cd TFE-2022-2023
             git pull
@@ -54,6 +58,8 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.PASSWORD }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+
           script: |
             ls
             cd TFE-2022-2023
