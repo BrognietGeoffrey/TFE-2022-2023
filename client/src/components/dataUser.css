@@ -1,0 +1,6 @@
+.section-three:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.40);
+    border-radius: 5px;
+    /* temps d'apparition du shade */
+    transition: 0.5s;
+}
