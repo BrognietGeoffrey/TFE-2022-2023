@@ -69,7 +69,7 @@ export const Analyse = () => {
       // Faire une liste des clients avec le noms des clients et leur id 
       const clientListWithFacture = facturier.map((bill) => {
         return {
-          id: bill.compte_client.client.client_id,
+          id: bill.compte_client ? bill.compte_client.client.client_id : null,
           nom: bill.compte_client.client.name, 
           prenom : bill.compte_client.client.firstname
         };
@@ -83,7 +83,7 @@ export const Analyse = () => {
       );
       // maintenant trouver toutes les factures payés et non payées pour chaque client
       const clientListWithFactures = clientListWithFactureWithoutDuplicates.map((client) => {
-        const factures = facturier.filter((bill) => bill.compte_client.client.client_id === client.id);
+        const factures = facturier.filter((bill) => bill.compte_client ? bill.compte_client.client.client_id === client.id : null);
         // ajouter la liste des factures payés et non payées pour chaque client
         return {
           id: client.id,
@@ -344,8 +344,19 @@ const retrieveLogs = async () => {
     }
     );
     setWeekFactures(weekFactures);
-    console.log(weekFactures);
+    // Find for all factures the due_date and check if it is in the current week, add it to the array
+    const factureToBePaid = []
+    for (let i = 0; i < facturier.length; i++) {
+      const facture = facturier[i];
+      console.log(facture);
+      const factureDate = new Date(facture.facture.due_date);
+      if (factureDate > monday) {
+        factureToBePaid.push(facture);
+      }
+    }
+    console.log(factureToBePaid);
   };
+
 
   useEffect(() => {
     previousWeekFacturation();
@@ -494,6 +505,32 @@ const retrieveLogs = async () => {
 
       </section>
       <section className="testimonials">
+        <div className="card">
+          {/* graphique indiquant le nombre de facture a payé cette semaine ci, le nombre déjà payé et le nombre non payé */}
+          <h3>Statuts des factures cette semaine</h3>
+          {billNotPayed && billNotPayed.length > 0 && (
+            console.log(weekFactures, "weekFactures"),
+            <div>
+              <Chart type="pie" data={
+                {
+                  labels: ['Factures payées', 'Factures non payées'],
+                  datasets: [
+                    {
+                      // data: [weekFacturesPayed.length, weekFacturesNotPayed.length],
+                      backgroundColor: [
+                        "#FF6384",
+                        "#36A2EB"
+                      ],
+                      hoverBackgroundColor: [
+                        "#FF6384",
+                        "#36A2EB"
+                      ]
+                    }]
+                }
+              } />
+            </div>
+          )}
+        </div>
 
         <div className="card" style={{maxHeight: '500px', overflow: 'auto'}}>
           <h3>Les clients et leurs factures </h3>
@@ -593,11 +630,6 @@ const retrieveLogs = async () => {
 
     )
 }
-
-
-                    
-    
-    
 
 export default Analyse
 
