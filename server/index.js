@@ -88,10 +88,6 @@ app.post('/api/ocr-mindee', upload.single('file'), (req, res) => {
       if (resp.document === undefined) {
         throw new Error('Failed to parse document with Mindee API');
       }
-
-      console.log(resp.document); // Full object
-      console.log(resp.document.toString()); // String summary
-
       res.send(resp.document); // Send the parsed data back to the client
     })
     .catch((error) => {
