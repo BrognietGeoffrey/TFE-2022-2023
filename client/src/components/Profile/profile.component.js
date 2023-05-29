@@ -8,9 +8,9 @@ import {Dialog } from 'primereact/dialog';
 import Register from "../components/Register/register.component";
 
 
-import FactureService from '../services/factureService';
+import FactureService from '../../services/factureService';
 import jwt_decode from "jwt-decode";
-import ClientService from "../services/clientService";
+import ClientService from "../../services/clientService";
 
 
 import './profile.css'
