@@ -394,6 +394,10 @@ const FacturierDatatable = () => {
         )
     }
 
+    const clientBodyTemplate = (rowData) => {
+        return rowData.compte_client.client.name + ' ' + rowData.compte_client.client.firstname;
+    }
+
     const header1 = renderHeader1();
 
     if (loading) {
@@ -420,6 +424,10 @@ const FacturierDatatable = () => {
                     <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom"  />
                          
                     <Column field='compte_fournisseur.fournisseur.num_fournisseur' header="N° de fournisseur" sortable  filter filterPlaceholder='Rechercher par N°'></Column>
+                    <Column field='compte_client.numCompteClient' header="N° de client" sortable  filter filterPlaceholder='Rechercher par N°'></Column>
+
+                    <Column field='compte_client.client.name' header="Nom et prénom du client" sortable  filter filterPlaceholder='Rechercher par nom ou prénom' body={clientBodyTemplate}></Column>
+
                     <Column field='facture.objet.title' header="Objet" sortable filter filterPlaceholder='Rechercher par objet...' ></Column>
                     <Column field="facture.facture_date" header="Date de la facture" sortable filterField="date" dataType="date"  body={dateBodyFactureTemplate} filter filterElement={dateFilterTemplate} />
                     <Column field="facture.num_facture" header="N° de facture" sortable filter filterPlaceholder="Rechercher par N°"  body={numfactureBodyTemplate}/>
