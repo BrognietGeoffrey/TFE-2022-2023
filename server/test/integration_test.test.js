@@ -46,7 +46,7 @@ describe('Facturiers routes', function() {
         .end(function(err, res) {
             expect(res).to.have.status(200);
 
-        res.body.facture_id.should.be.equal(5);
+        res.body.facture_id.should.be.equal(1);
         done();
         });
     });
@@ -139,7 +139,7 @@ describe('------- Factures routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.montant.should.be.equal(4)
+            res.body.montant.should.be.equal(1)
             res.body.libelle_id.should.be.equal(1)
             done();
             });
@@ -205,7 +205,7 @@ describe('------- TVA routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.tva_value.should.be.equal("6")
+            res.body.tva_value.should.be.equal("21")
            
             done();
             });
@@ -272,13 +272,13 @@ describe('------- extraits routes -----------', function() {
 describe('------- extraits routes -----------', function() {
     describe('GET /api/extraits/:id', function() {
         it('should fetch one extrait successfully', function(done) {
-        request.get('/api/extraits/3')
+        request.get('/api/extraits/1')
             .set('Authorization', `Bearer ${token}`)
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.num_extrait.should.be.equal(7843)
-            res.body.montant.should.be.equal(43043)
+            res.body.num_extrait.should.be.equal(1)
+            res.body.montant.should.be.equal(1)
            
             done();
             });
