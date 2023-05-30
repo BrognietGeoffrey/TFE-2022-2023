@@ -169,9 +169,11 @@ export const Analyse = () => {
             className="custom-button-logs p-button-link"
             tooltip="N° de facture"
             tooltipOptions={{ position: 'left' }}
-            onClick={rowData.facture !== undefined ? () => handleShowDetails(rowData) : null}
+            onClick={rowData.facture !== null ? () => handleShowDetails(rowData) : '/'}
+            disabled={rowData.facture !== null ? false : true}
           >
-            {rowData.facture !== undefined && rowData.facture.num_facture !== undefined ? rowData.facture.num_facture : '/'}
+            {console.log(rowData.facture)}
+            {rowData.facture !== null && rowData.facture.num_facture !== null ? rowData.facture.num_facture : '/'}
           </Button>
         </span>
       );
