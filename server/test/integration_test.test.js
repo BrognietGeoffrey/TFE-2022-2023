@@ -41,7 +41,7 @@ describe('Facturiers routes', function() {
   });
   describe('GET /api/facturiers/:id', function() {
     it('should fetch one facturier successfully', function(done) {
-    request.get('/api/facturiers/5')
+    request.get('/api/facturiers/1')
         .set('Authorization', `Bearer ${token}`)
         .end(function(err, res) {
             expect(res).to.have.status(200);
@@ -134,7 +134,7 @@ describe('------- Factures routes -----------', function() {
   describe('------- Facture routes -----------', function() {
     describe('GET /api/facture/:id', function() {
         it('should fetch one objet successfully', function(done) {
-        request.get('/api/facture/4')
+        request.get('/api/facture/1')
             .set('Authorization', `Bearer ${token}`)
             .end(function(err, res) {
                 expect(res).to.have.status(200);
