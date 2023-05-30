@@ -349,7 +349,7 @@ describe('------- fournisseur routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.name.should.be.equal("Geoffrey Brogniet1")
+            res.body.name.should.be.equal("Geoffrey Brogniet")
             res.body.num_fournisseur.should.be.equal(1)
            
             done();
