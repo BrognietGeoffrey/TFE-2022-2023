@@ -22,13 +22,10 @@ import PrivateRoute from './services/PrivateRoute';
 import jwt_decode from 'jwt-decode';
 import {Toast } from 'primereact/toast';
 
-
 const App = () => {
-
     const [menuIsVisible, setMenuIsVisible] = useState(false);
     const user =localStorage.getItem('role')
     const toast = useRef(null);
-
     const menu = [
         { label: "Mes données", to: "/userData", icon: faBook, isVisible: user === 'user' ? true : false},
         { label: "Contact", to: "/contact", icon: faHome, isVisible: user === 'user' ? true : false},
@@ -36,13 +33,10 @@ const App = () => {
         {label : 'Base de données', to : '/allData', icon: faFileContract, isVisible : user === 'admin' || user === 'moderator' ? true : false},
         { label: "Analyse", to: "/analyse", icon: faHome, isVisible: user === 'admin' || user === 'moderator' ? true : false},
         { label: "Facturiers", to: "/facturiers", icon: faFileSignature, isVisible: user === 'admin' || user === 'moderator' ? true : false},
-        // hash 
         {label : 'Aide', to : '/aide', icon: faCircleQuestion , isVisible : user === 'admin' || user === 'moderator' ? true : false},
         {label : 'Profil', to : '/profile', icon: faHardHat, isVisible : true, isLast: true},
 
     ];
-
-
     const onToggleMenu = () => {
         setMenuIsVisible(!menuIsVisible);
     }
@@ -69,25 +63,13 @@ const App = () => {
             localStorage.removeItem('role')
             window.location.reload();
         }
-
     }
-
     setInterval(checkTimeSession, 300000);
-
-
-
-
 
     if (isLoggedIn()) {  
         console.log(user)  
-        // si l'utilisateur connecté est un user, il est redirigé vers la page de profil
-       
-  
-
         return (
-        
         <Router>
-            <Toast ref={toast} />
             <div className="main-window">
                 {/* Checker le temps restant de connexion toutes les minutes, si le temps est bientot fini, afficher un message */}
                 <Toast ref={toast} />
@@ -113,11 +95,8 @@ const App = () => {
                                 <Redirect to="/redirect" exact component={RedirectionPage} />
                             </Route>
                         </Switch>
-                    
-                    </div>
-                   
+                    </div> 
                 </div>
-
             </div>
         </Router>);
     } else {
@@ -131,7 +110,6 @@ const App = () => {
                 </Switch>
             </Router>);
     }
-
 }
 
 export default App;
