@@ -1,11 +1,12 @@
 import react from 'react';
-import { useEffect, useState, useCallback } from 'react';
-import {InputText} from 'primereact/inputtext';
-import {DataTable} from 'primereact/datatable';
-import {Column} from 'primereact/column';
-import {Toast } from 'primereact/toast';
+import { useEffect, useState } from 'react';
+import { InputText } from 'primereact/inputtext';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import './allData.css'
 
 
 import ClientDataService from '../../services/clientService';
@@ -18,50 +19,64 @@ const ClientDatatable = () => {
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
 
     const [filters1, setFilters1] = useState(null)
-    const getClients = useCallback(() => {
-        ClientDataService.getAll()
-          .then((response) => {
-            setClients(response.data);
-            console.log(response.data, 'response.data');
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }, []);
-      
-      const getCompteClient = useCallback(() => {
-        compteClientService.getAll()
-          .then((response) => {
-            setCompteClient(response);
-            console.log(response, 'response.data');
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }, []);
-      
-      useEffect(() => {
-        getClients();
-      }, [getClients]);
-      
-      useEffect(() => {
-        getCompteClient();
-      }, [getCompteClient]);
-
+    const [rows, setRows] = useState(10);
 
     useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth <= 480) {
+                setRows(5);
+            } else {
+                setRows(10);
+            }
+        };
+
+        // Écoute les événements de redimensionnement de la fenêtre
+        window.addEventListener('resize', handleResize);
+
+        // Définit la valeur initiale en fonction de la taille de l'écran
+        handleResize();
+
+        // Nettoie l'écouteur d'événement lorsqu'un composant est démonté
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+    const getClients = () => {
+        ClientDataService.getAll().then((response) => {
+            setClients(response.data);
+            console.log(response.data, 'response.data');
+        })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const getCompteClient = () => {
+        compteClientService.getAll().then((response) => {
+            setCompteClient(response);
+            console.log(response, 'response.data');
+        })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    useEffect(() => {
+        getClients();
+        getCompteClient();
         initFilters1();
-      }, []);
+
+    }, []);
 
     const onRowEditComplete = (e) => {
         console.log(e)
         const data = {
             name: e.newData["client.name"],
             firstname: e.newData["client.firstname"],
-            email_client: e.newData["client.email_client"], 
+            email_client: e.newData["client.email_client"],
             adresse_client: e.newData["client.adresse_client"],
             telephone_client: e.newData["client.telephone_client"],
-            description : e.newData["client.description"],
+            description: e.newData["client.description"],
 
         }
         const dataCompteClient = {
@@ -70,35 +85,35 @@ const ClientDatatable = () => {
         }
         // update client data and compte client data
         ClientDataService.update(e.data.client_id, data)
-        .then((response) => {   
-            console.log(response.data);
-            toast.current.show({ severity: 'success', summary: 'Success', detail: 'Client Updated', life: 3000 });
-            getCompteClient();
+            .then((response) => {
+                console.log(response.data);
+                toast.current.show({ severity: 'success', summary: 'Success', detail: 'Client Updated', life: 3000 });
+                getCompteClient();
+            }
+            )
+            .catch((error) => {
+                console.log(error);
+            }
+            );
+        if (e.data.numCompteClient != e.newData.numCompteClient || e.data.num_compte_banque != e.newData.num_compte_banque) {
+            compteClientService.update(e.data.co_client_id, dataCompteClient)
+                .then((response) => {
+                    console.log(response.data);
+                    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Compte Client Updated', life: 3000 });
+                    getCompteClient();
+                }
+                )
+                .catch((error) => {
+                    console.log(error);
+                }
+                );
         }
-        )
-        .catch((error) => {
-            console.log(error);
-        }
-        );
-        if (e.data.numCompteClient !== e.newData.numCompteClient || e.data.num_compte_banque !== e.newData.num_compte_banque) {
-        compteClientService.update(e.data.co_client_id, dataCompteClient)
-        .then((response) => {
-            console.log(response.data);
-            toast.current.show({ severity: 'success', summary: 'Success', detail: 'Compte Client Updated', life: 3000 });
-            getCompteClient();
-        }
-        )
-        .catch((error) => {
-            console.log(error);
-        }
-        );
     }
-    }
 
 
 
-        
-    
+
+
 
     const textEditor = (options) => {
         console.log(options)
@@ -130,7 +145,7 @@ const ClientDatatable = () => {
             'client.telephone_client': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             'client.description': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
             'numCompteClient': { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-            'num_compte_banque': {  operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'num_compte_banque': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
 
         });
         setGlobalFilterValue1('');
@@ -138,7 +153,7 @@ const ClientDatatable = () => {
 
     const renderHeader1 = () => {
         return (
-            <div className="flex justify-content-between">
+            <div className="flex justify-content-between" id="header">
                 <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
@@ -156,7 +171,8 @@ const ClientDatatable = () => {
     return (
         <div>
             <Toast ref={toast} />
-            <DataTable value={compteClient} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['client.name', 'numCompteClient', 'client.firstname', 'client.adresse_client', 'client.telephone_client','num_compte_banque', 'client.email_client', 'client.description', 'createdAt']} filters={filters1}>
+            <DataTable value={compteClient} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['client.name', 'numCompteClient', 'client.firstname', 'client.adresse_client', 'client.telephone_client', 'num_compte_banque', 'client.email_client', 'client.description', 'createdAt']} filters={filters1}
+                paginator rows={rows} rowsPerPageOptions={[5, 10, 25, 50]} emptyMessage="Aucun client trouvé." currentPageReportTemplate="{first}-{last} sur {totalRecords}">
                 <Column field="client.name" header="Nom" sortable editor={(options) => textEditor(options)} filter ></Column>
                 <Column field="client.firstname" header="Prénom" sortable editor={(options) => textEditor(options)} filter ></Column>
                 <Column field="client.email_client" header="Email" sortable editor={(options) => textEditor(options)} filter ></Column>
@@ -165,7 +181,7 @@ const ClientDatatable = () => {
                 <Column field="client.description" header="Description" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="numCompteClient" header="Numéro de compte" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="num_compte_banque" header="N° de compte en banque" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="createdAt" header="Date de création" body={(rowData) => { return (<div>{new Date(rowData.createdAt).toLocaleDateString()}</div>)}} ></Column>
+                <Column field="createdAt" header="Date de création" body={(rowData) => { return (<div>{new Date(rowData.createdAt).toLocaleDateString()}</div>) }} ></Column>
 
 
                 <Column rowEditor></Column>

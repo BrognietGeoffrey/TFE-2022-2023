@@ -1,0 +1,22 @@
+.p-tabview-title {
+    margin-right: 1em;
+}
+
+@media (max-width: 480px) {
+    .logo {
+        width: 30%;
+    }
+}
+
+@media (max-width: 480px) {
+    #header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .p-button-outlined {
+        margin-bottom: 1em;
+    }
+
+}
