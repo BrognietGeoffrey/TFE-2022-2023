@@ -44,7 +44,6 @@ const FournisseurDatatable = () => {
     const getFournisseurs = () => {
         fournisseurService.getAll().then((response) => {
             setFournisseur(response.data);
-            console.log(response.data, 'response.data');
         })
         .catch((error) => {
             console.log(error);
@@ -54,7 +53,6 @@ const FournisseurDatatable = () => {
     const getCompteFournisseur = () => {
         compteFournisseurService.getAll().then((response) => {
             setCompteFournisseur(response);
-            console.log(response.data, 'response.data');
         })
         .catch((error) => {
             console.log(error);
@@ -84,6 +82,7 @@ const FournisseurDatatable = () => {
         // si au moins une data de data a été modifié alors on fait appel à la fonction update
         if (e.data.name != e.newData["fournisseur.data.name"] || e.data.email_fournisseur != e.newData["fournisseur.data.email_fournisseur"] || e.data.adresse_fournisseur != e.newData["fournisseur.data.adresse_fournisseur"] || e.data.telephone_fournisseur != e.newData["fournisseur.data.telephone_fournisseur"] || e.data.num_fournisseur != e.newData["fournisseur.data.num_fournisseur"] || e.data.description != e.newData["fournisseur.data.description"]) {
         fournisseurService.update(e.data.fournisseur_id, data)
+        console.log(e)
         .then((response) => {   
             console.log(response.data);
             toast.current.show({ severity: 'success', summary: 'Modification effectuée', detail: 'Fournisseur modifié', life: 3000 });
@@ -169,7 +168,7 @@ const FournisseurDatatable = () => {
     return (
         <div>
             <Toast ref={toast} />
-            <DataTable value={compteFournisseur} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['fournisseur.data.name', 'numCompteFournisseur', , 'fournisseur..data.adresse_fournisseur', 'fournisseur.data.telephone_fournisseur','num_compte_banque', 'fournisseur.data.email_fournisseur', 'fournisseur.data.description', 'createdAt']} filters={filters1}
+            <DataTable value={compteFournisseur} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['fournisseur.data.name', 'numCompteFournisseur', , 'fournisseur.data.adresse_fournisseur', 'fournisseur.data.telephone_fournisseur','num_compte_banque', 'fournisseur.data.email_fournisseur', 'fournisseur.data.description', 'createdAt']} filters={filters1}
             rows={rows} paginator rowsPerPageOptions={[5, 10, 25, 50]} emptyMessage="Aucun compte fournisseur trouvé.">
                 <Column field="fournisseur.data.name" header="Nom" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="fournisseur.data.email_fournisseur" header="Email" sortable editor={(options) => textEditor(options)} filter ></Column>
