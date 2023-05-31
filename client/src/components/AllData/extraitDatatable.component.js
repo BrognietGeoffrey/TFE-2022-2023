@@ -12,10 +12,10 @@ const AllData = () => {
     const getExtrait = () => {
         ExtraitDataService.getAll()
             .then(response => {
-                setExtraits(response.data);
+                setExtraits(response.data.data);
                 console.log(response.data);
                 // trier les données par date
-                setExtraits(response.data.sort((a, b) => (a.date_extrait > b.date_extrait) ? 1 : -1));
+                setExtraits(response.data.data.sort((a, b) => (a.date_extrait > b.date_extrait) ? 1 : -1));
             })
             .catch(e => {
                 console.log(e);

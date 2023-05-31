@@ -43,7 +43,7 @@ const ClientDatatable = () => {
     }, []);
     const getClients = () => {
         ClientDataService.getAll().then((response) => {
-            setClients(response.data);
+            setClients(response.data.data);
             console.log(response.data, 'response.data');
         })
             .catch((error) => {

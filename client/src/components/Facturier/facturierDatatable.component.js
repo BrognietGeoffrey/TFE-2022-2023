@@ -105,7 +105,7 @@ const FacturierDatatable = () => {
     const getExtraitList = async () => {
         const extraitList = await ExtraitDataService.getAll();
         console.log(extraitList);
-        setExtraitList(extraitList.data.map(extrait => {
+        setExtraitList(extraitList.data.data.map(extrait => {
             return {
                 num_extrait: extrait.num_extrait,
                 value: extrait.extrait_id, 
