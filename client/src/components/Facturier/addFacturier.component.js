@@ -1668,13 +1668,13 @@ const AddFacturier = () => {
 
 
                             <Button onClick={(e) => onClick('displayTva', 'center', e)} icon="pi pi-plus" className="p-button-success" />
-                            <Dialog header="Ajouter une TVA" visible={displayTva} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayTva')} className="tvaDialog">
+                            <Dialog header="Ajouter une TVA" visible={displayTva} footer={renderFooter} onHide={() => onHide('displayTva')} className="tvaDialog">
                                 <Toast ref={toastAddon} />
 
                                 <Button onClick={(e) => onClick('displayTvaList', 'center', e)} className="p-button-info" badge={tvaList.length} tooltip="Liste des TVA's" tooltipOptions={{ position: 'right' }}>
                                     Liste des TVA
                                 </Button>
-                                <Dialog header="Liste des TVA" visible={displayTvaList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayTvaList')} className="tvaDialog">
+                                <Dialog header="Liste des TVA" visible={displayTvaList}  footer={renderFooter} onHide={() => onHide('displayTvaList')} className="tvaDialog">
                                     <DataTable value={tvaList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive filter editMode="row" onRowEditComplete={onRowEditComplete}>
                                         <Column field="label" header="Valeur de la TVA" sortable editor={(options) => textEditor(options)} />
                                         <Column field="tva_description" header="Description " sortable editor={(options) => textEditor(options)} />
