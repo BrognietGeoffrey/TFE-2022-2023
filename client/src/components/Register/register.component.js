@@ -97,19 +97,19 @@ function Register() {
               )
               .catch(e => {
                 console.log(e);
-                toast.current.show({ severity: 'error', summary: 'Création échouée', detail: error.response.data.message, life: 3000 });
+                toast.current.show({ severity: 'error', summary: 'Création échouée', detail: e.response.data.message, life: 3000 });
               });
           }
           )
           .catch(e => {
             console.log(e);
-            toast.current.show({ severity: 'error', summary: 'Création échouée', detail: error.response.data.message, life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Création échouée', detail: e.response.data.message, life: 3000 });
           });
       }
       )
       .catch(e => {
         console.log(e);
-        toast.current.show({ severity: 'error', summary: 'Création échouée', detail: error.response.data.message, life: 3000 });
+        toast.current.show({ severity: 'error', summary: 'Création échouée', detail: e.response.data.message, life: 3000 });
       });
     } else {
       const dataUser = {
@@ -133,7 +133,7 @@ function Register() {
         )
         .catch(e => {
           console.log(e);
-          toast.current.show({ severity: 'error', summary: 'Création échouée', detail: error.response.data.message, life: 3000 });
+          toast.current.show({ severity: 'error', summary: 'Création échouée', detail: e.response.data.message, life: 3000 });
         }
         );
     }

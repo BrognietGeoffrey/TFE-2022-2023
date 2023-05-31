@@ -4,6 +4,7 @@ import {InputText} from 'primereact/inputtext';
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import userService from '../../services/userService';
 import './allData.css'
@@ -13,6 +14,7 @@ const UsersDatatable = () => {
 
     const [filters1, setFilters1] = useState(null)
     const [rows, setRows] = useState(10);
+    const toast = react.useRef(null);
 
     useEffect(() => {
       const handleResize = () => {
@@ -118,6 +120,7 @@ const UsersDatatable = () => {
 
     return (
         <div>
+            <Toast ref={toast} />
             <DataTable value={users} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['user.username', 'user.email', 'role.name', 'user.createdAt']} filters={filters1}
                 paginator rows={rows} rowsPerPageOptions={[5, 10, 25, 50]} stripedRows>
                 <Column field="user.username" header="Nom d'utilisateur" sortable editor={(options) => textEditor(options)} filter></Column>
