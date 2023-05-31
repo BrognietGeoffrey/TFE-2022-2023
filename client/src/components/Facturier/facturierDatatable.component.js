@@ -417,7 +417,7 @@ const FacturierDatatable = () => {
                      rowsPerPageOptions={[10,25,50]}
                      rowHover  loading={loading} dataKey="id" ref={dt} exportFilename={exportFileName}
                     emptyMessage="Aucunes données trouvées." scrollable header={header1} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}
+                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }} filters={filters1}
                     globalFilterFields={['facture.num_facture_lamy,compte_fournisseur.fournisseur.name,compte_fournisseur.fournisseur.num_fournisseur,compte_client.numCompteClient,compte_client.client.name,facture.objet.title,facture.facture_date,facture.libelle.title,decompte.num_decompte,facture.montant,facture.estpaye,facture.due_date,extrait.num_extrait,extrait.date_extrait']}>
 
                     <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ backgroundColor: '#f8f9fa' }}  />
