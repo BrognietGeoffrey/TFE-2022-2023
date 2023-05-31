@@ -70,19 +70,19 @@ const FournisseurDatatable = () => {
     const onRowEditComplete = (e) => {
         console.log(e)
         const data = {
-            name: e.newData["fournisseur.name"],
-            email_fournisseur: e.newData["fournisseur.email_fournisseur"], 
-            adresse_fournisseur: e.newData["fournisseur.adresse_fournisseur"],
-            telephone_fournisseur: e.newData["fournisseur.telephone_fournisseur"],
-            num_fournisseur: e.newData["fournisseur.num_fournisseur"],
-            description : e.newData["fournisseur.description"],
+            name: e.newData["fournisseur.data.name"],
+            email_fournisseur: e.newData["fournisseur.data.email_fournisseur"], 
+            adresse_fournisseur: e.newData["fournisseur.data.adresse_fournisseur"],
+            telephone_fournisseur: e.newData["fournisseur.data.telephone_fournisseur"],
+            num_fournisseur: e.newData["fournisseur.data.num_fournisseur"],
+            description : e.newData["fournisseur.data.description"],
         }
         const dataCompteClient = {
             numCompteFournisseur: e.newData.numCompteFournisseur,
             num_compte_banque: e.newData.num_compte_banque,
         }
         // si au moins une data de data a été modifié alors on fait appel à la fonction update
-        if (e.data.name != e.newData["fournisseur.name"] || e.data.email_fournisseur != e.newData["fournisseur.email_fournisseur"] || e.data.adresse_fournisseur != e.newData["fournisseur.adresse_fournisseur"] || e.data.telephone_fournisseur != e.newData["fournisseur.telephone_fournisseur"] || e.data.num_fournisseur != e.newData["fournisseur.num_fournisseur"] || e.data.description != e.newData["fournisseur.description"]) {
+        if (e.data.name != e.newData["fournisseur.data.name"] || e.data.email_fournisseur != e.newData["fournisseur.data.email_fournisseur"] || e.data.adresse_fournisseur != e.newData["fournisseur.data.adresse_fournisseur"] || e.data.telephone_fournisseur != e.newData["fournisseur.data.telephone_fournisseur"] || e.data.num_fournisseur != e.newData["fournisseur.data.num_fournisseur"] || e.data.description != e.newData["fournisseur.data.description"]) {
         fournisseurService.update(e.data.fournisseur_id, data)
         .then((response) => {   
             console.log(response.data);
@@ -128,11 +128,11 @@ const FournisseurDatatable = () => {
     const initFilters1 = () => {
         setFilters1({
             'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
-            'fournisseur.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'fournisseur.email_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'fournisseur.adresse_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'fournisseur.telephone_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'fournisseur.description': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'fournisseur.data.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'fournisseur.data.email_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'fournisseur.data.adresse_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'fournisseur.data.telephone_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'fournisseur.data.description': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
             'numCompteFournisseur': { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
             'num_compte_banque': {  operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
 
@@ -169,7 +169,7 @@ const FournisseurDatatable = () => {
     return (
         <div>
             <Toast ref={toast} />
-            <DataTable value={compteFournisseur} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['fournisseur.name', 'numCompteFournisseur', , 'fournisseur.adresse_fournisseur', 'fournisseur.telephone_fournisseur','num_compte_banque', 'fournisseur.email_fournisseur', 'fournisseur.description', 'createdAt']} filters={filters1}
+            <DataTable value={compteFournisseur} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['fournisseur.data.name', 'numCompteFournisseur', , 'fournisseur..data.adresse_fournisseur', 'fournisseur.data.telephone_fournisseur','num_compte_banque', 'fournisseur.data.email_fournisseur', 'fournisseur.data.description', 'createdAt']} filters={filters1}
             rows={rows} paginator rowsPerPageOptions={[5, 10, 25, 50]} emptyMessage="Aucun compte fournisseur trouvé.">
                 <Column field="fournisseur.data.name" header="Nom" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="fournisseur.data.email_fournisseur" header="Email" sortable editor={(options) => textEditor(options)} filter ></Column>
