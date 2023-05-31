@@ -109,11 +109,14 @@
 }
 
 /* Box shadow on hover card */
-.comment-item:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.19);
-  border-radius: 5px;
-}
+.comment-content:hover {
+  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  /* temps d'apparition du shade */
+  transition: 0.5s;
 
+
+}
 
 #card:hover {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.40);
