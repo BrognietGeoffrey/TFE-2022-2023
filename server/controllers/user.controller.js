@@ -14,11 +14,13 @@ const getAllUsers = async (req, res) => {
 
             ]
         });
-        res.send(users);
+        res.send({
+            message: "Les utilisateurs ont été récupérés avec succès.",
+            data: users
+        });
     } catch (err) {
-        res.status(200).send({
-            message:
-                err.message || "Some error occurred while retrieving users."
+        res.status(409).send({
+            message: "Une erreur s'est produite lors de la récupération des utilisateurs."
         });
     }
 }
@@ -38,11 +40,17 @@ const getUserByUsername = async (req, res, username) => {
         // On récupère le role de l'utilisateur
         const role = await Role.findByPk(userRole.roleId);
         // On renvoie l'utilisateur et son role
-        res.send({user, role});
+        res.send(
+            {
+                message: "L'utilisateur a été récupéré avec succès.",
+                data: {
+                    user: user,
+                    role: role
+            } 
+        });
     } catch (err) {
-        res.status(200).send({
-            message:
-                err.message || "Some error occurred while retrieving users."
+        res.status(409).send({
+            message: "Une erreur s'est produite lors de la récupération de l'utilisateur."
         });
     }
 }
@@ -56,11 +64,13 @@ const getUserAndClient = async (req, res) => {
                 }
             ]
         });
-        res.send(user);
+        res.send({
+            message: "Les utilisateurs ont été récupérés avec succès.",
+            data: user
+        });
     } catch (err) {
         res.status(409).send({
-            message:
-                err.message || "Some error occurred while retrieving users."
+            message: "Une erreur s'est produite lors de la récupération des utilisateurs."
         });
     }
 }
@@ -77,11 +87,13 @@ const updateUser = async (req, res) => {
         }, {
             where: {id: id}
         });
-        res.send(user);
+        res.send({
+            message: "L'utilisateur a été mis à jour avec succès.",
+            data: user
+        });
     } catch (err) {
         res.status(409).send({
-            message:
-                err.message || "Some error occurred while retrieving users."
+            message: "Une erreur s'est produite lors de la mise à jour de l'utilisateur."
         });
     }
 }

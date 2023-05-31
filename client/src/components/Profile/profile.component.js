@@ -5,7 +5,7 @@ import { Avatar } from 'primereact/avatar';
 import { Divider } from 'primereact/divider';
 import {Dialog } from 'primereact/dialog';
 
-import Register from "../components/Register/register.component";
+import Register from "../Register/register.component";
 
 
 import FactureService from '../../services/factureService';

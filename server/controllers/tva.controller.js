@@ -5,14 +5,15 @@ const { Tva } = require("../models");
 const findAllTva = (req, res) => {
     Tva.findAll()
     .then(data => {
-        res.send(data);
+        res.send({
+            message: "Liste des tva récupérée avec succès.",
+            data : data
+        });
     })
     .catch(err => {
-        res.status(500).send({
+        res.status(409).send({
             
-            message:
-            console.log(err) ||
-            err.message || "Some error occurred while retrieving tva."
+            message: "Malheureusement, une erreur s'est produite lors de la récupération des tva."
             
         });
     });
@@ -22,26 +23,29 @@ const findOneTva = (req, res) => {
 
     Tva.findByPk(id)
     .then(data => {
-        res.send(data);
+        res.send({
+            message: "Tva récupérée avec succès.",
+            data : data
+        });
     })
     .catch(err => {
-        res.status(500).send({
-            message: "Error retrieving tva with id=" + id
+        res.status(409).send({
+            message: "Erreur lors de la récupération de la tva avec l'id=" + id
         });
     });
 }
 const createTva = (req, res) => {
     // si champ vide alors erreur, si existe alors erreur
     if (!req.body.tva_value || !req.body.tva_description) {
-        res.status(400).send({
-            message: "Content can not be empty!"
+        res.status(409).send({
+            message: "La valeur de la tva et sa description sont obligatoires."
         });
         return;
     }
 
     if (req.body.tva_value < 0 || req.body.tva_value > 100) {
-        res.status(400).send({
-            message: "Tva value must be between 0 and 100"
+        res.status(409).send({
+            message: "La valeur de la tva doit être comprise entre 0 et 100."
         });
         return;
     }
@@ -50,8 +54,8 @@ const createTva = (req, res) => {
     Tva.findOne({ where: { tva_value: req.body.tva_value } || { description: req.body.description }})
     .then(data => {
         if (data) {
-            res.status(400).send({
-                message: "Tva value already exists!"
+            res.status(409).send({
+                message: "La tva existe déjà."
             });
             return;
         }
@@ -67,13 +71,15 @@ const createTva = (req, res) => {
     // Save tva in the database
     Tva.create(tva)
     .then(data => {
-        res.send(data);
+        res.send({
+            message: "La tva a été créée avec succès.",
+            data : data
+        });
     }
     )
     .catch(err => {
-        res.status(500).send({
-            message:
-            err.message || "Some error occurred while creating the tva."
+        res.status(409).send({
+            message: "Malheureusement, une erreur s'est produite lors de la création de la tva."
         });
     }
     );
@@ -88,17 +94,17 @@ const updateTva = (req, res) => {
     .then(num => {
         if (num == 1) {
             res.send({
-                message: "Tva was updated successfully."
+                message: "La tva a été mise à jour avec succès."
             });
         } else {
-            res.send({
-                message: `Cannot update tva with id=${id}. Maybe tva was not found or req.body is empty!`
+            res.status(409).send({
+                message: `Impossible de mettre à jour la tva avec l'id=${id}.`
             });
         }
     })
     .catch(err => {
-        res.status(500).send({
-            message: "Error updating tva with id=" + id
+        res.status(409).send({
+            message: "Erreur lors de la mise à jour de la tva avec l'id=" + id
         });
     });
 }
@@ -112,17 +118,17 @@ const deleteTva = (req, res) => {
     .then(num => {
         if (num == 1) {
             res.send({
-                message: "Tva was deleted successfully!"
+                message: "La tva a été supprimée avec succès!"
             });
         } else {
             res.send({
-                message: `Cannot delete tva with id=${id}. Maybe tva was not found!`
+                message: `Impossible de supprimer la tva avec l'id=${id}.`
             });
         }
     })
     .catch(err => {
-        res.status(500).send({
-            message: "Could not delete tva with id=" + id
+        res.status(409).send({
+            message: "Erreur lors de la suppression de la tva avec l'id=" + id
         });
     });
 }
@@ -132,11 +138,14 @@ const getTvaByValue = (req, res) => {
 
     Tva.findOne({ where: { tva_value: value }})
     .then(data => {
-        res.send(data);
+        res.send({
+            message: "Tva récupérée avec succès.",
+            data : data
+        });
     })
     .catch(err => {
-        res.status(500).send({
-            message: "Tva not found"
+        res.status(409).send({
+            message: "Erreur lors de la récupération de la tva avec la valeur=" + value
         });
     });
 }

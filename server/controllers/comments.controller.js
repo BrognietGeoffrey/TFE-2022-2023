@@ -12,20 +12,19 @@ const createComment = (req, res) => {
         userId: data.userId,
         facturier_id: data.facturier_id
     };
-
-    // Save comment in the database
     Comments.create(comment)
         .then(data => {
-        res.send(data);
-        }
-        )
+        res.send({
+            message: "Le commentaire a été parfaitement enregistré.",
+            data: data
+        });
+        })
         .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the comment."
+            err.message || "Malheureusement, une erreur s'est produite lors de la création du commentaire."
         });
-        }
-        );
+        });
 }
 
 const getAllComments = (req, res) => {
@@ -34,35 +33,31 @@ const getAllComments = (req, res) => {
         include: [
             {
                 model: User,
-      
             },
             {
                 model: Facturiers,
-             
                 include: [
                     {
                         model: Factures,
-                        
                     }
                 ]
             }
         ]
     })
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Les commentaires ont été récupérés avec succès.",
+            data: data
+        });
         })
         .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while retrieving comments."
+            err.message || "Malheureusement, une erreur s'est produite lors de la récupération des commentaires."
         });
         });
     }
-
-
-
-
-
+    
 module.exports = {
     createComment, 
     getAllComments

@@ -61,10 +61,12 @@ const UsersDatatable = () => {
         .then((response) => {
             console.log(response.data);
             getUsers();
+            toast.current.show({ severity: 'success', summary: 'Modification effectuée', detail: 'Utilisateur modifié', life: 3000 });
         }
         )
         .catch((error) => {
             console.log(error);
+            toast.current.show({ severity: 'error', summary: 'Modification non effectuée', detail: error.response.data.message, life: 3000 });
         }
         );
     }

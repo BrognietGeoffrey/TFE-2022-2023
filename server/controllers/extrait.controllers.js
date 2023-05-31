@@ -14,7 +14,7 @@ const createExtrait = (req, res) => {
     .then(data => {
         if (data) {
         res.status(409).send({
-            message: "This extrait already exists"
+            message: "L'extrait existe déjà."
         });
         return;
         } else {
@@ -31,12 +31,15 @@ const createExtrait = (req, res) => {
         // Save extrait in the database
         Extraits.create(extrait)
             .then(data => {
-            res.send(data);
+            res.send({
+                message: "L'extrait a été créé avec succès.",
+                data : data
+            });
             })
             .catch(err => {
             res.status(409).send({
                 message:
-                err.message || "Some error occurred while creating the extrait."
+                err.message || "Malheureusement, une erreur s'est produite lors de la création de l'extrait."
             });
             });
         }
@@ -44,7 +47,7 @@ const createExtrait = (req, res) => {
     .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the extrait."
+            err.message || "Malheureusement, une erreur s'est produite lors de la création de l'extrait."
         });
     });
 }
@@ -53,14 +56,17 @@ const createExtrait = (req, res) => {
 const findAllExtrait = (req, res) => {
     Extraits.findAll()
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Liste des extraits récupérée avec succès.",
+            data : data
+        });
         })
         .catch(err => {
         // send a null array if there is an error
         
-        res.status(200).send({
+        res.status(409).send({
             message:
-            err.message || "Some error occurred while retrieving extrait."
+            err.message || "Malheureusement, une erreur s'est produite lors de la récupération des extraits."
             
         });
         });
@@ -72,11 +78,14 @@ const findOneExtrait = (req, res) => {
 
     Extraits.findByPk(id)
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Extrait récupéré avec succès.",
+            data : data
+        });
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Error retrieving extrait with id=" + id
+        res.status(409).send({
+            message: "Erreur lors de la récupération de l'extrait avec l'id=" + id
         });
         });
 }
@@ -91,17 +100,17 @@ const updateExtrait = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "Extrait was updated successfully."
+            message: "Extrait mis à jour avec succès."
             });
         } else {
-            res.send({
-            message: `Cannot update Extrait with id=${id}. Maybe Extrait was not found or req.body is empty!`
+            res.status(409).send({
+            message: `Impossible de mettre à jour l'extrait avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Error updating Extrait with id=" + id
+        res.status(409).send({
+            message: "Erreur lors de la mise à jour de l'extrait avec l'id=" + id
         });
         });
 }
@@ -116,17 +125,17 @@ const deleteExtrait = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "Extrait was deleted successfully!"
+            message: "Extrait supprimé avec succès!"
             });
         } else {
-            res.send({
-            message: `Cannot delete Extrait with id=${id}. Maybe Extrait was not found!`
+            res.status(409).send({
+            message: `Impossible de supprimer l'extrait avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Could not delete Extrait with id=" + id
+        res.status(409).send({
+            message: "Erreur lors de la suppression de l'extrait avec l'id=" + id
         });
         });
 }

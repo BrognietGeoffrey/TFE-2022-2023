@@ -86,25 +86,26 @@ const FournisseurDatatable = () => {
         fournisseurService.update(e.data.fournisseur_id, data)
         .then((response) => {   
             console.log(response.data);
-            toast.current.show({ severity: 'success', summary: 'Success', detail: 'Fournisseur Updated', life: 3000 });
+            toast.current.show({ severity: 'success', summary: 'Modification effectuée', detail: 'Fournisseur modifié', life: 3000 });
             getCompteFournisseur();
         }
         )
         .catch((error) => {
             console.log(error);
+            toast.current.show({ severity: 'error', summary: 'Modification non effectuée', detail: error.response.data.message, life: 3000 });
         }
         );}
         if (e.data.numCompteFournisseur != e.newData.numCompteFournisseur || e.data.num_compte_banque != e.newData.num_compte_banque) {
         compteFournisseurService.update(e.data.compte_fournisseur_id, dataCompteClient)
         .then((response) => {
             console.log(response.data);
-            toast.current.show({ severity: 'success', summary: 'Success', detail: 'Compte Client Updated', life: 3000 });
+            toast.current.show({ severity: 'success', summary: 'Modification effectuée', detail: 'Compte fournisseur modifié', life: 3000 });
             getCompteFournisseur();
         }
         )
         .catch((error) => {
             console.log(error);
-            toast.current.show({ severity: 'error', summary: 'Error', detail: 'Compte Client Not Updated', life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Modification non effectuée', detail: error.response.data.message, life: 3000 });
         }
         );
     }

@@ -34,26 +34,6 @@ function Register() {
     { label: 'Comptable/Moderateur', value: 'moderator' }, 
     { label: 'Utilisateur/habitant', value: 'user' }
   ];
-  // const getClientList = async () => {
-  //   const clientList = await compteClientDataService.getAll();
-  //   setClientList(clientList.map(client => {
-  //       return {
-  //           label: client.client.name + " " + client.client.firstname,
-  //           value: client.co_client_id, 
-  //           name : client.client.name,
-  //           firstname : client.client.firstname, 
-  //           adresse_client : client.client.adresse_client,
-  //           telephone_client : client.client.telephone_client,
-  //           email_client : client.client.email_client,
-  //           numCompteClient : client.numCompteClient,
-  //           num_compte_banque : client.num_compte_banque
-
-  //       };
-  //   }).sort((a, b) => a.label.localeCompare(b.label)));
-  // };
-
-  
-
   const registerUser = (event) => {
     event.preventDefault();
     if (client === true) {
@@ -72,7 +52,7 @@ function Register() {
       .then(response => {
         console.log(response.data);
         setInfosClients(response.data);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Created', life: 3000 });
+        toast.current.show({ severity: 'success', summary: 'Création réussie', detail: 'Le client a parfaitement été créé', life: 3000 });
         setLastname('');
         setFirstname('');
         setAddress('');
@@ -97,7 +77,7 @@ function Register() {
           .then(response => {
             console.log(response.data);
             setInfosCompteClients(response.data);
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Client Created', life: 3000 });
+            toast.current.show({ severity: 'success', summary: 'Création réussie', detail: 'Le compte client a parfaitement été créé', life: 3000 });
             setNumCompteClient('');
             setNum_compte_banque('');
             setDescriptionClient('');
@@ -106,7 +86,7 @@ function Register() {
               .then(response => {
                 console.log(response.data);
                 setUserId(response.data.user_id);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Création réussie', detail: 'L\'utilisateur a parfaitement été créé', life: 3000 });
                 setUsername('');
                 setPassword('');
                 setConfirmPassword('');
@@ -117,19 +97,19 @@ function Register() {
               )
               .catch(e => {
                 console.log(e);
-                toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'User Not Created', life: 3000 });
+                toast.current.show({ severity: 'error', summary: 'Création échouée', detail: error.response.data.message, life: 3000 });
               });
           }
           )
           .catch(e => {
             console.log(e);
-            toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Compte Client Not Created', life: 3000 });
+            toast.current.show({ severity: 'error', summary: 'Création échouée', detail: error.response.data.message, life: 3000 });
           });
       }
       )
       .catch(e => {
         console.log(e);
-        toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Client Not Created', life: 3000 });
+        toast.current.show({ severity: 'error', summary: 'Création échouée', detail: error.response.data.message, life: 3000 });
       });
     } else {
       const dataUser = {
@@ -142,7 +122,7 @@ function Register() {
         .then(response => {
           console.log(response.data);
           setUserId(response.data.user_id);
-          toast.current.show({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Création réussie', detail: 'L\'utilisateur a parfaitement été créé', life: 3000 });
           setUsername('');
           setPassword('');
           setConfirmPassword('');
@@ -153,23 +133,11 @@ function Register() {
         )
         .catch(e => {
           console.log(e);
-          toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'User Not Created', life: 3000 });
+          toast.current.show({ severity: 'error', summary: 'Création échouée', detail: error.response.data.message, life: 3000 });
         }
         );
     }
   };
-
-
-
-
-  
-
-
-
-
-
-
-
 
   return (
     <div className="p-grid p-fluid" >

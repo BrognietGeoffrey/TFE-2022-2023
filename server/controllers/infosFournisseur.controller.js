@@ -13,7 +13,7 @@ const findAllFournisseur = (req, res) => {
         .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while retrieving fournisseurs."
+            "Malheureusement, une erreur s'est produite lors de la récupération des fournisseurs."
         });
         });
     }
@@ -24,11 +24,14 @@ const findOneFournisseur = (req, res) => {
 
     Fournisseurs.findByPk(id)
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Fournisseur récupéré avec succès.",
+            data : data
+        });
         })
         .catch(err => {
         res.status(409).send({
-            message: "Error retrieving fournisseur with id=" + id
+            message: "Erreur lors de la récupération du fournisseur avec l'id=" + id
         });
         });
     }
@@ -44,7 +47,7 @@ const createFournisseur = (req, res) => {
     .then(data => {
         if (data) {
         res.status(409).send({
-            message: "This fournisseur already exists"
+            message: "Le nom du fournisseur est déjà utilisé."
         });
         return;
         } else {
@@ -61,12 +64,15 @@ const createFournisseur = (req, res) => {
         // Save fournisseur in the database
         Fournisseurs.create(fournisseur)
             .then(data => {
-            res.send(data);
+            res.send({
+                message: "Le fournisseur a été créé avec succès.",
+                data : data
+            });
             })
             .catch(err => {
             res.status(409).send({
                 message:
-                err.message || "Some error occurred while creating the fournisseur."
+                "Malheureusement, une erreur s'est produite lors de la création du fournisseur."
             });
             });
         }
@@ -74,7 +80,7 @@ const createFournisseur = (req, res) => {
     .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the fournisseur."
+            "Malheureusement, une erreur s'est produite lors de la création du fournisseur."
         });
     });
     }
@@ -90,17 +96,17 @@ const updateFournisseur = (req, res) => {
     .then(num => {
         if (num == 1) {
         res.send({
-            message: "fournisseur was updated successfully."
+            message: "Le fournisseur a été mis à jour avec succès."
         });
         } else {
-        res.send({
-            message: `Cannot update fournisseur with id=${id}. Maybe fournisseur was not found or req.body is empty!`
+        res.status(409).send({
+            message: `Impossible de mettre à jour le fournisseur avec l'id=${id}.`
         });
         }
     })
     .catch(err => {
         res.status(409).send({
-        message: "Error updating fournisseur with id=" + id
+        message: "Erreur lors de la mise à jour du fournisseur avec l'id=" + id
         });
     });
 }
@@ -115,17 +121,17 @@ const deleteFournisseur = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "fournisseur was deleted successfully!"
+            message: "Le fournisseur a été supprimé avec succès !"
             });
         } else {
-            res.send({
-            message: `Cannot delete fournisseur with id=${id}. Maybe fournisseur was not found!`
+            res.status(409).send({
+            message: `Impossible de supprimer le fournisseur avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Could not delete fournisseur with id=" + id
+        res.status(409).send({
+            message: "Erreur lors de la suppression du fournisseur avec l'id=" + id
         });
         });
     }
@@ -140,16 +146,19 @@ const getFournisseurByName = (req, res) => {
     })
     .then(data => {
         if (!data) {
-        res.status(200).send({
-            message: "This fournisseur does not exist"
+        res.status(409).send({
+            message: "Aucun fournisseur trouvé avec le nom=" + name
         });
         } else {
-        res.send(data);
+        res.send({
+            message: "Fournisseur récupéré avec succès.",
+            data : data
+        });
         }
     })
     .catch(err => {
         res.status(409).send({
-            message: "Error retrieving fournisseur with name=" + name
+            message: "Erreur lors de la récupération du fournisseur avec le nom=" + name
         });
     });
     }

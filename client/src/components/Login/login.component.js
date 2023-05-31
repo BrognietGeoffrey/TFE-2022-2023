@@ -52,7 +52,7 @@ function Login() {
                         }
                     }
                 }).catch(error => {
-                    toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'Invalid credentials', life: 3000 });
+                    toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Nom d\'utilisateur ou mot de passe incorrect(s)', life: 3000 });
                 })
         }
     }

@@ -40,12 +40,15 @@ const create = async (req, res) => {
         // Save log in the database
         Logs.create(log)
             .then(data => {
-            res.send(data);
+            res.send({
+                message: "Le log a été créé avec succès.",
+                data : data
+            });
             })
             .catch(err => {
             res.status(409).send({
                 message:
-                err.message || "Some error occurred while creating the log."
+               "Malheureusement, une erreur s'est produite lors de la création du log."
             });
             });
         }
@@ -53,31 +56,27 @@ const create = async (req, res) => {
     .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the log."
+            "Malheureusement, une erreur s'est produite lors de la création du log."
         });
     }
     );
 };
 
 const findAll = (req, res) => {
-   // #swagger.tags = ['Users']
-    /* 
-    #swagger.summary = 'Get all users having an account'
-    #swagger.security = [{
-               "bearerAuth": []
-    }] */
     const user_id = req.query.user_id;
     var condition = user_id ? { user_id: { [Op.like]: `%${user_id}%` } } : null;
     // trouver tous les logs
     Logs.findAll({ where: condition, include: [Facturiers, Factures, Fournisseurs, Clients, Libelles, Objets, Decomptes, User, Extraits, Tva] })
     .then(data => {
-        res.send(data);
+        res.send({
+        message: "Les logs ont été récupérés avec succès.",
+        data : data
+        });
     }
     )
     .catch(err => {
-        res.status(500).send({
-        message:
-            err.message || "Some error occurred while retrieving logs."
+        res.status(409).send({
+        message: "Malheureusement, une erreur s'est produite lors de la récupération des logs."
         });
     }
     );

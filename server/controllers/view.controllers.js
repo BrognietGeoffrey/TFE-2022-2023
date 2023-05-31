@@ -85,9 +85,9 @@ const createCustomView = async (req, res) => {
 
 
     // Retourner la vue créée
-    res.status(200).json({ message: 'View created successfully.', view, resultView });
+    res.status(200).json({ message: 'La vue a été créée avec succès.', view, resultView });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(409).json({ message: "La vue n'a pas pu être créée.", error: error.message });
   }
 };
 
@@ -116,9 +116,9 @@ const getAllView = async (req, res) => {
 
     // pour chaque vue, récupérer les données de la table associée et y créer des colonnes pour chaque attribut
 
-    res.status(200).json({ message: 'Views retrieved successfully.', resultView });
+    res.status(200).json({ message: 'Les vues ont été récupérées avec succès.', view, resultView });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(409).json({ message: "Les vues n'ont pas pu être récupérées.", error: error.message });
   }
 };
 
@@ -145,9 +145,9 @@ const deleteView = async (req, res) => {
     await db.sequelize.query(sqlDeleteQuery, { type: db.sequelize.QueryTypes.DELETE_VIEW });
 
     // Retourner la vue supprimée
-    res.status(200).json({ message: 'View deleted successfully.', view_name });
+    res.status(200).json({ message: 'La vue a été supprimée avec succès.', view_name });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(409).json({ message: "La vue n'a pas pu être supprimée.", error: error.message });
   }
 
 };

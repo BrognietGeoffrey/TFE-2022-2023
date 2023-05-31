@@ -3,25 +3,19 @@ const db = require("../models");
 const Op = db.Sequelize.Op;
 const { Clients } = require("../models");
 
-// Create and Save a new Client
 const createClient = (req, res) => {
-    // If the name_client is already in the database, return an error
-    
-
     Clients.findOne({
         where: {
         name: req.body.name
         }
     })
-
     .then(data => {
         if (data) {
         res.status(409).send({
-            message: "This client already exists"
+            message: "Le client existe déjà."
         });
         return;
         } else {
-        // Create a client
         const client = {
             name: req.body.name,
             firstname : req.body.firstname,
@@ -35,13 +29,11 @@ const createClient = (req, res) => {
         Clients.create(client)
             .then(data => {
             res.send(data);
-          
-
             })
             .catch(err => {
             res.status(409).send({
                 message:
-                err.message || "Some error occurred while creating the client."
+                err.message || "Malheureusement, une erreur s'est produite lors de la création du client."
             });
             });
         }
@@ -49,15 +41,10 @@ const createClient = (req, res) => {
     .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the client."
+            err.message || "Malheureusement, une erreur s'est produite lors de la création du client."
         });
     });
 }
-
-// Retrieve all clients from the database.
-
-// ajouter swagger
-
 
 const findAllClients = (req, res) => {
 
@@ -68,7 +55,7 @@ const findAllClients = (req, res) => {
         .catch(err => {
         res.status(200).send({
             message:
-            err.message || "Some error occurred while retrieving clients."
+            err.message || "Malheureusement, une erreur s'est produite lors de la récupération des clients."
         });
         });
     }
@@ -83,7 +70,7 @@ const findOneClient = (req, res) => {
         })
         .catch(err => {
         res.status(200).send({
-            message: "Error retrieving client with id=" + id
+            message: "Malheureusement, une erreur s'est produite lors de la récupération du client avec l'id=" + id
         });
         });
     }
@@ -98,17 +85,17 @@ const updateClient = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "client was updated successfully."
+            message: "Le client a été mis à jour avec succès."
             });
         } else {
             res.send({
-            message: `Cannot update client with id=${id}. Maybe client was not found or req.body is empty!`
+            message: `Impossible de mettre à jour le client avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
         res.status(200).send({
-            message: "Error updating client with id=" + id
+            message: "Erreur lors de la mise à jour du client avec l'id=" + id
         });
         });
     }
@@ -123,17 +110,17 @@ const deleteClient = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "client was deleted successfully!"
+            message: "Le client a été supprimé avec succès!"
             });
         } else {
             res.send({
-            message: `Cannot delete client with id=${id}. Maybe client was not found!`
+            message: `Impossible de supprimer le client avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
         res.status(200).send({
-            message: "Could not delete client with id=" + id
+            message: "Impossible de supprimer le client avec l'id=" + id
         });
         });
     }
@@ -145,20 +132,18 @@ const deleteClient = (req, res) => {
         const condition2 = firstname ? { firstname: { [Op.like]: `%${firstname}%` } } : null;
         Clients.findAll({ where: condition, condition2 })
             .then(data => {
-            res.send(data);
+            res.send({  
+                message: "Le client a été trouvé avec succès!",
+                data: data
+            })
             })
             .catch(err => {
             res.status(200).send({
                 message:
-                err.message || "Some error occurred while retrieving clients."
+                err.message || "Malheureusement, une erreur s'est produite lors de la récupération du client."
             });
             });
         }
-        
-    
-
-
-
 module.exports = {
     createClient,
     findAllClients,

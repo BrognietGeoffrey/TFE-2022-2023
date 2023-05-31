@@ -10,7 +10,7 @@ const createCompteFournisseur = (req, res) => {
     // Validate request
     if (!req.body.numCompteFournisseur) {
         res.status(409).send({
-        message: "Content can not be empty!"
+        message: "Le numéro de compte fournisseur ne peut pas être vide."
         });
         return;
     }
@@ -25,12 +25,15 @@ const createCompteFournisseur = (req, res) => {
     // Save CompteFournisseur in the database
     compteFournisseurs.create(compteFournisseur)
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Le compte fournisseur a été créé avec succès.",
+            data : data
+        });
         })
         .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the CompteFournisseur."
+            err.message || "Malheureusement, une erreur s'est produite lors de la création du compte fournisseur."
         });
         });
 
@@ -43,12 +46,15 @@ const findAllCompteFournisseur = (req, res) => {
     
     compteFournisseurs.findAll({ where: condition })
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Liste des comptes fournisseurs retrouvés avec succès.",
+            data : data
+        });
         })
         .catch(err => {
         res.status(200).send({
             message:
-            err.message || "Some error occurred while retrieving compteFournisseurs."
+            err.message || "Malheureusement, une erreur s'est produite lors de la recherche des comptes fournisseurs."
         });
         });
     }
@@ -59,14 +65,16 @@ const findOneCompteFournisseur = (req, res) => {
     
     compteFournisseurs.findByPk(id)
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Compte fournisseur retrouvé avec succès.",
+            data : data
+        });
         })
         .catch(err => {
-        res.send({
-            message: "Error retrieving Facture with id=" + id
+        res.status(409).send({
+            message: "Erreur lors de la recherche du compte fournisseur avec l'id=" + id
         });
         });
-        console.log("CompteFournisseur with id=" + id)
     }
 // Update a CompteFournisseur by the id in the request
 const updateCompteFournisseur = (req, res) => {
@@ -78,17 +86,17 @@ const updateCompteFournisseur = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "CompteFournisseur was updated successfully."
+            message: "Le compte fournisseur a été mis à jour avec succès."
             });
         } else {
-            res.send({
-            message: `Cannot update CompteFournisseur with id=${id}. Maybe CompteFournisseur was not found or req.body is empty!`
+            res.status(409).send({
+            message: `Impossible de mettre à jour le compte fournisseur avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Error updating CompteFournisseur with id=" + id
+        res.status(409).send({
+            message: "Erreur lors de la mise à jour du compte fournisseur avec l'id=" + id
         });
         });
     }
@@ -103,17 +111,17 @@ const deleteCompteFournisseur = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "CompteFournisseur was deleted successfully!"
+            message: "Le compte fournisseur a été supprimé avec succès!"
             });
         } else {
-            res.send({
-            message: `Cannot delete CompteFournisseur with id=${id}. Maybe CompteFournisseur was not found!`
+            res.status(409).send({
+            message: `Impossible de supprimer le compte fournisseur avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Could not delete CompteFournisseur with id=" + id
+        res.status(409).send({
+            message: "Impossible de supprimer le compte fournisseur avec l'id=" + id
         });
         });
     }

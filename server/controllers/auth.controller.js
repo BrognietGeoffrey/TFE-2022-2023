@@ -23,18 +23,18 @@ exports.signup = async (req, res) => {
           },
         }).then((role) => {
           user.setRoles(role).then(() => {
-            res.send({ message: "User was registered successfully!" });
+            res.send({ message: "L'utilisateur a été parfaitement enregistré" });
           });
         });
       } else {
         // user role = 1
         user.setRoles([1]).then(() => {
-          res.send({ message: "User was registered successfully!" });
+          res.send({ message: "L'utilisateur a été parfaitement enregistré" });
         });
       }
     })
     .catch((err) => {
-      res.status(409).send({ message: err.message });
+      res.status(409).send({ message: 'Erreur lors de l\'enregistrement de l\'utilisateur' });
     });
 };
 
@@ -76,7 +76,7 @@ exports.signin = async (req, res) => {
     if (!validPassword) {
       return res.status(401).send({
         accessToken: null,
-        message: "Invalid Password!"
+        message: "Mot de passe invalide !"
       });
     }
 
@@ -91,7 +91,7 @@ exports.signin = async (req, res) => {
     res.header('Authorization', token).json({
       error: null,
       data: {token :token, role: userRole.role.dataValues.name , user: userRole.user.dataValues},
-      message: 'User logged in successfully'    })
+      message: 'Connexion réussie'    })
     // return res et les informations de l'user
     // add to the session storage the user info
 
@@ -101,7 +101,7 @@ exports.signin = async (req, res) => {
 
   } catch (error) {
 
-    return res.status(500).send(error.message);
+    return res.status(500).send(error.message + 'Erreur lors de la connexion');
   }
 }
 

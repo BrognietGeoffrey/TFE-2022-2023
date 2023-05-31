@@ -10,7 +10,7 @@ import TopMenuBar from './components/SideMenu/topMenu';
 import Analyse from './components/Analyse/analyse.component';
 import Login from './components/Login/login.component';
 import Facturiers from './components/Facturier/Facturier.component';
-import Profile from './components/profile.component';
+import Profile from './components/Profile/profile.component';
 import AllData from './components/AllData/allData.component';
 import RedirectionPage from './components/redirectPage';
 import DataUserClient from './components/dataUserClient.component';

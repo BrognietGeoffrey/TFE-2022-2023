@@ -15,7 +15,7 @@ const createCompteClient = (req, res) => {
     .then(data => {
         if (data) {
         res.status(409).send({
-            message: "This compteClient already exists"
+            message: "Le compte client existe déjà."
         });
         return;
         } else {
@@ -31,12 +31,15 @@ const createCompteClient = (req, res) => {
         // Save compteClient in the database
         compteClients.create(compteClient)
             .then(data => {
-            res.send(data);
+            res.send({
+                message: "Le compte client a été créé avec succès.",
+                data : data
+            });
             })
             .catch(err => {
             res.status(409).send({
                 message:
-                err.message || "Some error occurred while creating the compteClient."
+                err.message || "Malheureusement, une erreur s'est produite lors de la création du compte client."
             });
             });
         }
@@ -44,37 +47,25 @@ const createCompteClient = (req, res) => {
     .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the compteClient."
+            err.message || "Malheureusement, une erreur s'est produite lors de la création du compte client."
         });
     }
     );
 };
 
-// Retrieve all compteClients from the database.
-  // Swagger 
-  /* 
-    * @swagger
-    * /api/compteClients:
-    *   
-    *  get:
-    *   description: Use to request all compteClients
-    *  responses:
-    *  '200':
-    *  description: A successful response
-    * 
-    */
     
 const findAllComptesClients = (req, res) => {
-  
-
     compteClients.findAll()
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Liste des comptes clients trouvés avec succès.",
+            data : data
+        });
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
-            err.message || "Some error occurred while retrieving compteClients."
+            err.message || "Malheureusement, une erreur s'est produite lors de la récupération des comptes clients."
         });
         });
 }
@@ -85,11 +76,14 @@ const findOneCompteClient = (req, res) => {
 
     compteClients.findByPk(id)
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Compte client trouvé avec succès.",
+            data : data
+        });
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Error retrieving CompteClient with id=" + id
+        res.status(409).send({
+            message: "Malheureusement, une erreur s'est produite lors de la récupération du compte client avec l'id=" + id
         });
         });
 }
@@ -97,24 +91,23 @@ const findOneCompteClient = (req, res) => {
 // Update a CompteClient by the id in the request
 const updateCompteClient = (req, res) => {
     const id = req.params.id;
-
     compteClients.update(req.body, {
         where: { co_client_id: id }
     })
     .then(num => {
         if (num == 1) {
         res.send({
-            message: "CompteClient  was updated successfully."
+            message: "Le compte client a été mis à jour avec succès."
         });
         } else {
         res.send({
-            message: `Cannot update CompteClient with id=${id}. Maybe CompteClient was not found or req.body is empty!`
+            message: `Impossible de mettre à jour le compte client avec l'id=${id}.`
         });
         }
     })
     .catch(err => {
-        res.status(200).send({
-        message: "Error updating CompteClient with id=" + id
+        res.status(409).send({
+        message: "Malheureusement, une erreur s'est produite lors de la mise à jour du compte client avec l'id=" + id
         });
     }
     );
@@ -130,17 +123,17 @@ const deleteCompteClient = (req, res) => {
     .then(num => {
         if (num == 1) {
         res.send({
-            message: "CompteClient was deleted successfully!"
+            message: "Le compte client a été supprimé avec succès!"
         });
         } else {
         res.send({
-            message: `Cannot delete CompteClient with id=${id}. Maybe CompteClient was not found!`
+            message: `Impossible de supprimer le compte client avec l'id=${id}.`
         });
         }
     })
     .catch(err => {
-        res.status(200).send({
-        message: "Could not delete CompteClient with id=" + id
+        res.status(409).send({
+        message: "Malheureusement, une erreur s'est produite lors de la suppression du compte client avec l'id=" + id
         });
     }
     );

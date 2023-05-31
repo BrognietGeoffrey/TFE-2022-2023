@@ -6,8 +6,8 @@ const { Objets, Libelles } = require("../models");
 const createObjet = (req, res) => {
     // Validate request
     if (!req.body.title) {
-        res.status(400).send({
-        message: "Content can not be empty!"
+        res.status(409).send({
+        message: "Le titre ne peut pas être vide!"
         });
         return;
     }
@@ -20,7 +20,7 @@ const createObjet = (req, res) => {
     .then(data => {
         if (data) {
         res.status(409).send({
-            message: "This objet already exists"
+            message: "Cet objet existe déjà !"
         });
         return;
         } else {
@@ -33,12 +33,15 @@ const createObjet = (req, res) => {
         // Save factureObjet in the database
         Objets.create(objet)
             .then(data => {
-            res.send(data);
+            res.send({
+                message: "L'objet a été créé avec succès.",
+                data : data
+            });
             })
             .catch(err => {
             res.status(409).send({
                 message:
-                err.message || "Some error occurred while creating the objet."
+                "Une erreur s'est produite lors de la création de l'objet."
             });
             });
         }
@@ -46,7 +49,7 @@ const createObjet = (req, res) => {
     .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the objet."
+            "Une erreur s'est produite lors de la création de l'objet."
         });
     }
     );
@@ -64,9 +67,9 @@ const findObjet = (req, res) => {
         res.send(data);
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
-            err.message || "Some error occurred while retrieving factureObjets."
+            err.message || "Une erreur s'est produite lors de la récupération des objets."
         });
         });
     }
@@ -80,8 +83,8 @@ const findObjetById = (req, res) => {
         res.send(data);
     })
     .catch(err => {
-        res.status(200).send({
-        message: "Error retrieving factureObjet with id=" + id
+        res.status(409).send({
+        message: "Une erreur s'est produite lors de la récupération de l'objet avec l'id=" + id
         });
     });
     }
@@ -95,17 +98,17 @@ const updateObjet = (req, res) => {
     .then(num => {
         if (num == 1) {
         res.status(200).send({
-            message: "factureObjet was updated successfully."
+            message: "L'objet a été mis à jour avec succès."
         });
         } else {
         res.status(409).send({
-            message: `Cannot update factureObjet with id=${id}. Maybe factureObjet was not found or req.body is empty!`
+            message: `Impossible de mettre à jour l'objet avec l'id=${id}.`
         });
         }
     })
     .catch(err => {
         res.status(409).send({
-        message: "Error updating factureObjet with id=" + id
+        message: "Une erreur s'est produite lors de la mise à jour de l'objet avec l'id=" + id
         });
     });
     }
@@ -115,8 +118,8 @@ const updateObjet = (req, res) => {
 const createLibelle = (req, res) => {
     // Validate request
     if (!req.body.title) {
-        res.status(400).send({
-        message: "Content can not be empty!"
+        res.status(409).send({
+        message: "Le libelle ne peut pas être vide!"
         });
         return;
     }
@@ -129,7 +132,7 @@ const createLibelle = (req, res) => {
     .then(data => {
         if (data) {
         res.status(409).send({
-            message: "This libelle already exists"
+            message: "Ce libelle existe déjà !"
         });
         return;
         } else {
@@ -141,12 +144,15 @@ const createLibelle = (req, res) => {
         // Save factureLibelle in the database
         Libelles.create(libelle)
             .then(data => {
-            res.send(data);
+            res.send({
+                message: "Le libelle a été créé avec succès.",
+                data : data
+            });
             })
             .catch(err => {
             res.status(409).send({
                 message:
-                err.message || "Some error occurred while creating the factureLibelle."
+                err.message || "Une erreur s'est produite lors de la création du libelle."
             });
             });
         }
@@ -154,7 +160,7 @@ const createLibelle = (req, res) => {
     .catch(err => {
         res.status(409).send({
         message:
-            err.message || "Some error occurred while creating the factureLibelle."
+            err.message || "Une erreur s'est produite lors de la création du libelle."
         });
     });
     }
@@ -167,12 +173,15 @@ const findLibelle = (req, res) => {
     
     Libelles.findAll({ where: condition })
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Les libelles ont été récupérés avec succès.",
+            data : data
+        });
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
-            err.message || "Some error occurred while retrieving factureLibelles."
+            err.message || "Une erreur s'est produite lors de la récupération des libelles."
         });
         });
     }
@@ -183,11 +192,14 @@ const findLibelleById = (req, res) => {
 
     Libelles.findByPk(id)
     .then(data => {
-        res.send(data);
+        res.send({
+        message: "Le libelle a été récupéré avec succès.",
+        data : data
+        });
     })
     .catch(err => {
-        res.status(200).send({
-        message: "Error retrieving factureLibelle with id=" + id
+        res.status(409).send({
+        message: "Une erreur s'est produite lors de la récupération du libelle avec l'id=" + id
         });
     });
     }
@@ -201,17 +213,17 @@ const updateLibelle = (req, res) => {
     .then(num => {
         if (num == 1) {
         res.status(200).send({
-            message: "factureLibelle was updated successfully."
+            message: "Le libelle a été mis à jour avec succès."
         });
         } else {
         res.status(409).send({
-            message: `Cannot update factureLibelle with id=${id}. Maybe factureLibelle was not found or req.body is empty!`
+            message: `Impossible de mettre à jour le libelle avec l'id=${id}.`
         });
         }
     })
     .catch(err => {
         res.status(409).send({
-        message: "Error updating factureLibelle with id=" + id
+        message: "Une erreur s'est produite lors de la mise à jour du libelle avec l'id=" + id
         });
 
     });

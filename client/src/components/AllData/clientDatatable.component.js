@@ -87,24 +87,26 @@ const ClientDatatable = () => {
         ClientDataService.update(e.data.client_id, data)
             .then((response) => {
                 console.log(response.data);
-                toast.current.show({ severity: 'success', summary: 'Success', detail: 'Client Updated', life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Modification effectuée', detail: response.data.message, life: 3000 });
                 getCompteClient();
             }
             )
             .catch((error) => {
                 console.log(error);
+                toast.current.show({ severity: 'error', summary: 'Modification non effectuée', detail: error.response.data.message, life: 3000 });
             }
             );
         if (e.data.numCompteClient != e.newData.numCompteClient || e.data.num_compte_banque != e.newData.num_compte_banque) {
             compteClientService.update(e.data.co_client_id, dataCompteClient)
                 .then((response) => {
                     console.log(response.data);
-                    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Compte Client Updated', life: 3000 });
+                    toast.current.show({ severity: 'success', summary: 'Modification effectuée', detail: 'Modification du compte client', life: 3000 });
                     getCompteClient();
                 }
                 )
                 .catch((error) => {
                     console.log(error);
+                    toast.current.show({ severity: 'error', summary: 'Modification non effectuée', detail: error.response.data.message, life: 3000 });
                 }
                 );
         }

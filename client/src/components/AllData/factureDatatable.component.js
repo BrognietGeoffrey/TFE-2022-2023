@@ -140,13 +140,13 @@ const FactuerDatatable = () => {
         }
         factureService.updateFacture(e.data.facture_id, dataFacture)
             .then((response) => {
-                toast.current.show({ severity: 'success', summary: 'Facture modifiée', detail: 'Facture modifiée', life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Modification effectuée', detail: 'Facture modifiée', life: 3000 });
                 getFactures();
             }
             )
             .catch((error) => {
                 console.log(error);
-                toast.current.show({ severity: 'error', summary: 'Facture non modifiée', detail: error.response.data.message, life: 3000 });
+                toast.current.show({ severity: 'error', summary: 'Modification non effectuée', detail: error.response.data.message, life: 3000 });
             }
             );
     }

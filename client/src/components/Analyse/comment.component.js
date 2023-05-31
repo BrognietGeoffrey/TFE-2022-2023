@@ -33,7 +33,7 @@ const Comment = () => {
     FacturierService.getAll()
       .then((response) => {
         if (response.data.length === 0) {
-          toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'No facturier found', life: 3000 });
+          toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Aucun facturier n\'a été trouvé', life: 3000 });
           setFacturierIdList([]);
         } else {
           setFacturierIdList(response.data);
@@ -55,7 +55,7 @@ const Comment = () => {
         CommentService.getAll()
             .then((response) => {    
                 if (response.length === 0) {
-                    toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'No comment found', life: 3000 });
+                    toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Aucun commentaire n\'a été trouvé', life: 3000 });
                     setComments([]);
                 }
                 else {
@@ -102,7 +102,7 @@ const Comment = () => {
           getComments();
           onReset();
          
-          toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Comment Created', life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Création réussie', detail: 'Le commentaire a bien été créé', life: 3000 });
         })
         .catch((error) => {
           console.log(error);

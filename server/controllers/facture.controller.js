@@ -9,7 +9,7 @@ const createFacture = (req, res) => {
     // Validate request
     if (!req.body.num_facture) {
         res.status(409).send({
-        message: "Content can not be empty!"
+        message: "Le numéro de facture ne peut pas être vide !"
         });
         return;
     }
@@ -50,12 +50,15 @@ const createFacture = (req, res) => {
             // Save Facture in the database
             Factures.create(facture)
                 .then(data => {
-                res.send(data);
+                res.send({
+                    message: "La facture a été créée avec succès.",
+                    data : data
+                });
                 })
                 .catch(err => {
                 res.status(500).send({
                     message:
-                    err.message || "Some error occurred while creating the Facture."
+                    err.message || "Une erreur s'est produite lors de la création de la facture."
                 });
                 });
             }
@@ -64,7 +67,7 @@ const createFacture = (req, res) => {
     .catch(err => {
         res.status(500).send({
             message:
-            err.message || "Some error occurred while creating the Facture."
+            err.message || "Une erreur s'est produite lors de la création de la facture."
         });
     });
 };
@@ -78,8 +81,6 @@ const findAllFacture = async (req, res) => {
         include: [
             {
             model: Tva,
-     
-            
             },
             {
                 model: Objets,
@@ -87,16 +88,13 @@ const findAllFacture = async (req, res) => {
             {
                 model: Libelles,
             }
-            
-        
-            
         ],
         });
         res.send(factures);
     } catch (err) {
-        res.status(200).send({
+        res.status(409).send({
         message:
-            err.message || "Some error occurred while retrieving factures."
+            err.message || "Une erreur s'est produite lors de la récupération des factures."
         });
     }
 };
@@ -107,11 +105,14 @@ const findOneFacture = (req, res) => {
 
     Factures.findByPk(id)
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "La facture a été récupérée avec succès.",
+            data : data
+        });
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Error retrieving Facture with id=" + id
+        res.status(409).send({
+            message: "Une erreur s'est produite lors de la récupération de la facture avec l'id=" + id
         });
         });
     }
@@ -128,17 +129,17 @@ const updateFacture = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "Facture was updated successfully."
+            message: "La facture a été mise à jour avec succès."
             });
         } else {
-            res.send({
-            message: `Cannot update Facture with id=${id}. Maybe Facture was not found or req.body is empty!`
+            res.status(409).send({
+            message: `Impossible de mettre à jour la facture avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
-        res.status(500).send({
-            message: "Error updating Facture with id=" + id
+        res.status(409).send({
+            message: "Une erreur s'est produite lors de la mise à jour de la facture avec l'id=" + id
         });
         });
     };
@@ -159,17 +160,17 @@ const deleteFacture = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "Facture was deleted successfully!"
+            message: "La facture a été supprimée avec succès!"
             });
         } else {
-            res.send({
-            message: `Cannot delete Facture with id=${id}. Maybe Facture was not found!`
+            res.status(409).send({
+            message: `Impossible de supprimer la facture avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
-        res.status(500).send({
-            message: "Could not delete Facture with id=" + id
+        res.status(409).send({
+            message: "Une erreur s'est produite lors de la suppression de la facture avec l'id=" + id
         });
         });
     }
@@ -182,9 +183,9 @@ const getLastIdFacture = (req, res) => {
             res.send(facture.facture_id.toString());
           })
           .catch(err => {
-            res.status(500).send({
+            res.status(409).send({
               message:
-                err.message || "Some error occurred while retrieving last facture ID."
+                err.message || "Une erreur s'est produite lors de la récupération de la facture."
             });
           });
 
@@ -219,16 +220,16 @@ const getFactureById = (req, res) => {
             res.send(facturierData);
         })
         .catch(err => {
-            res.status(500).send({
+            res.status(409).send({
                 message:
-                    err.message || "Some error occurred while retrieving facturier."
+                    err.message || "Une erreur s'est produite lors de la récupération de la facture."
             });
         });
     })
     .catch(err => {
-        res.status(500).send({
+        res.status(409).send({
             message:
-                err.message || "Some error occurred while retrieving compte client."
+                err.message || "Une erreur s'est produite lors de la récupération de la facture."
         });
     });
 }

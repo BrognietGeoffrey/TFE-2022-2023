@@ -276,11 +276,11 @@ export const Analyse = () => {
   };
 
   const onRowGroupExpand = (event) => {
-    toast.current.show({ severity: 'info', summary: 'Groupe agrandi', detail: 'Value: ' + event.data.nom, life: 3000 });
+    toast.current.show({ severity: 'info', summary: 'Groupe agrandi', detail: 'Valeur: ' + event.data.nom, life: 3000 });
   }
 
   const onRowGroupCollapse = (event) => {
-    toast.current.show({ severity: 'success', summary: 'Groupe réduit', detail: 'Value: ' + event.data.nom, life: 3000 });
+    toast.current.show({ severity: 'success', summary: 'Groupe réduit', detail: 'Valeur: ' + event.data.nom, life: 3000 });
   }
 
   const statusBodyTemplate = (rowData) => {

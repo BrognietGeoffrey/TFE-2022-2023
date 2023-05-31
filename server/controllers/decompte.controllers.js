@@ -20,7 +20,7 @@ const createDecompte = (req, res) => {
     .then(data => {
         if (data) {
         res.status(409).send({
-            message: "This decompte already exists"
+            message: "Le décompte existe déjà."
         });
         return;
         } else {
@@ -35,12 +35,15 @@ const createDecompte = (req, res) => {
         // Save decompte in the database
         Decomptes.create(decompte)
             .then(data => {
-            res.send(data);
+            res.send({
+                message: "Le décompte a été créé avec succès.",
+                data : data
+            });
             })
             .catch(err => {
             res.status(409).send({
                 message:
-                err.message || "Some error occurred while creating the decompte."
+                err.message || "Malheureusement, une erreur s'est produite lors de la création du décompte."
             });
             });
         }
@@ -48,7 +51,7 @@ const createDecompte = (req, res) => {
     .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the decompte."
+            err.message || "Malheureusement, une erreur s'est produite lors de la création du décompte."
         });
     }
     );
@@ -58,12 +61,15 @@ const createDecompte = (req, res) => {
 const findAllDecompte = (req, res) => {
     Decomptes.findAll()
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Les décomptes ont été récupérés avec succès.",
+            data : data
+        });
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message:
-            err.message || "Some error occurred while retrieving decompte."
+            err.message || "Malheureusement, une erreur s'est produite lors de la récupération des décomptes."
         });
         });
 }
@@ -74,11 +80,14 @@ const findOneDecompte = (req, res) => {
 
     Decomptes.findByPk(id)
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Le décompte a été récupéré avec succès.",
+            data : data
+        });
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Error retrieving decompte with id=" + id
+        res.status(409).send({
+            message: "Impossible de récupérer le décompte avec l'id=" + id
         });
         });
 }
@@ -93,17 +102,17 @@ const updateDecompte = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "Decompte was updated successfully."
+            message: "Le décompte a été mis à jour avec succès."
             });
         } else {
-            res.send({
-            message: `Cannot update Decompte with id=${id}. Maybe Decompte was not found or req.body is empty!`
+            res.status(409).send({
+            message: `Impossible de mettre à jour le décompte avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Error updating Decompte with id=" + id
+        res.status(409).send({
+            message: "Impossible de mettre à jour le décompte avec l'id=" + id
         });
         });
 }
@@ -118,17 +127,17 @@ const deleteDecompte = (req, res) => {
         .then(num => {
         if (num == 1) {
             res.send({
-            message: "Decompte was deleted successfully!"
+            message: "Le décompte a été supprimé avec succès!"
             });
         } else {
-            res.send({
-            message: `Cannot delete Decompte with id=${id}. Maybe Decompte was not found!`
+            res.status(409).send({
+            message: `Impossible de supprimer le décompte avec l'id=${id}.`
             });
         }
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Could not delete Decompte with id=" + id
+        res.status(409).send({
+            message: "Impossible de supprimer le décompte avec l'id=" + id
         });
         });
 }
