@@ -196,6 +196,8 @@ const FacturierDatatable = () => {
 
     useEffect(() => {
         fetchData();
+        initFilters1();
+
     }, []);
 
         
