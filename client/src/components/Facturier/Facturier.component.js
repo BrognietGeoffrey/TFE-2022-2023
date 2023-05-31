@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Facturiers.css';
 import {TabView, TabPanel} from 'primereact/tabview';
 import AddFacturier from './addFacturier.component';
@@ -9,7 +9,7 @@ import FacturierDatatable from './facturierDatatable.component';
 const Facturier = () => {
 
         return (
-                <div className="container" id="facturier">
+                <div className="container" id="facturier-table">
                 <div className="card" id="facturier">
       
                 <TabView>

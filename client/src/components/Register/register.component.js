@@ -146,7 +146,7 @@ function Register() {
       <div className="login" id="login">
 
 
-        <form className="card" id="form" style={{maxHeight: '55vh', overflowY: 'auto'}} onSubmit={registerUser}>
+        <form  id="form" style={{maxHeight: '55vh', overflowY: 'auto'}} onSubmit={registerUser}>
         <img src={logo} alt="Logo" className="logo" style = {{marginLeft: 'auto', marginRight: 'auto', display: 'block'}} />
 
           <div className="facture-section">

@@ -6,17 +6,17 @@ import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
-import {Badge } from 'primereact/badge';
+import { Badge } from 'primereact/badge';
 import { Dialog } from 'primereact/dialog';
 import viewServices from '../../services/viewServices';
-import './analyse.css';
+// import './analyse.css';
 export const CustomViewForm = () => {
     const [table, setTable] = useState(null);
-    const [tables] = useState([
+    const [tables, setTables] = useState([
         { label: 'Facture', value: 'factures' },
         { label: 'Client', value: 'clients' },
         { label: 'Facturiers', value: 'facturiers' },
-        
+
     ]);
     const operators = [
         { label: 'Egal', value: '=', type: 3 },
@@ -43,40 +43,52 @@ export const CustomViewForm = () => {
     const [responseView, setResponseView] = useState(null);
     const [allViews, setAllViews] = useState([]);
     const [displayAllViews, setDisplayAllViews] = useState(false);
+    const [position, setPosition] = useState('center');
+    const dialogFuncMap = {
+        'displayAllViews': setDisplayAllViews,
+    };
 
+    const onClick = (name, position, e) => {
+        e.preventDefault(); // add this line to prevent the default behavior
 
+        dialogFuncMap[`${name}`](true);
+
+        if (position) {
+            setPosition(position);
+        }
+    };
 
 
     const handleTableChange = (e) => {
         // Clear the existing columns before adding new ones
         setColumns([]);
-      
+
         // Add columns for the selected table
         switch (e.value) {
-          case 'factures':
-            setColumns([
-              { label: 'Date', value: 'facture_date', type: 'date', joinsTable: 'factures' },
-              { label: 'Montant', value: 'montant', type: 'number', joinsTable: 'factures' },
-              { label: 'Facture payée ', value: 'estpaye', type: 'boolean', joinsTable: 'factures' },
-              { label: 'Libellé', value: 'libelleTitle', valueQuery: "title", type: "string", joinsTable: 'libelles', conditionJoins: "factures.libelle_id = libelles.id" },
-              { label: 'Objets', value: 'title', type: "string", joinsTable: 'objets', conditionJoins: "factures.objet_id = objets.id" },
-              { label: 'Tva', value: 'tva_value', type: 'string', joinsTable: 'tvas', conditionJoins: "factures.tva_id = tvas.tva_id" }
-            ]);
-            break;
-          case 'clients':
-            setColumns([
-              { label: 'Nom', value: 'name', type: 'string', joinsTable: 'clients' }
-            ]);
-            break;
-          case 'facturiers':
-            setColumns([
-              { label: 'Montant de la facture', value: 'factures.montant', type: 'number', joinsTable: 'factures', conditionJoins: "factures.facture_id = facturiers.facture_id" }
-            ]);
-            break;
-          default:
-            setColumns([]);
+            case 'factures':
+                setColumns([
+                    { label: 'Date', value: 'facture_date', type: 'date', joinsTable: 'factures' },
+                    { label: 'Montant', value: 'montant', type: 'number', joinsTable: 'factures' },
+                    { label: 'Payé', value: 'estpaye', type: 'boolean', joinsTable: 'factures' },
+                    { label: 'Libélle', value: 'libelleTitle', valueQuery: "title", type: "string", joinsTable: 'libelles', conditionJoins: "factures.libelle_id = libelles.id" },
+                    { label: 'Objets', value: 'title', type: "string", joinsTable: 'objets', conditionJoins: "factures.objet_id = objets.id" },
+                    { label: 'Tva', value: 'tva_value', type: 'string', joinsTable: 'tvas', conditionJoins: "factures.tva_id = tvas.tva_id" }
+                ]);
+                break;
+            case 'clients':
+                setColumns([
+                    { label: 'Nom', value: 'name', type: 'string', joinsTable: 'clients' }
+                ]);
+                break;
+            case 'facturiers':
+                setColumns([
+                    { label: 'Montant de la facture', value: 'factures.montant', type: 'number', joinsTable: 'factures', conditionJoins: "factures.facture_id = facturiers.facture_id" }
+                ]);
+                break;
+            default:
+                setColumns([]);
         }
-      
+
         // Reset the parameter values
         setColumn(null);
         setOperator(null);
@@ -85,11 +97,11 @@ export const CustomViewForm = () => {
         setValueDate1(null);
         setValueDate2(null);
         setValueQuery(null);
-      
+
         // Update the selected table
         setTable(e.value);
-      };
-      
+    };
+
 
 
 
@@ -111,9 +123,9 @@ export const CustomViewForm = () => {
     };
 
 
-    useEffect( () => {
-         retrieveAllViews();
-    }, [responseView]);
+    useEffect(() => {
+        retrieveAllViews();
+    }, []);
 
 
     // selon la table sélectionnée, on récupère les colonnes de la table
@@ -192,19 +204,19 @@ export const CustomViewForm = () => {
     const onHide = (dialogName) => {
         setDisplayAllViews(false);
         setSelectedView(null);
-      };
-    
-      const viewTemplate = (rowData) => {
-        return (
-          <>
-            <Button icon={selectedView === rowData ? 'pi pi-minus' : 'pi pi-plus'} onClick={() => setSelectedView(rowData)} />
-            <span style={{ paddingLeft: 10 }}>{rowData.viewname}</span>
-          </>
-        );
-      };
+    };
 
-      const handleDelete = (view) => {
-        console.log (view);
+    const viewTemplate = (rowData) => {
+        return (
+            <>
+                <Button icon={selectedView === rowData ? 'pi pi-minus' : 'pi pi-plus'} onClick={() => setSelectedView(rowData)} />
+                <span style={{ paddingLeft: 10 }}>{rowData.viewname}</span>
+            </>
+        );
+    };
+
+    const handleDelete = (view) => {
+        console.log(view);
         viewServices.deleteView(view.viewname)
             .then((response) => {
                 console.log(response);
@@ -215,171 +227,161 @@ export const CustomViewForm = () => {
             });
     };
 
-    
-      
+
+
 
     return (
 
-        <div className="section-three" >
-               
-           
-                <div class="card-content">
-                <div>
-            <div>
-                {/* choix du nom de la vue */}
-             <div>
-                   <InputText
-                        value={viewName}
-                        onChange={(e) => setViewName(e.target.value)}
-                        placeholder="Nom de la vue"
-                        tooltip="Veuillez d'abord indiquer le nom de la vue (attention a bien choisir un nom qui permet de recconnaitre la vue facilement)"
-                        tooltipOptions={{ position: 'top' }} 
-                        style = {{width: '100%', marginTop: '-10px', marginBottom: '10px'}}/>
-                </div>
-                <div>
+        <div style={{ width: '100%', marginTop: '20px' }}>
 
-                    <Dropdown
-                        value={table}
-                        options={tables}
-                        onChange={handleTableChange}
-                        placeholder="Sélectionnez une table" 
-                        tooltip="La table ici représente les données sur lesquelles vous voulez faire votre vue"
-                        tooltipOptions={{ position: 'top' }}
-                        style = {{width: '100%', marginBottom: '10px'}}/>
-
-                </div>
-                <div>
-                    <Dropdown
-                        value={column}
-                        options={columns}
-                        onChange={(e) => setColumn(e.value)}
-                        placeholder="Que voulez-vous trier ?"
-                        tooltip="Ici, vous choisissez les données qui seront triées"
-                        tooltipOptions={{ position: 'top' }}
-                        style = {{width: '100%', marginBottom: '10px'}}/>
-
-                </div>
-                <div>
-                    {/* si la colonne est de type number, on affiche les opérateurs de type 1 et 2, si non, on affiche juste les 1 */}
-                    {columns.length > 0 && column && (columns.find((c) => c.value === column).type === 'date' || columns.find((c) => c.value === column).type === 'number') && (
-
-                        // console.log les opérateurs de type 1 et 2
-                        <Dropdown
-                            value={operator}
-                            options={operators.filter((o) => o.type === 1 || o.type === 2 || o.type === 3)}
-                            onChange={(e) => setOperator(e.value)}
-                            placeholder="Sélectionnez un opérateur" 
-                            tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
-                            tooltipOptions={{ position: 'top' }}
-                            style = {{width: '100%', marginBottom: '10px'}}/>
-                    )}
-                    {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'boolean' && (
-                        <Dropdown
-                            value={operator}
-                            options={operators.filter((o) => o.type === 0)}
-                            onChange={(e) => setOperator(e.value)}
-                            placeholder="Sélectionnez un opérateur"
-                            tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
-                            tooltipOptions={{ position: 'top' }}
-                            style = {{width: '100%', marginBottom: '10px'}}/>
-
-                    )}
-                    {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'string' && (
-                        <Dropdown
-                            value={operator}
-                            options={operators.filter((o) => o.type === 3)}
-                            onChange={(e) => setOperator(e.value)}
-                            placeholder="Sélectionnez un opérateur" 
-                            tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
-                            tooltipOptions={{ position: 'top' }}
-                            style = {{width: '100%', marginBottom: '10px'}}/>
-                    )}
-                </div>
-
-                {/* selon le type de la colonne, on affiche un composant différent */}
-                {columns.find((c) => c.value === column)?.type === 'number' && (
-                    <>
-                        <InputNumber
-                            value={valueParam1}
-                            onChange={(e) => setValueParam1(e.value)}
-                            placeholder="Valeur"
-                            tooltip = "Veuillez indiquer une valeur"
-                            tooltipOptions={{ position: 'top' }}
-                            style = {{width: '100%', marginBottom: '10px'}}
-                        />
-                        {operator === 'BETWEEN' && (
-                            <InputNumber
-                                value={valueParam2}
-                                onChange={(e) => setValueParam2(e.value)}
-                                placeholder="Valeur"
-                                tooltip = "Veuillez indiquer la seconde valeur"
+                        <div>
+                            <InputText
+                                value={viewName}
+                                onChange={(e) => setViewName(e.target.value)}
+                                placeholder="Nom de la vue"
+                                tooltip="Veuillez d'abord indiquer le nom de la vue (attention a bien choisir un nom qui permet de recconnaitre la vue facilement)"
                                 tooltipOptions={{ position: 'top' }}
-                                style = {{width: '100%', marginBottom: '10px'}}/>
-                            
+                                style={{ width: '100%', marginTop: '-10px', marginBottom: '10px' }} />
+                        </div>
+                        <div>
+
+                            <Dropdown
+                                value={table}
+                                options={tables}
+                                onChange={handleTableChange}
+                                placeholder="Sélectionnez une table"
+                                tooltip="La table ici représente les données sur lesquelles vous voulez faire votre vue"
+                                tooltipOptions={{ position: 'top' }}
+                                style={{ width: '100%', marginBottom: '10px' }} />
+
+                        </div>
+                        <div>
+                            <Dropdown
+                                value={column}
+                                options={columns}
+                                onChange={(e) => setColumn(e.value)}
+                                placeholder="Que voulez-vous trier ?"
+                                tooltip="Ici, vous choisissez les données qui seront triées"
+                                tooltipOptions={{ position: 'top' }}
+                                style={{ width: '100%', marginBottom: '10px' }} />
+
+                        </div>
+                        <div>
+                            {/* si la colonne est de type number, on affiche les opérateurs de type 1 et 2, si non, on affiche juste les 1 */}
+                            {columns.length > 0 && column && (columns.find((c) => c.value === column).type === 'date' || columns.find((c) => c.value === column).type === 'number') && (
+
+                                // console.log les opérateurs de type 1 et 2
+                                <Dropdown
+                                    value={operator}
+                                    options={operators.filter((o) => o.type === 1 || o.type === 2 || o.type === 3)}
+                                    onChange={(e) => setOperator(e.value)}
+                                    placeholder="Sélectionnez un opérateur"
+                                    tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
+                                    tooltipOptions={{ position: 'top' }}
+                                    style={{ width: '100%', marginBottom: '10px' }} />
+                            )}
+                            {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'boolean' && (
+                                <Dropdown
+                                    value={operator}
+                                    options={operators.filter((o) => o.type === 0)}
+                                    onChange={(e) => setOperator(e.value)}
+                                    placeholder="Sélectionnez un opérateur"
+                                    tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
+                                    tooltipOptions={{ position: 'top' }}
+                                    style={{ width: '100%', marginBottom: '10px' }} />
+
+                            )}
+                            {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'string' && (
+                                <Dropdown
+                                    value={operator}
+                                    options={operators.filter((o) => o.type === 3)}
+                                    onChange={(e) => setOperator(e.value)}
+                                    placeholder="Sélectionnez un opérateur"
+                                    tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
+                                    tooltipOptions={{ position: 'top' }}
+                                    style={{ width: '100%', marginBottom: '10px' }} />
+                            )}
+                        </div>
+
+                        {/* selon le type de la colonne, on affiche un composant différent */}
+                        {columns.find((c) => c.value === column)?.type === 'number' && (
+                            <>
+                                <InputNumber
+                                    value={valueParam1}
+                                    onChange={(e) => setValueParam1(e.value)}
+                                    placeholder="Valeur"
+                                    tooltip="Veuillez indiquer une valeur"
+                                    tooltipOptions={{ position: 'top' }}
+                                    style={{ width: '100%', marginBottom: '10px' }}
+                                />
+                                {operator === 'BETWEEN' && (
+                                    <InputNumber
+                                        value={valueParam2}
+                                        onChange={(e) => setValueParam2(e.value)}
+                                        placeholder="Valeur"
+                                        tooltip="Veuillez indiquer la seconde valeur"
+                                        tooltipOptions={{ position: 'top' }}
+                                        style={{ width: '100%', marginBottom: '10px' }} />
+
+                                )}
+                            </>
                         )}
-                    </>
-                )}
-                {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'date' && (
-                    // si l'opérateur est compris entre, on affiche deux calendriers
-                    operator === 'BETWEEN' ? (
-                        <div>
-                            <Calendar
-                                value={valueDate1}
-                                onChange={(e) => setValueDate1(e.value)}
-                                placeholder="Valeur"
-                                tooltip='Veuillez indiquer la date'
+                        {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'date' && (
+                            // si l'opérateur est compris entre, on affiche deux calendriers
+                            operator === 'BETWEEN' ? (
+                                <div>
+                                    <Calendar
+                                        value={valueDate1}
+                                        onChange={(e) => setValueDate1(e.value)}
+                                        placeholder="Valeur"
+                                        tooltip='Veuillez indiquer la date'
 
-                                showIcon 
-                                style = {{width: '100%', marginBottom: '10px'}}/>
-                            <Calendar
-                                value={valueDate2}
-                                onChange={(e) => setValueDate2(e.value)}
-                                placeholder="Valeur" 
-                                showIcon 
-                                style = {{width: '100%', marginBottom: '10px'}}
-                                tooltip='Veuillez indiquer la seconde date'/>
+                                        showIcon
+                                        style={{ width: '100%', marginBottom: '10px' }} />
+                                    <Calendar
+                                        value={valueDate2}
+                                        onChange={(e) => setValueDate2(e.value)}
+                                        placeholder="Valeur"
+                                        showIcon
+                                        style={{ width: '100%', marginBottom: '10px' }}
+                                        tooltip='Veuillez indiquer la seconde date' />
 
-                        </div>
-                    ) : (
-                        <div>
-                            <Calendar
-                                value={valueDate1}
-                                onChange={(e) => setValueDate1(e.value)}
-                                placeholder="Valeur" 
-                                showIcon
-                                style = {{width: '100%', marginBottom: '10px'}}
-                                tooltip='Veuillez indiquer la date'
-                                tooltipOptions={{ position: 'top' }}/>
-                        </div>
-                    )
-                )}
-                {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'string' && (
-                    <div>
-                        <InputText
-                            value={valueQuery}
-                            onChange={(e) => setValueParam1(e.target.value)}
-                            placeholder="Valeur" 
-                            tooltip='Veuillez indiquer une valeur'
-                            tooltipOptions={{ position: 'top' }}
-                            style = {{width: '100%', marginBottom: '10px'}}/>
+                                </div>
+                            ) : (
+                                <div>
+                                    <Calendar
+                                        value={valueDate1}
+                                        onChange={(e) => setValueDate1(e.value)}
+                                        placeholder="Valeur"
+                                        showIcon
+                                        style={{ width: '100%', marginBottom: '10px' }}
+                                        tooltip='Veuillez indiquer la date'
+                                        tooltipOptions={{ position: 'top' }} />
+                                </div>
+                            )
+                        )}
+                        {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'string' && (
+                            <div>
+                                <InputText
+                                    value={valueQuery}
+                                    onChange={(e) => setValueParam1(e.target.value)}
+                                    placeholder="Valeur"
+                                    tooltip='Veuillez indiquer une valeur'
+                                    tooltipOptions={{ position: 'top' }}
+                                    style={{ width: '100%', marginBottom: '10px' }} />
+                            </div>
+                        )}
+                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                        <Button label="Créer la vue" onClick={submitView} id="buttonViewAnalyse" style={{ width: '100%', marginBottom: '10p' }} disabled={valueParam1 === ''} />
                     </div>
-                )}
-            </div>
-            {/* Button qui est disabled tant que la valeur de la case valeur n'est pas remplie */}
-            <div style={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
-            <Button label="Créer la vue" onClick={submitView} id="buttonViewAnalyse" style = {{width: '100%', marginBottom: '10p'}} disabled={valueParam1 === ''} />
-            </div>
-            <div style={{display:"flex", flexDirection:"column", justifyContent:"space-between", marginTop:"0.5em"}}>
-            <Button  id="buttonViewAnalyse" label="Voir les vues créées" onClick={getAllViews} style={{backgroundColor:"#f0ad4e", color:"white"}}><Badge value={allViews.length} severity="info" /></Button>
-            </div>
-        </div>
-                </div>
-             
-                    {/* afficher la liste des vues */}
-                    <Dialog header="Liste des vues" visible={displayAllViews} style={{ width: '70%' }} footer={null} onHide={() => onHide('displayAllViews')}>
-                    <DataTable value={allViews} selection={selectedView} onSelectionChange={(e) => setSelectedView(e.value)}>
-                        <Column header="Nom de la vue" body={viewTemplate} style = {{width: '20%'}}></Column>
-                        <Column header="Données" body={(rowData) => {
+                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", marginTop: "0.5em" }}>
+                        <Button id="buttonViewAnalyse" label="Voir les vues créées" onClick={getAllViews} style={{ backgroundColor: "#f0ad4e", color: "white" }}><Badge value={allViews.length} severity="info" /></Button>
+                    </div>
+                                {/* afficher la liste des vues */}
+            <Dialog header="Liste des vues" visible={displayAllViews} style={{ width: '70%' }} footer={null} onHide={() => onHide('displayAllViews')}>
+                <DataTable value={allViews} selection={selectedView} onSelectionChange={(e) => setSelectedView(e.value)}>
+                    <Column header="Nom de la vue" body={viewTemplate} style={{ width: '20%' }}></Column>
+                    <Column header="Données" body={(rowData) => {
                         if (selectedView === rowData) {
                             // si la table de rowData est factures, on affiche les données de factures
                             if (rowData.table === 'factures') {
@@ -416,29 +418,27 @@ export const CustomViewForm = () => {
                             }
                         }
                         // si rowData.data a une longueur supérieure à 0, on affiche les données de rowData.data
-        if (rowData.data.length > 0) {
-            return (
-                <div>
-                    Il y a {rowData.data.length} données pour cette view
-                    <Button icon="pi pi-trash" className="p-button-danger p-button-sm" style={{ marginLeft: '1rem' }} onClick={() => handleDelete(rowData)} />
-                </div>
-            );
-        }
-        return (
-
-            <div>Il n'y a pas de données
+                        if (rowData.data.length > 0) {
+                            return (
+                                <div>
+                                    Il y a {rowData.data.length} données pour cette view
                                     <Button icon="pi pi-trash" className="p-button-danger p-button-sm" style={{ marginLeft: '1rem' }} onClick={() => handleDelete(rowData)} />
+                                </div>
+                            );
+                        }
+                        return (
 
-            </div>
+                            <div>Il n'y a pas de données
+                                <Button icon="pi pi-trash" className="p-button-danger p-button-sm" style={{ marginLeft: '1rem' }} onClick={() => handleDelete(rowData)} />
 
-        );
+                            </div>
 
-                        }}></Column>
-                    </DataTable>
-                    </Dialog>
-                </div>     
+                        );
 
-  
+                    }}></Column>
+                </DataTable>
+            </Dialog>
+                    </div>                  
     );
 };
 

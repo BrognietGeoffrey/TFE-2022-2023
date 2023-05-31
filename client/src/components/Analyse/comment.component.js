@@ -15,14 +15,14 @@ import FacturierService from '../../services/facturierService';
 import './analyse.css'
 
 const Comment = () => {
-  const { handleSubmit} = useForm();
+  const { handleSubmit, errors } = useForm();
   const [facturierIdList, setFacturierIdList] = useState([]);
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
   const [factureNum, setFactureNum] = useState('');
   const [facturierId, setFacturierId] = useState('');
   const toast = useRef(null);
-  const [checked1, setChecked1] = useState(false);
+  const [checked1, setChecked1] = useState(true);
   const [comments, setComments] = useState([]);
 
   const token = localStorage.getItem('access_token');
@@ -33,7 +33,7 @@ const Comment = () => {
     FacturierService.getAll()
       .then((response) => {
         if (response.data.length === 0) {
-          toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Aucun facturier n\'a été trouvé', life: 3000 });
+          toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'No facturier found', life: 3000 });
           setFacturierIdList([]);
         } else {
           setFacturierIdList(response.data);
@@ -55,7 +55,7 @@ const Comment = () => {
         CommentService.getAll()
             .then((response) => {    
                 if (response.length === 0) {
-                    toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Aucun commentaire n\'a été trouvé', life: 3000 });
+                    toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'No comment found', life: 3000 });
                     setComments([]);
                 }
                 else {
@@ -102,7 +102,7 @@ const Comment = () => {
           getComments();
           onReset();
          
-          toast.current.show({ severity: 'success', summary: 'Création réussie', detail: 'Le commentaire a bien été créé', life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Comment Created', life: 3000 });
         })
         .catch((error) => {
           console.log(error);
@@ -211,12 +211,7 @@ const Comment = () => {
     <div className="comment-list" key={comment.id}>
       <div className="comment-item">
         <div className="comment-avatar">
-          {/* Put an blue icon if the owner of the comment is connected */}
-          {comment.user.id === user_id ? (
-            <i className="pi pi-user" style={{ fontSize: "2.3em", backgroundColor: '#a2a8d3', borderRadius: '50%', padding: '0.2em' }}></i>
-          ) : (
-            <i className="pi pi-user" style={{ fontSize: "2.3em", backgroundColor: '#f2f2f2', borderRadius: '50%', padding: '0.2em' }}></i>
-          )}
+          <img src="https://placehold.it/50x50" alt="Avatar" />
         </div>
         <div className="comment-content">
           <div className="comment-header">

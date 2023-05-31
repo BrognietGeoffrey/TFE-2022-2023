@@ -13,19 +13,20 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import {Chip} from 'primereact/chip';
 import { Tooltip } from 'primereact/tooltip';
+import { FileUpload } from 'primereact/fileupload';
 import 'jspdf-autotable';
+import { jsPDF } from "jspdf";
 
 import FacturierDataService from "../../services/facturierService";
 import FactureDataService from "../../services/factureService";
 import ExtraitDataService from "../../services/extraitService";
 import LogsDataService from "../../services/logsService";
 import {Toast} from 'primereact/toast';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
-
 
 const FacturierDatatable = () => {
 
     const [loading, setLoading] = useState(true)
+    const [importedCols, setImportedCols] = useState([{ field: '', header: 'Header' }]);
     const dt = useRef(null);
 
 
@@ -33,9 +34,6 @@ const FacturierDatatable = () => {
     const [extraitList, setExtraitList] = useState([]);
     const [displayExtraitList, setDisplayExtraitList] = useState(false);
     const [extrait, setExtrait] = useState({ facture: {} })
-    const [globalFilterValue1, setGlobalFilterValue1] = useState('');
-
-    const [filters1, setFilters1] = useState(null)
 
     const toastAddon = useRef(null);
     const [user, setUser] = useState(null);
@@ -48,13 +46,13 @@ const FacturierDatatable = () => {
         
 
     ];
+    const exportColumns = cols.map(col => ({title: col.header, dataKey: col.field}));
 
 
     useEffect(() => {
         const currentUser = JSON.parse(localStorage.getItem('user'));
         setUser(currentUser);
         getExtraitList();
-  
     }, []);
 
     const [position, setPosition] = useState('center');
@@ -104,8 +102,7 @@ const FacturierDatatable = () => {
     };
     const getExtraitList = async () => {
         const extraitList = await ExtraitDataService.getAll();
-        console.log(extraitList);
-        setExtraitList(extraitList.data.data.map(extrait => {
+        setExtraitList(extraitList.data.map(extrait => {
             return {
                 num_extrait: extrait.num_extrait,
                 value: extrait.extrait_id, 
@@ -116,6 +113,7 @@ const FacturierDatatable = () => {
     };
 
     const saveExtrait = (rowData) => {
+        console.log(extrait.facture.facture_id)
         console.log(extrait)
         var data = {
             num_extrait: extrait.num_extrait,
@@ -160,11 +158,8 @@ const FacturierDatatable = () => {
                 // mettre à jour le estpaye de la facture
                 var data = {
                     estpaye: true,
-                    num_facture_lamy : extrait.facture.num_facture_lamy,
-                    num_facture_fournisseur : extrait.facture.num_facture
-
                 }
-                FactureDataService.update(extrait.facture_id, data)
+                FactureDataService.update(extrait.facture.facture_id, data)
                 .then(response => {
                     toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Facture Updated', life: 3000 });
                 })
@@ -199,7 +194,6 @@ const FacturierDatatable = () => {
 
     useEffect(() => {
         fetchData();
-        initFilters1();
     }, []);
 
         
@@ -219,6 +213,7 @@ const FacturierDatatable = () => {
 
     }
     const numfactureLamyBodyTemplate = (rowData) => {
+        console.log(rowData.facture.num_facture_lamy)
         if (rowData.facture.num_facture_lamy === null) {
             return 'Pas de numéro';
         }
@@ -256,6 +251,7 @@ const FacturierDatatable = () => {
 
 
         if (rowData.facture.due_date !== null) {
+            console.log(rowData.facture.due_date)
             // Si la due date est dépassée on affiche en rouge mais que la facture est payé, on affiche en vert
             if (dueDate < new Date() && rowData.facture.estpaye === true) {
                 // Afficher en vert si la facture est payée
@@ -347,59 +343,11 @@ const FacturierDatatable = () => {
         </div>
     );
 
-
-    const clearFilter1 = () => {
-        initFilters1();
-    }
-
-    const onGlobalFilterChange1 = (e) => {
-        const value = e.target.value;
-        let _filters1 = { ...filters1 };
-        _filters1['global'].value = value;
-
-        setFilters1(_filters1);
-        setGlobalFilterValue1(value);
-    }
-
-
-    const initFilters1 = () => {
-        setFilters1({
-            'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
-            'facture.num_facture_lamy': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'compte_fournisseur.fournisseur.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'compte_fournisseur.fournisseur.num_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'facture.objet.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'facture.num_facture': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-            'facture.libelle.title': { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-            'decompte.num_decompte': {  operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'facture.montant' : { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-            'extrait.num_extrait' : { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-
-
-        });
-        setGlobalFilterValue1('');
-    }
-
-    const renderHeader1 = () => {
-        return (
-            <div className="flex justify-content-between">
-                <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
-                </span>
-                <div className="flex align-items-center export-buttons">
-                        <Button type="button" icon="pi pi-file" onClick={() => exportCSV(false)} className="mr-2" tooltip="Exporter toutes les données" tooltipOptions={{ position: 'top' }} />
-        </div>
-            </div>
-        )
-    }
-
     const clientBodyTemplate = (rowData) => {
         return rowData.compte_client.client.name + ' ' + rowData.compte_client.client.firstname;
     }
 
-    const header1 = renderHeader1();
+
 
     if (loading) {
         return <ProgressBar mode="indeterminate" style={{ height: '6px' }} />;
@@ -409,7 +357,7 @@ const FacturierDatatable = () => {
         return (
             
             <div className="container" id ="facturier-container">
-            <div className="facturierTable" id="facturier">
+            <div className="facturierTable" >
             <Tooltip target=".custom-chip-not-payed" content="Facture non payée" />
             <Tooltip target=".custom-chip-wait" content="Facture en attente de paiement" />
                 <Toast ref={toastAddon} />
@@ -417,9 +365,8 @@ const FacturierDatatable = () => {
                     <DataTable  value={facturiers} paginator  rows={10}
                      rowsPerPageOptions={[10,25,50]}
                      rowHover  loading={loading} dataKey="id" ref={dt} exportFilename={exportFileName}
-                    emptyMessage="Aucunes données trouvées." scrollable header={header1} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}
-                    filterDisplay="menu" globalFilterFields={['facture.num_facture_lamy', 'compte_fournisseur.fournisseur.name', , 'compte_fournisseur.fournisseur.num_fournisseur', 'facture.objet.title','facture.num_facture', 'facture.libelle.title', 'decompte.num_decompte', 'facture.montant', 'extrait.num_extrait']} filters={filters1}>
+                    emptyMessage="Aucunes données trouvées." scrollable header={header} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}>
 
                     <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ backgroundColor: '#f8f9fa' }}  />
                     <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom"  />
@@ -451,6 +398,7 @@ const FacturierDatatable = () => {
                                     <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitDialog">
                                         <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive scrollable scrollHeight="200px" className="p-datatable-customers" dataKey="id" rowHover filterDisplay="menu" loading={loading} emptyMessage="Aucunes données trouvées." currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }} 
                                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" search>
+                                            {console.log(extraitList)}
                                             <Column field="label" header="N° de l'extrait" />
                                             <Column field="date" header="Date de l'extrait" />
                                             <Column field="montant" header="Montant de l'extrait" />

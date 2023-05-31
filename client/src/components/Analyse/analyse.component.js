@@ -100,9 +100,9 @@ export const Analyse = () => {
   const retrieveLogs = async () => {
     try {
       const response = await LogsService.getAll();
-      setLogs(response.data.data);
+      setLogs(response.data);
       // dans l'ordre des dates décroissantes
-      const logsSorted = response.data.data.sort((a, b) => {
+      const logsSorted = response.data.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       }
       );
@@ -276,11 +276,11 @@ export const Analyse = () => {
   };
 
   const onRowGroupExpand = (event) => {
-    toast.current.show({ severity: 'info', summary: 'Groupe agrandi', detail: 'Valeur: ' + event.data.nom, life: 3000 });
+    toast.current.show({ severity: 'info', summary: 'Groupe agrandi', detail: 'Value: ' + event.data.nom, life: 3000 });
   }
 
   const onRowGroupCollapse = (event) => {
-    toast.current.show({ severity: 'success', summary: 'Groupe réduit', detail: 'Valeur: ' + event.data.nom, life: 3000 });
+    toast.current.show({ severity: 'success', summary: 'Groupe réduit', detail: 'Value: ' + event.data.nom, life: 3000 });
   }
 
   const statusBodyTemplate = (rowData) => {
@@ -349,7 +349,7 @@ export const Analyse = () => {
     <div className="container" id="analyse">
       <Toast ref={toast} />
       <section className="features">
-        <div className="card">
+        <div className = "card" id="card">
           <h3>Statuts des factures au total</h3>
           {billNotPayed && billNotPayed.length > 0 && (
             <div>
@@ -373,7 +373,7 @@ export const Analyse = () => {
             </div>
           )}
         </div>
-        <div className="card">
+        <div className = "card" id="card">
           {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
           <h3>Total de facture ajoutées</h3>
           {billNotPayed && billNotPayed.length > 0 && (
@@ -401,7 +401,7 @@ export const Analyse = () => {
             </div>
           )}
         </div>
-        <div className="card">
+        <div className = "card" id="card">
           {/* graphique indiquant le nombre de facture a payé cette semaine ci, le nombre déjà payé et le nombre non payé */}
           <h3>Statuts des factures cette semaine</h3>
           {billNotPayed && billNotPayed.length > 0 && (
@@ -429,7 +429,7 @@ export const Analyse = () => {
         </div>
       </section>
       <section className="testimonials">
-        <div className="card">
+        <div className = "card" id="card">
           <h3>Total de factures sur l'année </h3>
           {billNotPayed && billNotPayed.length > 0 && (
             <div>
@@ -457,7 +457,7 @@ export const Analyse = () => {
             </div>
           )}
         </div>
-        <div className="card" style={{ maxHeight: '500px', overflow: 'auto' }}>
+        <div className = "card" id="card" style={{ maxHeight: '500px', overflow: 'auto' }}>
           <h3>Les clients et leurs factures </h3>
           <p> <DataTable value={clientListWithFacture} rowGroupMode="subheader" groupRowsBy="nom"
             sortMode="single" sortField="nom" sortOrder={1} responsiveLayout="scroll"
@@ -469,7 +469,7 @@ export const Analyse = () => {
           </DataTable>
           </p>
         </div>
-        <div className="card" >
+        <div className = "card" id="card" >
           <DataTable value={logs} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} emptyMessage="Aucun log pour le moment" style={{ height: "90%" }}>
             <Column field="user.username" header="Utilisateur" />
             <Column field="date" header="Date" body={dateBodyTemplate} />
@@ -534,11 +534,12 @@ export const Analyse = () => {
         </div>
       </section>
       <section className="blog">
-        <div className="card">
+        <div className = "card" id="card">
           <h3>Vues</h3>
           <p><ViewAnalyse /></p>
         </div>
-        <div className="card">
+        <div className = "card" id="card">
+        <h3>Commentaires</h3>
           <CommentZone />
         </div>
       </section>
