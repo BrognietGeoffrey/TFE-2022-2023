@@ -340,12 +340,6 @@ const FacturierDatatable = () => {
       
 
 
-    const header = (
-        <div className="flex align-items-center export-buttons">
-                        <Button type="button" icon="pi pi-file" onClick={() => exportCSV(false)} className="mr-2" tooltip="Exporter toutes les données" tooltipOptions={{ position: 'top' }} />
-        </div>
-    );
-
     const clientBodyTemplate = (rowData) => {
         return rowData.compte_client.client.name + ' ' + rowData.compte_client.client.firstname;
     }
@@ -387,12 +381,16 @@ const FacturierDatatable = () => {
     const renderHeader1 = () => {
         return (
             <div className="flex justify-content-between" id="header">
+                        <div className="flex align-items-center export-buttons">
+                        <Button type="button" icon="pi pi-file" onClick={() => exportCSV(false)} className="mr-2" tooltip="Exporter toutes les données" tooltipOptions={{ position: 'top' }} />
+        </div>
                 <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
                 </span>
             </div>
+            
         )
     }
 
@@ -417,7 +415,7 @@ const FacturierDatatable = () => {
                     <DataTable  value={facturiers} paginator  rows={10}
                      rowsPerPageOptions={[10,25,50]}
                      rowHover  loading={loading} dataKey="id" ref={dt} exportFilename={exportFileName}
-                    emptyMessage="Aucunes données trouvées." scrollable header={header} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    emptyMessage="Aucunes données trouvées." scrollable header={header1} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}
                     globalFilterFields={'facture.num_facture_lamy,compte_fournisseur.fournisseur.name,compte_fournisseur.fournisseur.num_fournisseur,compte_client.numCompteClient,compte_client.client.name,facture.objet.title,facture.facture_date,facture.libelle.title,decompte.num_decompte,facture.montant,facture.estpaye,facture.due_date,extrait.num_extrait,extrait.date_extrait'}>
 
