@@ -36,7 +36,7 @@ export const Analyse = () => {
   const retrieveFacturier = async () => {
     try {
       const response = await FacturierDataService.getAll();
-      setFacturier(response.data);
+      setFacturier(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -100,9 +100,9 @@ export const Analyse = () => {
   const retrieveLogs = async () => {
     try {
       const response = await LogsService.getAll();
-      setLogs(response.data);
+      setLogs(response.data.data);
       // dans l'ordre des dates décroissantes
-      const logsSorted = response.data.sort((a, b) => {
+      const logsSorted = response.data.data.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       }
       );
