@@ -9,9 +9,9 @@ import { Calendar } from 'primereact/calendar';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
 import { Checkbox } from 'primereact/checkbox';
-import {DataTable} from 'primereact/datatable';
-import {Column} from 'primereact/column';
-import { Tooltip } from  'primereact/tooltip';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Tooltip } from 'primereact/tooltip';
 import { ProgressBar } from "primereact/progressbar";
 import LibelleDataService from "../../services/libelleService";
 import ObjetDataService from "../../services/objetService";
@@ -31,7 +31,7 @@ const AddFacturier = () => {
     const [file, setFile] = useState(null);
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [fileInfo , setFileInfo] = useState(null);
+    const [fileInfo, setFileInfo] = useState(null);
 
     useEffect(() => {
         const currentUser = JSON.parse(localStorage.getItem('user'));
@@ -90,8 +90,8 @@ const AddFacturier = () => {
         'displayDecompte': setDisplayDecompte,
         'displayExtrait': setDisplayExtrait,
         'displayFournisseur': setDisplayFournisseur,
-        'displayClient': setDisplayClient, 
-        'displayLibellesList': setDisplayLibellesList, 
+        'displayClient': setDisplayClient,
+        'displayLibellesList': setDisplayLibellesList,
         'displayObjetList': setDisplayObjetList,
         'displayDecompteList': setDisplayDecompteList,
         'displayExtraitList': setDisplayExtraitList,
@@ -177,7 +177,7 @@ const AddFacturier = () => {
                 label: libelle.title,
                 // add tooltip to the label
                 value: libelle.id,
-                from : 'libelle'
+                from: 'libelle'
             };
             // sort the list by label
         }).sort((a, b) => a.label.localeCompare(b.label)));
@@ -189,8 +189,8 @@ const AddFacturier = () => {
         setObjetList(objetList.data.map(objet => {
             return {
                 label: objet.title,
-                value: objet.id, 
-                from : 'objet'
+                value: objet.id,
+                from: 'objet'
             };
             // sort the list by label
         }).sort((a, b) => a.label.localeCompare(b.label)));
@@ -201,9 +201,9 @@ const AddFacturier = () => {
         setDecompteList(decompteList.data.map(decompte => {
             return {
                 label: decompte.num_decompte,
-                value: decompte.decompte_id, 
-                type : decompte.type, 
-                from : 'decompte'
+                value: decompte.decompte_id,
+                type: decompte.type,
+                from: 'decompte'
             };
             // sort the list by label
         }).sort((a, b) => a.label.localeCompare(b.label)));
@@ -214,10 +214,10 @@ const AddFacturier = () => {
         setExtraitList(extraitList.data.map(extrait => {
             return {
                 label: extrait.num_extrait,
-                value: extrait.extrait_id, 
-                montant : extrait.montant,
-                date : extrait.date_extrait, 
-                from : 'extrait'
+                value: extrait.extrait_id,
+                montant: extrait.montant,
+                date: extrait.date_extrait,
+                from: 'extrait'
             };
         }));
     };
@@ -227,9 +227,9 @@ const AddFacturier = () => {
         setTvaList(tvaList.data.map(tva => {
             return {
                 label: tva.tva_value,
-                value: tva.tva_id, 
-                tva_description : tva.tva_description,
-                from : 'tva'
+                value: tva.tva_id,
+                tva_description: tva.tva_description,
+                from: 'tva'
 
             };
         }));
@@ -241,15 +241,15 @@ const AddFacturier = () => {
         setFournisseurList(fournisseurList.map(fournisseur => {
             return {
                 label: fournisseur.fournisseur.name,
-                value: fournisseur.co_fournisseur_id, 
-                numCompteFournisseur : fournisseur.numCompteFournisseur, 
-                adresse_fournisseur : fournisseur.fournisseur.adresse_fournisseur,
-                telephone_fournisseur : fournisseur.fournisseur.telephone_fournisseur,
-                email_fournisseur : fournisseur.fournisseur.email_fournisseur,
-                num_compte_banque : fournisseur.num_compte_banque,
-                fournisseur_id : fournisseur.fournisseur_id,
-                description : fournisseur.fournisseur.description,
-                from : 'fournisseur'
+                value: fournisseur.co_fournisseur_id,
+                numCompteFournisseur: fournisseur.numCompteFournisseur,
+                adresse_fournisseur: fournisseur.fournisseur.adresse_fournisseur,
+                telephone_fournisseur: fournisseur.fournisseur.telephone_fournisseur,
+                email_fournisseur: fournisseur.fournisseur.email_fournisseur,
+                num_compte_banque: fournisseur.num_compte_banque,
+                fournisseur_id: fournisseur.fournisseur_id,
+                description: fournisseur.fournisseur.description,
+                from: 'fournisseur'
 
 
             };
@@ -261,24 +261,24 @@ const AddFacturier = () => {
         setClientList(clientList.map(client => {
             return {
                 label: client.client.name + " " + client.client.firstname,
-                value: client.co_client_id, 
-                name : client.client.name,
-                firstname : client.client.firstname, 
-                adresse_client : client.client.adresse_client,
-                telephone_client : client.client.telephone_client,
-                email_client : client.client.email_client,
-                numCompteClient : client.numCompteClient,
-                num_compte_banque : client.num_compte_banque, 
-                client_id : client.client.client_id,
-                description : client.client.description,
-                from : 'client'
+                value: client.co_client_id,
+                name: client.client.name,
+                firstname: client.client.firstname,
+                adresse_client: client.client.adresse_client,
+                telephone_client: client.client.telephone_client,
+                email_client: client.client.email_client,
+                numCompteClient: client.numCompteClient,
+                num_compte_banque: client.num_compte_banque,
+                client_id: client.client.client_id,
+                description: client.client.description,
+                from: 'client'
 
             };
         }).sort((a, b) => a.label.localeCompare(b.label)));
     };
 
 
-  
+
 
 
 
@@ -316,15 +316,15 @@ const AddFacturier = () => {
         } else {
             tva_id = factures.tva
         }
-        var montantTotal = null; 
+        var montantTotal = null;
         if (result && result.totalAmount.value !== undefined) {
             // convert to string
             const montantValue = String(result.totalAmount.value);
-        
+
             // if there is a dot in the amount, replace it with a comma
             if (montantValue.includes('.')) {
                 let montantReplace = montantValue.replace('.', ',');
-            // convert the string to a number
+                // convert the string to a number
                 montantTotal = Number(montantReplace.replace(/\s/g, ''));
                 console.log(montantTotal)
 
@@ -335,52 +335,52 @@ const AddFacturier = () => {
             montantTotal = factures.montant_facture
 
         }
-        
+
         var data = {
-            num_facture : result && result.invoiceNumber.value ? result.invoiceNumber.value : factures.num_facture,
-            facture_date : result && result.date.value ? result.date.value : factures.date_facture,
+            num_facture: result && result.invoiceNumber.value ? result.invoiceNumber.value : factures.num_facture,
+            facture_date: result && result.date.value ? result.date.value : factures.date_facture,
             montant: result && result.totalAmount.value ? montantTotal : factures.montant_facture,
-            objet_id : factures.objet, 
-            libelle_id : factures.libelle,
-            estpaye : extrait.extrait ? true : false,
-            num_facture_lamy : factures.num_facture_lamy,
-            tva_id : tva_id,
-            due_date : result && result.dueDate.value ? result.dueDate.value : factures.due_date,
+            objet_id: factures.objet,
+            libelle_id: factures.libelle,
+            estpaye: extrait.extrait ? true : false,
+            num_facture_lamy: factures.num_facture_lamy,
+            tva_id: tva_id,
+            due_date: result && result.dueDate.value ? result.dueDate.value : factures.due_date,
         }
         console.log(factures)
         console.log(data)
         FactureDataService.create(data)
-        .then(response => {
-            console.log(response.data);
-          setFactures({
-            ...factures,
-            num_facture: response.data.num_facture,
-            facture_date: response.data.date_facture,
-            montant: response.data.montant,
-            objet: response.data.objet_id,
-            libelle: response.data.libelle_id,
-            estpaye: response.data.estpaye,
-            tva_id: response.data.tva_id,
-            num_facture_lamy: response.data.num_facture_lamy,
-            due_date: response.data.due_date,
-            submitted: true
-          });
-          console.log(response.data);
-        //   Ajouter dans le facturier
-          saveFacturier(response.data.facture_id)
-        })
-        .catch(e => {
-          console.log(e);
-          toast.current.show({ severity: 'error', summary: 'Erreur', detail: e.response.data.message, life: 3000 });
-        });
+            .then(response => {
+                console.log(response.data);
+                setFactures({
+                    ...factures,
+                    num_facture: response.data.num_facture,
+                    facture_date: response.data.date_facture,
+                    montant: response.data.montant,
+                    objet: response.data.objet_id,
+                    libelle: response.data.libelle_id,
+                    estpaye: response.data.estpaye,
+                    tva_id: response.data.tva_id,
+                    num_facture_lamy: response.data.num_facture_lamy,
+                    due_date: response.data.due_date,
+                    submitted: true
+                });
+                console.log(response.data);
+                //   Ajouter dans le facturier
+                saveFacturier(response.data.facture_id)
+            })
+            .catch(e => {
+                console.log(e);
+                toast.current.show({ severity: 'error', summary: 'Erreur', detail: e.response.data.message, life: 3000 });
+            });
     };
 
 
-            
 
 
 
-      
+
+
     // fonction qui crée le facturier dans la base de donnée grâce au dernier id de facture récupéré
     const saveFacturier = (facture_id) => {
         console.log(fournisseur)
@@ -388,9 +388,9 @@ const AddFacturier = () => {
             facture_id: facture_id,
             decompte_id: decompte.decompte,
             co_fournisseur_id: fournisseur.fournisseur.fournisseur_id,
-            extrait_id: extrait.extrait? extrait.extrait : null,
+            extrait_id: extrait.extrait ? extrait.extrait : null,
             co_client_id: client.client,
-            facture_img : file ? file : null,
+            facture_img: file ? file : null,
         };
 
         FacturierDataService.create(data)
@@ -406,7 +406,7 @@ const AddFacturier = () => {
                 });
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Facturier Added', life: 3000 });
                 //vide les champs du formulaire
-                
+
                 setFactures({
                     ...factures,
                     num_facture: "",
@@ -444,27 +444,30 @@ const AddFacturier = () => {
                 setChecked1(false);
                 const file = document.getElementById('file');
                 file.value = '';
-     
+
 
                 const logData = {
-                    facturier_id : response.data.facturier_id,
-                    facture_id : response.data.facture_id,
-                    user_id : decoded.user_id.id,
-                    description : "Ajout d'un facturier", 
+                    facturier_id: response.data.facturier_id,
+                    facture_id: response.data.facture_id,
+                    user_id: decoded.user_id.id,
+                    description: "Ajout d'un facturier",
                 };
-                console.log(logData);
-                console.log(user)
-                LogsDataService.create(logData);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+
+                // si il y a le facturier_id et le facture_id, on ajoute le log
+                if (logData.facturier_id && logData.facture_id) {
+                    LogsDataService.create(logData);
+                    toast.current.show({ severity: 'success', summary: 'Log ajoutée', detail: `Le log - ${logData.description} - a été ajouté avec succès`, life: 3000 });
+                }
 
             })
             .catch(e => {
-                toast.current.show({ severity: 'error', summary: 'Error', detail: 'Facturier not added', life: 3000 });
+
+                toast.current.show({ severity: 'error', summary: 'Erreur de création', detail: e.response.data.message, life: 3000 });
             });
     };
-                            
 
-        
+
+
 
 
     // fonction qui va ajouter un libelle dans la base de donnée
@@ -487,9 +490,9 @@ const AddFacturier = () => {
 
                 getLibelleList();
                 const logData = {
-                    libelle_id : response.data.id,
-                    description : "Ajout d'un libelle",
-                    user_id : decoded.user_id.id
+                    libelle_id: response.data.id,
+                    description: "Ajout d'un libelle",
+                    user_id: decoded.user_id.id
                 }
                 LogsDataService.create(logData)
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
@@ -518,9 +521,9 @@ const AddFacturier = () => {
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Objet Added', life: 3000 });
                 getObjetList();
                 const logData = {
-                    objet_id : response.data.id,
-                    description : "Ajout d'un objet",
-                    user_id : decoded.user_id.id,
+                    objet_id: response.data.id,
+                    description: "Ajout d'un objet",
+                    user_id: decoded.user_id.id,
                 }
                 LogsDataService.create(logData)
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
@@ -550,9 +553,9 @@ const AddFacturier = () => {
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Decompte Added', life: 3000 });
                 getDecompteList();
                 const logData = {
-                    decompte_id : response.data.decompte_id,
-                    description : "Ajout d'un decompte",
-                    user_id : decoded.user_id.id,
+                    decompte_id: response.data.decompte_id,
+                    description: "Ajout d'un decompte",
+                    user_id: decoded.user_id.id,
 
                 }
                 LogsDataService.create(logData)
@@ -586,9 +589,9 @@ const AddFacturier = () => {
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Decompte Added', life: 3000 });
                 getExtraitList();
                 const logData = {
-                    extrait_id : response.data.extrait_id,
-                    description : "Ajout d'un extrait",
-                    user_id : decoded.user_id.id,
+                    extrait_id: response.data.extrait_id,
+                    description: "Ajout d'un extrait",
+                    user_id: decoded.user_id.id,
 
                 }
                 console.log(logData);
@@ -601,9 +604,9 @@ const AddFacturier = () => {
     };
 
 
-    
 
- 
+
+
 
     const saveFournisseur = async () => {
 
@@ -615,7 +618,7 @@ const AddFacturier = () => {
             num_fournisseur: fournisseur.num_fournisseur,
             description: fournisseur.description,
         };
-       await FournisseurDataService.create(data)
+        await FournisseurDataService.create(data)
             .then(response => {
                 setFournisseur({
                     ...fournisseur,
@@ -627,14 +630,14 @@ const AddFacturier = () => {
                     description: response.data.description,
                 });
                 console.log(response.data.fournisseur_id);
-                setFournisseurId(response.data.fournisseur_id+1);
-                
+                setFournisseurId(response.data.fournisseur_id + 1);
+
                 saveCompteFournisseur(response.data.fournisseur_id);
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Fournisseur Added', life: 3000 });
                 const logData = {
-                    fournisseur_id : response.data.fournisseur_id,
-                    description : "Ajout d'un fournisseur",
-                                        user_id : decoded.user_id.id,
+                    fournisseur_id: response.data.fournisseur_id,
+                    description: "Ajout d'un fournisseur",
+                    user_id: decoded.user_id.id,
 
                 }
                 LogsDataService.create(logData)
@@ -710,9 +713,9 @@ const AddFacturier = () => {
                 setClientId(response.data.client_id + 1);
                 savecompteClient(response.data.client_id);
                 const logData = {
-                    client_id : response.data.client_id,
-                    description : "Ajout d'un client",
-                                        user_id : decoded.user_id.id,
+                    client_id: response.data.client_id,
+                    description: "Ajout d'un client",
+                    user_id: decoded.user_id.id,
 
                 }
                 LogsDataService.create(logData)
@@ -744,7 +747,7 @@ const AddFacturier = () => {
                 });
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Client Added', life: 3000 });
                 //vide les champs du formulaire
-                
+
                 setClient({
                     ...client,
                     name: "",
@@ -752,7 +755,7 @@ const AddFacturier = () => {
                     adresse_client: "",
                     telephone_client: "",
                     email_client: "",
-                    description: "", 
+                    description: "",
 
                 });
                 setCompteClient({
@@ -766,7 +769,7 @@ const AddFacturier = () => {
                 // raffraichir la liste des clients
                 getClientList();
                 // ajouter l'id du client dans la table des logs 
-                
+
 
             })
             .catch(e => {
@@ -797,12 +800,12 @@ const AddFacturier = () => {
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Tva Added', life: 3000 });
 
                 // mettre à jour la liste des tva
-               
-                
+
+
                 const logData = {
-                    tva_id : response.data.tva_id,
-                    description : "Ajout d'une tva",
-                    user_id : decoded.user_id.id,
+                    tva_id: response.data.tva_id,
+                    description: "Ajout d'une tva",
+                    user_id: decoded.user_id.id,
 
                 }
                 LogsDataService.create(logData)
@@ -816,90 +819,90 @@ const AddFacturier = () => {
 
     const onRowEditComplete = async (e) => {
         try {
-          let apiData, logData;
-          switch (e.data.from) {
-            case 'libelle':
-              apiData = { id: e.data.value, title: e.newData.label };
-              await LibelleDataService.update(e.data.value, apiData);
-              logData = { libelle_id: e.data.libelle_id, description: "Modification d'un libelle", user_id: decoded.user_id.id };
-              await LogsDataService.create(logData);
-              getLibelleList();
-              break;
-      
-            case 'objet':
-              apiData = { id: e.data.value, title: e.newData.label };
-              await ObjetDataService.update(e.data.value, apiData);
-              logData = { objet_id: e.data.objet_id, description: "Modification d'un objet", user_id: decoded.user_id.id };
-              await LogsDataService.create(logData);
-              getObjetList();
-              setShowAlert(false);
-              break;
-      
-            case 'decompte':
-              apiData = { decompte_id: e.data.value, num_decompte: e.newData.label, type: e.newData.type };
-              await DecompteDataService.update(e.data.value, apiData);
-              logData = { decompte_id: e.data.decompte_id, description: "Modification d'un decompte", user_id: decoded.user_id.id };
-              await LogsDataService.create(logData);
-              getDecompteList();
-              setShowAlert(false);
-              break;
-      
-            case 'fournisseur':
-                console.log(e)
-              const fournisseurData = {
-                name: e.newData.label,
-                adresse_fournisseur: e.newData.adresse_fournisseur,
-                telephone_fournisseur: e.newData.telephone_fournisseur,
-                email_fournisseur: e.newData.email_fournisseur, 
-                description: e.newData.description
-              };
-              const compteFournisseurData = {
-                numCompteFournisseur: e.newData.numCompteFournisseur,
-                num_compte_banque: e.newData.num_compte_banque
-              };
-              await FournisseurDataService.update(e.data.fournisseur_id, fournisseurData);
-              logData = { fournisseur_id: e.data.fournisseur_id, description: "Modification d'un fournisseur", user_id: decoded.user_id.id };
-              await LogsDataService.create(logData);
-              await compteFournisseurDataService.update(e.data.value, compteFournisseurData);
-              getFournisseurList();
-              setShowAlert(false);
-              break;
-            case 'client':
-                const clientData = {
-                    name: e.newData.label,
-                    firstname: e.newData.firstname,
-                    adresse_client: e.newData.adresse_client,
-                    telephone_client: e.newData.telephone_client,
-                    email_client: e.newData.email_client,
-                    description: e.newData.description
-                };
-                const compteClientData = {
-                    numCompteClient: e.newData.numCompteClient,
-                    num_compte_banque: e.newData.num_compte_banque
-                };
-                await clientDataService.update(e.data.client_id, clientData);
-                logData = { client_id: e.data.client_id, description: "Modification d'un client", user_id: decoded.user_id.id };
-                await LogsDataService.create(logData);
-                await compteClientDataService.update(e.data.value, compteClientData);
-                getClientList();
-                setShowAlert(false);
-                break;
+            let apiData, logData;
+            switch (e.data.from) {
+                case 'libelle':
+                    apiData = { id: e.data.value, title: e.newData.label };
+                    await LibelleDataService.update(e.data.value, apiData);
+                    logData = { libelle_id: e.data.libelle_id, description: "Modification d'un libelle", user_id: decoded.user_id.id };
+                    await LogsDataService.create(logData);
+                    getLibelleList();
+                    break;
 
-      
-            default:
-              break;
-          }
-          toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: `${e.data.from} Updated`, life: 3000 });
-          toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                case 'objet':
+                    apiData = { id: e.data.value, title: e.newData.label };
+                    await ObjetDataService.update(e.data.value, apiData);
+                    logData = { objet_id: e.data.objet_id, description: "Modification d'un objet", user_id: decoded.user_id.id };
+                    await LogsDataService.create(logData);
+                    getObjetList();
+                    setShowAlert(false);
+                    break;
+
+                case 'decompte':
+                    apiData = { decompte_id: e.data.value, num_decompte: e.newData.label, type: e.newData.type };
+                    await DecompteDataService.update(e.data.value, apiData);
+                    logData = { decompte_id: e.data.decompte_id, description: "Modification d'un decompte", user_id: decoded.user_id.id };
+                    await LogsDataService.create(logData);
+                    getDecompteList();
+                    setShowAlert(false);
+                    break;
+
+                case 'fournisseur':
+                    console.log(e)
+                    const fournisseurData = {
+                        name: e.newData.label,
+                        adresse_fournisseur: e.newData.adresse_fournisseur,
+                        telephone_fournisseur: e.newData.telephone_fournisseur,
+                        email_fournisseur: e.newData.email_fournisseur,
+                        description: e.newData.description
+                    };
+                    const compteFournisseurData = {
+                        numCompteFournisseur: e.newData.numCompteFournisseur,
+                        num_compte_banque: e.newData.num_compte_banque
+                    };
+                    await FournisseurDataService.update(e.data.fournisseur_id, fournisseurData);
+                    logData = { fournisseur_id: e.data.fournisseur_id, description: "Modification d'un fournisseur", user_id: decoded.user_id.id };
+                    await LogsDataService.create(logData);
+                    await compteFournisseurDataService.update(e.data.value, compteFournisseurData);
+                    getFournisseurList();
+                    setShowAlert(false);
+                    break;
+                case 'client':
+                    const clientData = {
+                        name: e.newData.label,
+                        firstname: e.newData.firstname,
+                        adresse_client: e.newData.adresse_client,
+                        telephone_client: e.newData.telephone_client,
+                        email_client: e.newData.email_client,
+                        description: e.newData.description
+                    };
+                    const compteClientData = {
+                        numCompteClient: e.newData.numCompteClient,
+                        num_compte_banque: e.newData.num_compte_banque
+                    };
+                    await clientDataService.update(e.data.client_id, clientData);
+                    logData = { client_id: e.data.client_id, description: "Modification d'un client", user_id: decoded.user_id.id };
+                    await LogsDataService.create(logData);
+                    await compteClientDataService.update(e.data.value, compteClientData);
+                    getClientList();
+                    setShowAlert(false);
+                    break;
+
+
+                default:
+                    break;
+            }
+            toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: `${e.data.from} Updated`, life: 3000 });
+            toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
         } catch (error) {
-          toastAddon.current.show({ severity: 'error', summary: 'Error', detail: `${e.data.from} not updated`, life: 3000 });
+            toastAddon.current.show({ severity: 'error', summary: 'Error', detail: `${e.data.from} not updated`, life: 3000 });
         }
-      };
-      
+    };
+
 
     const textEditor = (options) => {
         // Message dans le dialog pour informer l'utilisateur
-        
+
         return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} tooltip="Attention ! Toutes modifications entrainera des changements sur tout le facturier" tooltipOptions={{ className: 'yellow-tooltip', position: 'top' }} />;
 
     }
@@ -907,52 +910,52 @@ const AddFacturier = () => {
     const handleFormSubmit = (event) => {
         setLoading(true);
         event.preventDefault();
-    
+
         if (!file) {
-          alert('Please select a file.');
-          return;
+            alert('Please select a file.');
+            return;
         }
-    
+
         const formData = new FormData();
         formData.append('file', file);
-    
-        axios
-          .post('/api/ocr-mindee', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then((response) => {
-            setResult(response.data);
-            setLoading(false);
-    
-    
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      };
 
-      const handleFileChange = (event) => {
+        axios
+            .post('/api/ocr-mindee', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then((response) => {
+                setResult(response.data);
+                setLoading(false);
+
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const handleFileChange = (event) => {
         setFile(event.target.files[0]);
 
         const file = event.target.files[0];
         console.log(file);
         if (!file) {
-          return;
+            return;
         }
         else {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          setFileInfo({
-            previewURL: reader.result,
-            fileName: file.name,
-            fileSize: `${(file.size / 1024).toFixed(2)} KB`
-          });
-        };
-    }
-      };
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                setFileInfo({
+                    previewURL: reader.result,
+                    fileName: file.name,
+                    fileSize: `${(file.size / 1024).toFixed(2)} KB`
+                });
+            };
+        }
+    };
 
 
     //   Check if the fournisseur from result.supplierName exist in the database, if not, show a message to the user to add it
@@ -965,7 +968,7 @@ const AddFacturier = () => {
     };
 
     const checkClient = async (data) => {
-    
+
         const client = await clientDataService.getClientByName(data);
         if (client.data.message === "Client not found") {
             return false
@@ -975,70 +978,55 @@ const AddFacturier = () => {
 
 
     return (
-        
-        <div>
+
+        <div className="addFacturier-section">
 
             <Toast ref={toast} />
             <Tooltip
-  target=".editButton"
-  content="Modifier"
-    position="bottom"   
-    mouseTrack={true}
-    mouseTrackLeft={10}
+                target=".editButton"
+                content="Modifier"
+                position="bottom"
+                mouseTrack={true}
+                mouseTrackLeft={10}
 
-/>
-<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', border: '1px solid #ced4da', borderRadius: '.25rem', padding: '.375rem .75rem', marginBottom: '1rem', width: '100%' }}>
-  <label className="upload-btn" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-    <input
-      type="file"
-      id="file"
-      name="file"
-        className="inputfile"
+            />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', border: '1px solid #ced4da', borderRadius: '.25rem', width: '100%', flexWrap: 'wrap', padding: '1rem' }}>
+                <label className="upload-btn" style={{ marginBottom: '1rem' }}>
+                    
+                    <input type="file" onChange={handleFileChange} id ="file"/>
+                </label>
 
+                {loading && (
+                    <ProgressBar mode="indeterminate" className="p-progressbar" />
+                )}
+                {fileInfo && (
+                    <div className="file-info-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginLeft: '1rem', width: '50%' }}>
+                        <img className="file-preview" src={fileInfo.previewURL} alt="Preview" />
+                        <div className="file-name">{fileInfo.fileName}</div>
+                        <div className="file-size">{fileInfo.fileSize}</div>
+                    </div>
+                )}
+                                <Button type="button" label="Récupérer les données de la facture" onClick={handleFormSubmit} className="p-button-raised p-button-rounded" style={{ marginLeft: '1rem' }} />
 
-      onChange={handleFileChange}
-      loading={loading}
-    //   Si fileinfo n'existe pas, on affiche le message "Choose a file"
-    //   Si fileinfo existe, on affiche le nom du fichier
-    />
-
-
-
-
-  </label>
-
-  <Button type="button" label="Upload" onClick={handleFormSubmit} />
-
-
-  {loading && (
-    <ProgressBar mode="indeterminate" className="p-progressbar" />
-  )}
-    {fileInfo && (
-  <div className="file-info-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', marginLeft: '1rem', width: '50%' }}>
-    <img className="file-preview" src={fileInfo.previewURL} alt="Preview" />
-    <div className="file-name">{fileInfo.fileName}</div>
-    <div className="file-size">{fileInfo.fileSize}</div>
-  </div>
-)}
-</div>
+            </div>
 
             <h3 class="style-section-title">Factures</h3>
-            <div class="facture-section">
+            <div className="facture-section">
 
 
-                <div class="section-three">
+                <div class="section-three no-hover">
 
                     <div className="p-inputgroup">
                         <span className="p-inputgroup-addon">
                             <i class="fa-solid fa-hashtag"></i>                            </span>
                         <span className="p-float-label">
-                            { result && result.invoiceNumber.value ? <InputText id="num_facture" type="text" value={result.invoiceNumber.value} onChange={(e) => setResult({ ...result, invoiceNumber: { value: e.target.value } })} /> : <InputText id="num_facture" type="text" value={factures.num_facture} onChange={(e) => setFactures({ ...factures, num_facture: e.target.value })} />}
+                            {result && result.invoiceNumber.value ? <InputText id="num_facture" type="text" value={result.invoiceNumber.value} onChange={(e) => setResult({ ...result, invoiceNumber: { value: e.target.value } })} /> : <InputText id="num_facture" type="text" value={factures.num_facture} onChange={(e) => setFactures({ ...factures, num_facture: e.target.value })} />}
                             <label htmlFor="inputgroup">N° de facture*</label>
                         </span>
                     </div>
                 </div>
 
-                <div class="section-three">
+                <div class="section-three no-hover">
 
                     <div className="p-inputgroup">
                         <span className="p-inputgroup-addon">
@@ -1050,251 +1038,246 @@ const AddFacturier = () => {
                         </span>
                     </div>
                 </div>
-                <div class="section-three">
-                {result && result.date.value ? 
-                    <div className="p-inputgroup">
+                <div class="section-three no-hover">
+                    {result && result.date.value ?
+                        <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
-                            <i className="pi pi-calendar"></i>
-                        </span>
+                                <i className="pi pi-calendar"></i>
+                            </span>
                             <span className="p-float-label">
 
-                            <InputText id="date_facture" type="text" value={result.date.value} onChange={(e) => setResult({ ...result, date: { value: e.target.value } })} />
-                            <label htmlFor="inputgroup">Date de facture*</label>
+                                <InputText id="date_facture" type="text" value={result.date.value} onChange={(e) => setResult({ ...result, date: { value: e.target.value } })} />
+                                <label htmlFor="inputgroup">Date de facture*</label>
                             </span>
-                    </div>
-                    :
-                            
-                            <span className="p-float-label">
+                        </div>
+                        :
+
+                        <span className="p-float-label">
 
                             <Calendar id="date_facture" value={factures.date_facture} onChange={(e) => setFactures({ ...factures, date_facture: e.value })} dateFormat="dd/mm/yy" showIcon />
                             <label htmlFor="inputgroup">Date de facture*</label>
-                            </span>
-                
+                        </span>
+
                     }
                 </div>
-                <div class="section-three">
-                {result && result.dueDate.value ? 
-                    <div className="p-inputgroup">
+                <div class="section-three no-hover">
+                    {result && result.dueDate.value ?
+                        <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
-                            <i className="pi pi-calendar"></i>
-                        </span>
+                                <i className="pi pi-calendar"></i>
+                            </span>
                             <span className="p-float-label">
 
-                            <InputText id="date_facture" type="text" value={result.dueDate.value} onChange={(e) => setResult({ ...result, dueDate: { value: e.target.value } })} />
-                            <label htmlFor="inputgroup">Date de facture*</label>
+                                <InputText id="date_facture" type="text" value={result.dueDate.value} onChange={(e) => setResult({ ...result, dueDate: { value: e.target.value } })} />
+                                <label htmlFor="inputgroup">Date de facture*</label>
                             </span>
-                    </div>
-                    :
-                            
-                            <span className="p-float-label">
+                        </div>
+                        :
+
+                        <span className="p-float-label">
 
                             <Calendar id="date_facture" value={factures.due_date} onChange={(e) => setFactures({ ...factures, due_date: e.value })} dateFormat="dd/mm/yy" showIcon minDate={factures.date_facture} />
                             <label htmlFor="inputgroup">Date limite de paiement </label>
-                            </span>
-                
+                        </span>
+
                     }
                 </div>
 
-                        
-                <div class="section-three">
 
-                {result && result.totalAmount.value ? 
-                    <div className="p-inputgroup">
+                <div class="section-three no-hover">
+
+                    {result && result.totalAmount.value ?
+                        <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
-                            <i className="pi pi-euro"></i>
-                        </span>
+                                <i className="pi pi-euro"></i>
+                            </span>
                             <span className="p-float-label">
 
-                            <InputText id="montant" type="text" value={result.totalAmount.value} onChange={(e) => setResult({ ...result, totalAmount: { value: e.target.value } })} />
-                            <label htmlFor="inputgroup">Montant de la facture*</label>
+                                <InputText id="montant" type="text" value={result.totalAmount.value} onChange={(e) => setResult({ ...result, totalAmount: { value: e.target.value } })} />
+                                <label htmlFor="inputgroup">Montant de la facture*</label>
                             </span>
-                    </div>
-                    :
-                    <div className="p-inputgroup">
+                        </div>
+                        :
+                        <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
-                            <i className="pi pi-euro"></i>
-                        </span>
-                           
-                            <span className="p-float-label">
-                            <InputText id="montant" type="text" value={factures.montant_facture} onChange={(e) => setFactures({ ...factures, montant_facture: e.target.value })} />
-                            <label htmlFor="inputgroup">Montant de la facture* </label>
+                                <i className="pi pi-euro"></i>
                             </span>
-                            
-                    </div>
-                
+
+                            <span className="p-float-label">
+                                <InputText id="montant" type="text" value={factures.montant_facture} onChange={(e) => setFactures({ ...factures, montant_facture: e.target.value })} />
+                                <label htmlFor="inputgroup">Montant de la facture* </label>
+                            </span>
+
+                        </div>
+
                     }
                 </div>
-                
+
                 <div class="facture-section" style={{ marginTop: '1em' }}>
-                    <div class="section-three">
+                    <div class="section-three no-hover">
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
                             <span className="p-float-label">
                                 <Dropdown id="libelle" value={factures.libelle} options={libelleList} onChange={(e) => setFactures({ ...factures, libelle: e.value })} placeholder="Choisir parmis les libéllés" filter showClear />
-                                <label htmlFor="inputgroup">Libelle de la facture*</label>
+                                <label htmlFor="inputgroup">Libellé*</label>
                             </span>
                             <Button onClick={(e) => onClick('displayLibelles', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             <Dialog header="Ajout d'un libéllé" className="libelleDialog" visible={displayLibelles} footer={renderFooter} onHide={() => onHide('displayLibelles')}>
-                            
-                                <Button onClick={(e) => onClick('displayLibellesList', 'center', e)}  className="p-button-info" tooltip="Liste des libéllés existants" tooltipOptions={{ position: 'right' }} badge={libelleList.length}>
+
+                                <Button onClick={(e) => onClick('displayLibellesList', 'center', e)} className="p-button-info" tooltip="Liste des libéllés existants" tooltipOptions={{ position: 'right' }} badge={libelleList.length}>
                                     Liste des libélles existants
                                 </Button>
                                 <Toast ref={toastAddon} />
 
-                                <div class="section-three">
+                                <div class="section-three no-hover">
 
-                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                    <div className="p-inputgroup" >
                                         <span className="p-inputgroup-addon">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </span>
                                         <span className="p-float-label">
-                                        
+
                                             <InputText id="libelle" type="text" value={libelles.title} onChange={(e) => setLibelles({ ...libelles, title: e.target.value })} />
                                             <label htmlFor="libelle">Titre du libéllé*</label>
                                         </span>
                                         {/* Button to see a list of libelle */}
-                                        <Dialog header="Liste des libéllés" className="libelleListDialog" visible={displayLibellesList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayLibellesList')} maximizable filter={true} filterPlaceholder="Chercher par objet" filterBy="label"
+                                        <Dialog header="Liste des libéllés" className="libelleListDialog" visible={displayLibellesList} style={{ width: '90%' }} footer={renderFooter} onHide={() => onHide('displayLibellesList')} maximizable filter={true} filterPlaceholder="Chercher par objet" filterBy="label"
                                         >
                                             <Toast ref={toastAddon} />
                                             <DataTable value={libelleList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive maximizable filter={true} filterPlaceholder="Chercher par libéllé" filterBy="label" editMode="row" onRowEditComplete={onRowEditComplete}>
-                                                <Column  field="label" header="Libéllés" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)}  />
+                                                <Column field="label" header="Libéllés" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)} />
                                                 {/* colonne avec le bouton de modifier  */}
 
-                                                <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
+                                                <Column className="editButton" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
 
 
                                             </DataTable>
                                             {/* si l'utilisateur appuie sur modifier de la className editbutton, alors on affiche un message d'attention  */}
-                                            
-                              
-                                            
+
+
+
                                         </Dialog>
-                                        
+
 
                                     </div>
                                 </div>
-                                
+
                             </Dialog>
                         </div>
                     </div>
 
-                    <div class="section-three" style={{ minWidth: '20em' }}>
+                    <div class="section-three no-hover">
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
                                 <i className="pi pi-file"></i>
                             </span>
-                            <span className="p-float-label" style={{ width: '100%' }}>
-                                <Dropdown id="decompte" value={decompte.decompte} options={decompteList} onChange={(e) => setDecompte({ ...decompte, decompte: e.value })} placeholder="Choisir parmis les décomptes" filter showClear />
-                                <label htmlFor="inputgroup">Décompte de la facture*</label>
+                            <span className="p-float-label" >
+                                <Dropdown id="decompte" value={decompte.decompte} options={decompteList} onChange={(e) => setDecompte({ ...decompte, decompte: e.value })} placeholder="Choisir un décomptes" filter showClear />
+                                <label htmlFor="inputgroup">Décompte*</label>
                             </span>
-                            <Button onClick={(e) => onClick('displayDecompte', 'center', e)} icon="pi pi-plus" className="p-button-success" />
-                            
+                            <Button onClick={(e) => onClick('displayDecompte', 'center', e)} icon="pi pi-plus" className="p-button-success" style={{minWidth:'fit-content'}} />
+
                             <Dialog header="Ajout d'un décompte" className="decompteDialog" visible={displayDecompte} footer={renderFooter} onHide={() => onHide('displayDecompte')}>
-                            <Toast ref={toastAddon} />
-                            <Button onClick={(e) => onClick('displayDecompteList', 'center', e)} className="p-button-info" tooltip="Liste des décomptes existants" tooltipOptions={{ position: 'right' }} badge={decompteList.length}>
-                                            List des décomptes existants 
-                                        </Button>
+                                <Toast ref={toastAddon} />
+                                <Button onClick={(e) => onClick('displayDecompteList', 'center', e)} className="p-button-info" tooltip="Liste des décomptes existants" tooltipOptions={{ position: 'right' }} badge={decompteList.length}>
+                                    List des décomptes existants
+                                </Button>
                                 <div class="facture-section" style={{ marginTop: '1em' }}>
-                                <div class="section-three">
+                                    <div class="section-three no-hover">
 
-                                <div className="p-inputgroup" style={{ marginTop: '2em' }}>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
-                                        <span className="p-float-label">
-                                            <InputText id="decompte" type="text" value={decompte.num_decompte} onChange={(e) => setDecompte({ ...decompte, num_decompte: e.target.value })} />
-                                            <label htmlFor="decompte">N° du décompte*</label>
-                                        </span>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
+                                        <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                            <span className="p-inputgroup-addon">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </span>
+                                            <span className="p-float-label">
+                                                <InputText id="decompte" type="text" value={decompte.num_decompte} onChange={(e) => setDecompte({ ...decompte, num_decompte: e.target.value })} />
+                                                <label htmlFor="decompte">N° du décompte*</label>
+                                            </span>
+                                            <span className="p-inputgroup-addon">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </span>
+                                        </div>
+                                        <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                            <span className="p-inputgroup-addon">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </span>
+                                            <span className="p-float-label">
+                                                <InputText id="decompte" type="text" value={decompte.type} onChange={(e) => setDecompte({ ...decompte, type: e.target.value })} />
+                                                <label htmlFor="decompte">Titre du décompte*</label>
+                                            </span>
+                                            <span className="p-inputgroup-addon">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </span>
+                                        </div>
+                                        <div class="section-three no-hover">
+
+
+
+
+                                            {/* Button to see a list of libelle */}
+
+                                            <Dialog header="Liste des décomptes" className="decompteListDialog" visible={displayDecompteList} style={{ width: '90%' }} footer={renderFooter} onHide={() => onHide('displayDecompteList')}>
+
+
+                                                <DataTable value={decompteList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive maximizable filter={true} filterPlaceholder="Chercher par décompte" filterBy="label" editMode="row" onRowEditComplete={onRowEditComplete}>
+                                                    <Column field="label" header="Décompte" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)} />
+                                                    <Column field="type" header="Type" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)} />
+                                                    {/* colonne avec le bouton de modifier  */}
+                                                    <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} className="editButton" data-pr-tooltip="No notifications" data-pr-position="right"></Column>
+
+                                                </DataTable>
+                                                {/* check if the className editButton is changed */}
+                                                {/* si le bouton modifier est cliqué, on indique un message en rouge pour indiqué que ce changement sera effectué sur tous les facturiers existants */}
+
+
+                                            </Dialog>
+
+                                        </div>
                                     </div>
-                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
-                                        <span className="p-float-label">
-                                            <InputText id="decompte" type="text" value={decompte.type} onChange={(e) => setDecompte({ ...decompte, type: e.target.value })} />
-                                            <label htmlFor="decompte">Titre du décompte*</label>
-                                        </span>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
-                                    </div>
-                                    <div class="section-three">
-
-                                    
-
-                                        
-                                        {/* Button to see a list of libelle */}
-                                       
-                                        <Dialog header="Liste des décomptes" className="decompteListDialog" visible={displayDecompteList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayDecompteList')}>
-                                            
-
-                                            <DataTable value={decompteList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive maximizable filter={true} filterPlaceholder="Chercher par décompte" filterBy="label" editMode="row" onRowEditComplete={onRowEditComplete}>
-                                                <Column field="label" header="Décompte" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)}/>
-                                                <Column field="type" header="Type" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)}/>
-                                                {/* colonne avec le bouton de modifier  */}
-                                                <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} className="editButton" data-pr-tooltip="No notifications" data-pr-position="right"></Column>
-
-                                            </DataTable>
-                                            {/* check if the className editButton is changed */}
-                                            {/* si le bouton modifier est cliqué, on indique un message en rouge pour indiqué que ce changement sera effectué sur tous les facturiers existants */}
-                                            
-
-                                        </Dialog>
-                                        
-                                    </div>
-                                    </div>
-                                </div>    
+                                </div>
                             </Dialog>
                         </div>
                     </div>
 
-                    <div class="section-three">
+                    <div class="section-three no-hover">
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
                             <span className="p-float-label">
-                                <Dropdown id="objet" value={factures.objet} options={objetList} onChange={(e) => setFactures({ ...factures, objet: e.value })} placeholder="Choisir parmis les objets" filter showClear/>
+                                <Dropdown id="objet" value={factures.objet} options={objetList} onChange={(e) => setFactures({ ...factures, objet: e.value })} placeholder="Choisir parmis les objets" filter showClear />
                                 <label htmlFor="inputgroup">Objet de la facture*</label>
                             </span>
                             <Button onClick={(e) => onClick('displayObjets', 'center', e)} icon="pi pi-plus" className="p-button-success" />
-                            
-                            <Dialog header="Ajout d'un objet" className="objetDialog" visible={displayObjets} footer={renderFooter} onHide={() => onHide('displayObjets')}>
-                            <Toast ref={toastAddon} />
-                            <Button onClick={(e) => onClick('displayObjetList', 'center', e)} className="p-button-info" tooltip="Liste des objets existants" tooltipOptions={{ position: 'right' }} badge={objetList.length}>
-                                            List des objets existants
-                                        </Button>
-                                <div class="section-three">
+
+                            <Dialog header="Ajout d'un objet" className="objetDialog" visible={displayObjets} footer={renderFooter} onHide={() => onHide('displayObjets')} style={{ width: '90%' }}>
+                                <Toast ref={toastAddon} />
+                                <Button onClick={(e) => onClick('displayObjetList', 'center', e)} className="p-button-info" tooltip="Liste des objets existants" tooltipOptions={{ position: 'right' }} badge={objetList.length}>
+                                    List des objets existants
+                                </Button>
+                                <div class="section-three no-hover">
 
                                     <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                         <span className="p-inputgroup-addon">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </span>
                                         <span className="p-float-label">
-                                        <InputText id="objet" type="text" value={objet.title} onChange={(e) => setObjet({ ...objet, title: e.target.value })} />
-                                        <label htmlFor="objet">Objet*</label>
+                                            <InputText id="objet" type="text" value={objet.title} onChange={(e) => setObjet({ ...objet, title: e.target.value })} />
+                                            <label htmlFor="objet">Objet*</label>
                                         </span>
                                         {/* Button to see a list of objet */}
-                                        
-                                        <Dialog header="Liste des objets" className="objetListDialog" visible={displayObjetList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayObjetList')} >
+
+                                        <Dialog header="Liste des objets" className="objetListDialog" visible={displayObjetList} style={{ width: '90%' }} footer={renderFooter} onHide={() => onHide('displayObjetList')} >
                                             <DataTable value={objetList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} responsive stripedRows resizableColumns columnResizeMode="expand" editMode="row" onRowEditComplete={onRowEditComplete}>
-                                                <Column field="label" header="Objets" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)}/>
-                                                <Column  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} className="editButton" data-pr-tooltip="No notifications" data-pr-position="right" />
-
+                                                <Column field="label" header="Objets" sortable filter filterPlaceholder="Rechercher" editor={(options) => textEditor(options)} />
+                                                <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} className="editButton" data-pr-tooltip="No notifications" data-pr-position="right" />
                                             </DataTable>
-
                                         </Dialog>
-                                        
-
                                     </div>
-                                </div>    
+                                </div>
                             </Dialog>
-
                         </div>
                     </div>
 
@@ -1304,11 +1287,11 @@ const AddFacturier = () => {
 
             </div>
             <div class="facture-section">
-                <h3 class="style-section-title" style={{marginTop:"1em"}}>Clients et fournisseurs</h3>
+                <h3 class="style-section-title" style={{ marginTop: "1em" }}>Clients et fournisseurs</h3>
                 <div class="facture-section">
-                    <div class="section-three">
-                  
-                  
+                    <div class="section-three no-hover">
+
+
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
                                 <i class="fa-solid fa-file-invoice"></i>
@@ -1320,73 +1303,73 @@ const AddFacturier = () => {
                                 </span>
                                 :
                                 <span className="p-float-label">
-                                    <Dropdown id="fournisseur" value={fournisseur.fournisseur} options={fournisseurList} onChange={(e) => setFournisseur({ ...fournisseur, fournisseur: e.value })} placeholder="Séléctionner un fournisseur" filter showClear/> 
+                                    <Dropdown id="fournisseur" value={fournisseur.fournisseur} options={fournisseurList} onChange={(e) => setFournisseur({ ...fournisseur, fournisseur: e.value })} placeholder="Séléctionner un fournisseur" filter showClear />
                                     <label htmlFor="fournisseur">Fournisseur*</label>
                                 </span>
-}            
-                           
-                            
-                            
-                            
+                            }
+
+
+
+
                             <Button onClick={(e) => onClick('displayFournisseur', 'center', e)} icon="pi pi-plus" className="p-button-success" />
-                            
-                            <Dialog header="Ajout d'un nouveau fournisseur" className="fournisseurDialog" visible={displayFournisseur} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayFournisseur')}>
-                            <Toast ref={toastAddon} />
+
+                            <Dialog header="Ajout d'un nouveau fournisseur" className="fournisseurDialog" visible={displayFournisseur} style={{ width: '90%' }} footer={renderFooter} onHide={() => onHide('displayFournisseur')}>
+                                <Toast ref={toastAddon} />
 
                                 {/* Button for the list of fournisseur */}
-                                <Button onClick={(e) => onClick('displayFournisseurList', 'center', e)}  className="p-button-info" tooltip="Liste des fournisseurs existants" tooltipOptions={{ position: 'right' }} badge={fournisseurList.length}>
+                                <Button onClick={(e) => onClick('displayFournisseurList', 'center', e)} className="p-button-info" tooltip="Liste des fournisseurs existants" tooltipOptions={{ position: 'right' }} badge={fournisseurList.length}>
                                     Liste des fournisseurs existants
                                 </Button>
                                 <Dialog header="Liste des fournisseurs" className="fournisseurListDialog" visible={displayFournisseurList} style={{ width: '70%' }} footer={renderFooter} onHide={() => onHide('displayFournisseurList')}>
-                                        <DataTable value={fournisseurList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]}  stripedRows columnResizeMode="expand" filter={true} filterPlaceholder="Chercher par fournisseur" filterBy="label" scrollable scrollHeight="flex" editMode="row" onRowEditComplete={onRowEditComplete}>
-                                            <Column field="label" header="Fournisseurs" sortable filter filterPlaceholder="Rechercher"  style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
-                                            <Column field="numCompteFournisseur" header="Numéro de compte fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
-                                            <Column field="adresse_fournisseur" header="Adresse du fournisseur" sortable filter filterPlaceholder="Rechercher"  style={{ minWidth: '200px' }} editMode  ="row" editor={(options) => textEditor(options)} />
-                                            <Column field="telephone_fournisseur" header="Téléphone du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
-                                            <Column field="email_fournisseur" header="Email du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
-                                            <Column field="num_compte_banque" header="N° de compte en banque du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
-                                            <Column field="description" header="Description" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
-                                            <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
+                                    <DataTable value={fournisseurList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} stripedRows columnResizeMode="expand" filter={true} filterPlaceholder="Chercher par fournisseur" filterBy="label" scrollable scrollHeight="flex" editMode="row" onRowEditComplete={onRowEditComplete}>
+                                        <Column field="label" header="Fournisseurs" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="numCompteFournisseur" header="Numéro de compte fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="adresse_fournisseur" header="Adresse du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editMode="row" editor={(options) => textEditor(options)} />
+                                        <Column field="telephone_fournisseur" header="Téléphone du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="email_fournisseur" header="Email du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="num_compte_banque" header="N° de compte en banque du fournisseur" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="description" header="Description" sortable filter filterPlaceholder="Rechercher" style={{ minWidth: '200px' }} editor={(options) => textEditor(options)} />
+                                        <Column className="editButton" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
 
-                                        </DataTable>
+                                    </DataTable>
                                 </Dialog>
-                               
+
                                 <div class="facture-section">
-                                    <div class="section-three">
+                                    <div class="section-three no-hover">
                                         <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                             <span className="p-inputgroup-addon">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </span>
                                             <span className="p-float-label">
-                                            <InputText id="name" type="text" value={fournisseur.name} onChange={(e) => setFournisseur({ ...fournisseur, name: e.target.value })} />
-                                            <label htmlFor="name">Nom du fournisseur*</label>
+                                                <InputText id="name" type="text" value={fournisseur.name} onChange={(e) => setFournisseur({ ...fournisseur, name: e.target.value })} />
+                                                <label htmlFor="name">Nom*</label>
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="section-three">
+                                    <div class="section-three no-hover">
                                         <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                             <span className="p-inputgroup-addon">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </span>
                                             <span className="p-float-label">
-                                            <InputText id="num_fournisseur" type="text" value={fournisseur.num_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, num_fournisseur: e.target.value })} />
-                                            <label htmlFor="num_fournisseur">Numéro du fournisseur*</label>
+                                                <InputText id="num_fournisseur" type="text" value={fournisseur.num_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, num_fournisseur: e.target.value })} />
+                                                <label htmlFor="num_fournisseur">Numéro du fournisseur*</label>
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="section-three">
+                                    <div class="section-three no-hover">
                                         <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                             <span className="p-inputgroup-addon">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </span>
                                             <span className="p-float-label">
-                                            <InputText id="adresse_fournisseur" type="text" value={fournisseur.adresse_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, adresse_fournisseur: e.target.value })} />
-                                            <label htmlFor="adresse_fournisseur">Adresse du fournisseur*</label>
+                                                <InputText id="adresse_fournisseur" type="text" value={fournisseur.adresse_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, adresse_fournisseur: e.target.value })} />
+                                                <label htmlFor="adresse_fournisseur">Adresse du fournisseur*</label>
                                             </span>
                                         </div>
                                     </div>
                                     <div class="facture-section">
-                                        <div class="section-three">
+                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -1397,29 +1380,29 @@ const AddFacturier = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="section-three">
+                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </span>
                                                 <span className="p-float-label">
-                                                <InputText id="email_fournisseur" type="text" value={fournisseur.email_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, email_fournisseur: e.target.value })} />
-                                                <label htmlFor="email_fournisseur">Email du fournisseur*</label>
+                                                    <InputText id="email_fournisseur" type="text" value={fournisseur.email_fournisseur} onChange={(e) => setFournisseur({ ...fournisseur, email_fournisseur: e.target.value })} />
+                                                    <label htmlFor="email_fournisseur">Email du fournisseur*</label>
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="section-three">
+                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </span>
                                                 <span className="p-float-label">
-                                                <InputText id="num_compte" type="text" value={compteFournisseur.numCompteFournisseur} onChange={(e) => setCompteFournisseur({ ...compteFournisseur, numCompteFournisseur: e.target.value })} />
-                                                <label htmlFor="num_compte">Numéro de compte*</label>
+                                                    <InputText id="num_compte" type="text" value={compteFournisseur.numCompteFournisseur} onChange={(e) => setCompteFournisseur({ ...compteFournisseur, numCompteFournisseur: e.target.value })} />
+                                                    <label htmlFor="num_compte">Numéro de compte*</label>
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="section-three">
+                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -1430,7 +1413,7 @@ const AddFacturier = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="section-three">
+                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -1445,17 +1428,17 @@ const AddFacturier = () => {
                                 </div>
 
                             </Dialog>
-               
+
                         </div>
                         {result &&
-                        checkFournisseur(result.supplierName.value) !== true && !fournisseur.fournisseur ?
-                            <p style={{color: 'red', fontSize: '0.8em', marginTop: '0.5em'}}>Le fournisseur de la facture scanné n'a pas été trouvé, veuillez le rajouter manuellement</p>
+                            checkFournisseur(result.supplierName.value) !== true && !fournisseur.fournisseur ?
+                            <p style={{ color: 'red', fontSize: '0.8em', marginTop: '0.5em' }}>Le fournisseur de la facture scanné n'a pas été trouvé, veuillez le rajouter manuellement</p>
                             :
-                            <p></p> 
+                            <p></p>
                         }
                     </div>
-                    <div class="section-three">
-                    <div className="p-inputgroup">
+                    <div class="section-three no-hover">
+                        <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
@@ -1466,37 +1449,37 @@ const AddFacturier = () => {
                                 </span>
                                 :
                                 <span className="p-float-label">
-                                    <Dropdown id="client" value={client.client} options={clientList} onChange={(e) => setClient({ ...client, client: e.value })} placeholder="Select a client" filter showClear/> 
+                                    <Dropdown id="client" value={client.client} options={clientList} onChange={(e) => setClient({ ...client, client: e.value })} placeholder="Select a client" filter showClear />
                                     <label htmlFor="client">Client*</label>
                                 </span>
-}                              
+                            }
 
-                            
+
                             <Button onClick={(e) => onClick('displayClient', 'center', e)} icon="pi pi-plus" className="p-button-success" />
-                            
+
                             <Dialog header="Ajout d'un nouveau client" className="clientDialog" visible={displayClient} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayClient')}>
-                            <Toast ref={toastAddon} />
+                                <Toast ref={toastAddon} />
 
                                 {/* Button for the list of fournisseur */}
-                                <Button onClick={(e) => onClick('displayClientList', 'center', e)}  className="p-button-info" tooltip="Liste des clients existants" tooltipOptions={{ position: 'right' }} badge={clientList.length}>
+                                <Button onClick={(e) => onClick('displayClientList', 'center', e)} className="p-button-info" tooltip="Liste des clients existants" tooltipOptions={{ position: 'right' }} badge={clientList.length}>
                                     Liste des clients existants
                                 </Button>
                                 <Dialog header="Liste des clients" className="clientListDialog" visible={displayClientList} style={{ width: '80%' }} footer={renderFooter} onHide={() => onHide('displayClientList')}>
-                                        <DataTable value={clientList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]}  stripedRows columnResizeMode="expand" filter={true} filterPlaceholder="Chercher par client" filterBy="label" scrollable scrollHeight="flex" editMode="row" onRowEditComplete={onRowEditComplete}>
-                                            <Column field="name" header="Nom du client" sortable filter filterPlaceholder="Chercher par client" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
-                                            <Column field="firstname" header="Prénom du client" sortable filter filterPlaceholder="Chercher par prénom" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
-                                            <Column field="adresse_client" header="Adresse du client" sortable filter filterPlaceholder="Chercher par adresse" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
-                                            <Column field="telephone_client" header="Téléphone du client" sortable filter filterPlaceholder="Chercher par téléphone" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
-                                            <Column field="email_client" header="Email du client" sortable filter filterPlaceholder="Chercher par email" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
-                                            <Column field="numCompteClient" header="Numéro de compte" sortable filter filterPlaceholder="Chercher par numéro de compte" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
-                                            <Column field="num_compte_banque" header="N° de compte de banque" sortable filter filterPlaceholder="Chercher par numéro de compte de banque" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
-                                            <Column field="description" header="Description du client" sortable filter filterPlaceholder="Chercher par description" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)}/>
-                                            <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
+                                    <DataTable value={clientList} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} stripedRows columnResizeMode="expand" filter={true} filterPlaceholder="Chercher par client" filterBy="label" scrollable scrollHeight="flex" editMode="row" onRowEditComplete={onRowEditComplete}>
+                                        <Column field="name" header="Nom du client" sortable filter filterPlaceholder="Chercher par client" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="firstname" header="Prénom du client" sortable filter filterPlaceholder="Chercher par prénom" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="adresse_client" header="Adresse du client" sortable filter filterPlaceholder="Chercher par adresse" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="telephone_client" header="Téléphone du client" sortable filter filterPlaceholder="Chercher par téléphone" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="email_client" header="Email du client" sortable filter filterPlaceholder="Chercher par email" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="numCompteClient" header="Numéro de compte" sortable filter filterPlaceholder="Chercher par numéro de compte" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="num_compte_banque" header="N° de compte de banque" sortable filter filterPlaceholder="Chercher par numéro de compte de banque" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)} />
+                                        <Column field="description" header="Description du client" sortable filter filterPlaceholder="Chercher par description" filterMatchMode="contains" style={{ width: '250px' }} editor={(options) => textEditor(options)} />
+                                        <Column className="editButton" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
 
-                                        </DataTable>
+                                    </DataTable>
                                 </Dialog>
                                 <div class="facture-section">
-                                    <div class="section-three">
+                                    <div class="section-three no-hover">
                                         <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                             <span className="p-inputgroup-addon">
                                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -1507,7 +1490,7 @@ const AddFacturier = () => {
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="section-three">
+                                    <div class="section-three no-hover">
                                         <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                             <span className="p-inputgroup-addon">
                                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -1518,7 +1501,7 @@ const AddFacturier = () => {
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="section-three">
+                                    <div class="section-three no-hover">
                                         <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                             <span className="p-inputgroup-addon">
                                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -1530,7 +1513,7 @@ const AddFacturier = () => {
                                         </div>
                                     </div>
                                     <div class="facture-section">
-                                        <div class="section-three">
+                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -1541,7 +1524,7 @@ const AddFacturier = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="section-three">
+                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -1552,7 +1535,7 @@ const AddFacturier = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="section-three">
+                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -1562,7 +1545,7 @@ const AddFacturier = () => {
                                                     <label htmlFor="Email du client">N° du compte client*</label>
                                                 </span>
                                             </div>
-                                        </div>                                        <div class="section-three">
+                                        </div>                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -1573,7 +1556,7 @@ const AddFacturier = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="section-three">
+                                        <div class="section-three no-hover">
                                             <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                                 <span className="p-inputgroup-addon">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -1588,43 +1571,43 @@ const AddFacturier = () => {
                                 </div>
 
                             </Dialog>
-               
+
+                        </div>
+                        {result && checkClient(result.customerName) !== true && !client.client ?
+                            <p className="p-error" style={{ textAlign: "center" }}>Le client n'existe pas. Veuillez le créer avant de continuer</p>
+                            : null}
                     </div>
-                    {result && checkClient(result.customerName) !== true && !client.client ?
-                    <p className="p-error" style={{textAlign:"center"}}>Le client n'existe pas. Veuillez le créer avant de continuer</p>
-                    : null}
-                    </div>
-               
+
                 </div>
             </div>
-            <div class="facture-section" style={{marginBottom:"1em"}}>
-                <h3 class="style-section-title" style={{marginTop:"1em"}}>Extraits de compte et TVA</h3>
+            <div class="facture-section" style={{ marginBottom: "1em" }}>
+                <h3 class="style-section-title" style={{ marginTop: "1em" }}>Extraits de compte et TVA</h3>
                 <div class="facture-section">
-                    <div class="section-three">
+                    <div class="section-three no-hover">
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
                             <span className="p-float-label">
-                                <Dropdown id="extrait" value={extrait.extrait} options={extraitList} onChange={(e) => setExtrait({ ...extrait, extrait: e.value })} placeholder="Choisir un extrait" tooltip="Ce champs n'est pas obligatoire. Si vous décidez de ne pas le remplir, la facture sera indiquée comme non payée" tooltipOptions={{ position: 'top'}} filter showClear/>
+                                <Dropdown id="extrait" value={extrait.extrait} options={extraitList} onChange={(e) => setExtrait({ ...extrait, extrait: e.value })} placeholder="Choisir un extrait" tooltip="Ce champs n'est pas obligatoire. Si vous décidez de ne pas le remplir, la facture sera indiquée comme non payée" tooltipOptions={{ position: 'top' }} filter showClear />
                                 <label htmlFor="inputgroup">Extrait de la facture</label>
                             </span>
                             <Button onClick={(e) => onClick('displayExtrait', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             <Dialog header="Ajouter un extrait" visible={displayExtrait} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtrait')} className="extraitDialog">
-                            <Toast ref={toastAddon} />
-                                <Button onClick={(e) => onClick('displayExtraitList', 'center', e)}  className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
+                                <Toast ref={toastAddon} />
+                                <Button onClick={(e) => onClick('displayExtraitList', 'center', e)} className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
                                     Liste des extraits
                                 </Button>
-                                    <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitListDialog">
-                                        <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive editMode="row" onRowEditComplete={onRowEditComplete}>
-                                            <Column field="label" header="N° de l'extrait" editor={(options) => textEditor(options)}/>
-                                            <Column field="date" header="Date de l'extrait" editor={(options) => textEditor(options)}/>
-                                            <Column field="montant" header="Montant de l'extrait" editor={(options) => textEditor(options)} />
-                                            <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
+                                <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitListDialog">
+                                    <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive editMode="row" onRowEditComplete={onRowEditComplete}>
+                                        <Column field="label" header="N° de l'extrait" editor={(options) => textEditor(options)} />
+                                        <Column field="date" header="Date de l'extrait" editor={(options) => textEditor(options)} />
+                                        <Column field="montant" header="Montant de l'extrait" editor={(options) => textEditor(options)} />
+                                        <Column className="editButton" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
 
-                                        </DataTable>
-                                    </Dialog>
-                                <div class="section-three">
+                                    </DataTable>
+                                </Dialog>
+                                <div class="section-three no-hover">
 
                                     <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                         <span className="p-inputgroup-addon">
@@ -1636,7 +1619,7 @@ const AddFacturier = () => {
                                         </span>
                                     </div>
                                 </div>
-                                <div class="section-three">
+                                <div class="section-three no-hover">
                                     <div className="p-inputgroup" style={{ marginTop: '2em', width: '97%', marginLeft: '1.5%' }}>
                                         <span className="p-inputgroup-addon">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -1646,8 +1629,8 @@ const AddFacturier = () => {
                                             <label htmlFor="date_extrait">Date d'extrait</label>
                                         </span>
                                     </div>
-                                </div>     
-                                <div class="section-three">
+                                </div>
+                                <div class="section-three no-hover">
                                     <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                         <span className="p-inputgroup-addon">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -1657,50 +1640,50 @@ const AddFacturier = () => {
                                             <label htmlFor="montant_extrait">Montant d'extrait</label>
                                         </span>
                                     </div>
-                                </div>                             
+                                </div>
                             </Dialog>
                         </div>
                     </div>
-                    <div class="section-three">
+                    <div class="section-three no-hover">
                         <div className="p-inputgroup">
                             <span className="p-inputgroup-addon">
                                 <i class="fa-solid fa-file-invoice"></i>
                             </span>
-                            { result && result.taxes && result.taxes.length > 0 ?
+                            {result && result.taxes && result.taxes.length > 0 ?
                                 <span className="p-float-label">
-                                    <InputText id="tva" type="text" value={result.taxes[0].rate} onChange={(e) => setResult({ ...result, taxes: [{ rate: e.target.value }] })} tooltip={`tvas existantes : ` + tvaList.map((tva) => tva.label + '%')} tooltipOptions={{ position: 'top'}} />
+                                    <InputText id="tva" type="text" value={result.taxes[0].rate} onChange={(e) => setResult({ ...result, taxes: [{ rate: e.target.value }] })} tooltip={`tvas existantes : ` + tvaList.map((tva) => tva.label + '%')} tooltipOptions={{ position: 'top' }} />
                                     {/* Si on clique sur le bouton, on affiche le dropdown */}
-                                    
-                                </span>
-                            :
-                                <span className="p-float-label">
-                                    <Dropdown id="tva" value={factures.tva} options={tvaList} onChange={(e) => setFactures({ ...factures, tva: e.value })} placeholder="Select a tva" filter showClear/>
-                                    <label htmlFor="inputgroup">TVA</label>
-                                    
-                                </span>
-                                
-            
-}
 
-                        
+                                </span>
+                                :
+                                <span className="p-float-label">
+                                    <Dropdown id="tva" value={factures.tva} options={tvaList} onChange={(e) => setFactures({ ...factures, tva: e.value })} placeholder="Select a tva" filter showClear />
+                                    <label htmlFor="inputgroup">TVA</label>
+
+                                </span>
+
+
+                            }
+
+
 
                             <Button onClick={(e) => onClick('displayTva', 'center', e)} icon="pi pi-plus" className="p-button-success" />
                             <Dialog header="Ajouter une TVA" visible={displayTva} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayTva')} className="tvaDialog">
-                            <Toast ref={toastAddon} />
+                                <Toast ref={toastAddon} />
 
-                                <Button onClick={(e) => onClick('displayTvaList', 'center', e)}  className="p-button-info" badge={tvaList.length} tooltip="Liste des TVA's" tooltipOptions={{ position: 'right' }}>
-                                    Liste des TVA 
+                                <Button onClick={(e) => onClick('displayTvaList', 'center', e)} className="p-button-info" badge={tvaList.length} tooltip="Liste des TVA's" tooltipOptions={{ position: 'right' }}>
+                                    Liste des TVA
                                 </Button>
-                                    <Dialog header="Liste des TVA" visible={displayTvaList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayTvaList')}  className="tvaDialog">
-                                        <DataTable value={tvaList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive filter editMode="row" onRowEditComplete={onRowEditComplete}>
-                                            <Column field="label" header="Valeur de la TVA" sortable editor={(options) => textEditor(options)}/>
-                                            <Column field="tva_description" header="Description " sortable editor={(options) => textEditor(options)}/>
-                                            <Column className="editButton"  rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible'}} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
+                                <Dialog header="Liste des TVA" visible={displayTvaList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayTvaList')} className="tvaDialog">
+                                    <DataTable value={tvaList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive filter editMode="row" onRowEditComplete={onRowEditComplete}>
+                                        <Column field="label" header="Valeur de la TVA" sortable editor={(options) => textEditor(options)} />
+                                        <Column field="tva_description" header="Description " sortable editor={(options) => textEditor(options)} />
+                                        <Column className="editButton" rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center', overflow: 'visible' }} data-pr-tooltip="Modifier" data-pr-position="top"></Column>
 
 
-                                        </DataTable>
-                                    </Dialog>
-                                <div class="section-three">
+                                    </DataTable>
+                                </Dialog>
+                                <div class="section-three no-hover">
                                     <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                         <span className="p-inputgroup-addon">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -1710,8 +1693,8 @@ const AddFacturier = () => {
                                             <label htmlFor="inputgroup">Montant de la TVA</label>
                                         </span>
                                     </div>
-                                </div>      
-                                <div class="section-three">
+                                </div>
+                                <div class="section-three no-hover">
                                     <div className="p-inputgroup" style={{ marginTop: '2em' }}>
                                         <span className="p-inputgroup-addon">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -1721,28 +1704,28 @@ const AddFacturier = () => {
                                             <label htmlFor="inputgroup">Description de la TVA</label>
                                         </span>
                                     </div>
-                                </div>                      
+                                </div>
                             </Dialog>
                         </div>
                     </div>
                 </div>
-            </div> 
-               
+            </div>
+
             {/* radio button   */}
-          
-                {/* checked button  */}
-                <p>Les champs ayant (*) sont obligatoires</p>
-                <div className="p-field-radiobutton">
+
+            {/* checked button  */}
+            <p>Les champs ayant (*) sont obligatoires</p>
+            <div className="p-field-radiobutton">
                 Êtes-vous sûr de vouloir ajouter cette facture ?  (Toutes les informations doivent être correctes) :
 
-                <Checkbox inputId="cb1" value="Yes" onChange={(e) => setChecked1(e.checked)} checked={checked1} style={{marginLeft:"1em"}} />
-                    
-                </div>
-   
-            <div style={{marginTop:"1em"}}>
-                    
-                    <Button onClick={saveFacture} name="addFacture" disabled={checked1 ? false : true}  style={{display:"flex", justifyContent:"center", alignItems:"center", margin:"auto", width:"50%"}} className="p-button-success">Ajouter la facture</Button>
-                </div>            
+                <Checkbox inputId="cb1" value="Yes" onChange={(e) => setChecked1(e.checked)} checked={checked1} style={{ marginLeft: "1em" }} />
+
+            </div>
+
+            <div style={{ marginTop: "1em" }}>
+
+                <Button onClick={saveFacture} name="addFacture" disabled={checked1 ? false : true} style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", width: "50%" }} className="p-button-success">Ajouter la facture</Button>
+            </div>
         </div>
     );
 };

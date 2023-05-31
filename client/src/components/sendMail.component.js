@@ -7,6 +7,7 @@ import './sendMail.css'
 
 const SendEmail = () => {
   const [loading, setLoading] = useState(false);
+  const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('recommendation'); // par défaut, le sujet recommandation est sélectionné
@@ -16,6 +17,9 @@ const SendEmail = () => {
   console.log(decoded);
   const userMail = decoded.user_id.email;
 
+  const handleToChange = (event) => {
+    setTo(event.target.value);
+  };
 
   const handleSubjectChange = (event) => {
     setSubject(event.target.value);
@@ -75,7 +79,7 @@ const SendEmail = () => {
   return (
     <div className="send-email" style={{display : "flex", flexDirection : "column", alignItems : "center", justifyContent : "center", marginTop : "50px"}}>
 
-         <div className="card opening-hours" style={{width : "50%", height : "100%", padding : "20px", boxShadow : "1px 1px 1px 1px #888888", marginLeft : "20px"}}>
+         <Card className="card opening-hours" style={{minWidth : "50%", height : "100%", padding : "20px"}} id="card">
         <h2>Horaires de permanence :</h2>
         <ul className="list-unstyled">
           {/* Président */}
@@ -89,8 +93,8 @@ const SendEmail = () => {
             <li>Dimanche : Fermé</li>
             Tous les jours jusqu'à 18h pour toute demande ne nécessitant pas Monsieur Rappaille
         </ul>
-    </div>
-    <Card style={{width : "50%", height : "100%", padding : "20px", boxShadow : "1px 1px 1px 1px #888888", marginLeft : "20px"}}>
+    </Card>
+    <Card style={{minWidth : "50%", height : "100%", padding : "20px"}} id="card" className='contact' >
               <h1>Contactez-nous ! <i className="fas fa-envelope"></i></h1>
 
         <Toast ref={toast} />

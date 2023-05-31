@@ -9,7 +9,7 @@ class compteClientService {
         const alldata = data.data.data;
         console.log(alldata, 'alldata');
         // find the fournisseur_id from the compteFournisseur, then find the fournisseur from the fournisseur_id, then add the fournisseur to the compteFournisseur
-        const compteClientWithClient = data.data.data.map(async compteClient => {
+        const compteClientWithClient = alldata.map(async compteClient => {
             const client = await axios.get(API_CLIENT_URL + compteClient.client_id, { headers: BASIC_HEADERS });
             compteClient.client = client.data;
             return compteClient;

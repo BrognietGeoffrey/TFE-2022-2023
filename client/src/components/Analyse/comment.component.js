@@ -207,35 +207,67 @@ const Comment = () => {
             </TabPanel>
             <TabPanel header="Liste des commentaires" >
             {comments && comments.length > 0 ? (
-  comments.map((comment) => (
-    <div className="comment-list" key={comment.id}>
-      <div className="comment-item">
-        <div className="comment-avatar">
-          <img src="https://placehold.it/50x50" alt="Avatar" />
-        </div>
-        <div className="comment-content">
-          <div className="comment-header">
-            <h3 className="comment-title">{comment.title}</h3>
-            <p className="comment-meta">
-              Par {comment.user.username} - il y a{" "}
-              {createdSinceComment(comment.createdAt)}
-            </p>
-          </div>
-          <div className="comment-body">
-            <p>{comment.comments}</p>
-          </div>
-          {comment.facturier_id && (
-            <div className="comment-footer">
-              <span className="comment-reply">
-                Ce commentaire est lié à la facture n°
-                {comment.facturier.facture.num_facture}
-              </span>
+comments.map((comment) => (
+  <div className={`comment-list ${comment.user.id === user_id ? 'user-comment' : ''}`} key={comment.id}>
+    <div className="comment-item">
+      {comment.user.id === user_id ? (
+        <>
+          <div className="comment-content">
+            <div className="comment-header">
+              <h3 className="comment-title">{comment.title}</h3>
+              <p className="comment-meta">
+                Par {comment.user.username} - il y a{" "}
+                {createdSinceComment(comment.createdAt)}
+              </p>
             </div>
-          )}
-        </div>
-      </div>
+            <div className="comment-body">
+              <p>{comment.comments}</p>
+            </div>
+            {comment.facturier_id && (
+              <div className="comment-footer">
+                <span className="comment-reply">
+                  Ce commentaire est lié à la facture n°
+                  {comment.facturier.facture.num_facture}
+                </span>
+              </div>
+            )}
+          </div>
+          <div className="comment-avatar">
+            {/* Put a blue icon if the owner of the comment is connected */}
+            <i className="pi pi-user" style={{ fontSize: "2.3em", backgroundColor: '#a2a8d3', borderRadius: '50%', padding: '0.2em', marginLeft: '0.5em' }}></i>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="comment-avatar">
+            {/* Put a blue icon if the owner of the comment is connected */}
+            <i className="pi pi-user" style={{ fontSize: "2.3em", backgroundColor: '#f2f2f2', borderRadius: '50%', padding: '0.2em' }}></i>
+          </div>
+          <div className="comment-content">
+            <div className="comment-header">
+              <h3 className="comment-title">{comment.title}</h3>
+              <p className="comment-meta">
+                Par {comment.user.username} - il y a{" "}
+                {createdSinceComment(comment.createdAt)}
+              </p>
+            </div>
+            <div className="comment-body">
+              <p>{comment.comments}</p>
+            </div>
+            {comment.facturier_id && (
+              <div className="comment-footer">
+                <span className="comment-reply">
+                  Ce commentaire est lié à la facture n°
+                  {comment.facturier.facture.num_facture}
+                </span>
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
-  ))
+  </div>
+))
 ) : (
   <p>Aucun commentaire</p>
 )}

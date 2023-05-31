@@ -6,8 +6,9 @@ const API_FOURNISSEUR_URL = '/api/fournisseurs/';
 class compteFournisseurService {
     async getAll() {
         const data = await axios.get(API_URL, { headers: BASIC_HEADERS });
+        const alldata = data.data.data;
         // find the fournisseur_id from the compteFournisseur, then find the fournisseur from the fournisseur_id, then add the fournisseur to the compteFournisseur
-        const compteFournisseursWithFournisseurs = data.data.data.map(async compteFournisseur => {
+        const compteFournisseursWithFournisseurs = alldata.map(async compteFournisseur => {
             const fournisseur = await axios.get(API_FOURNISSEUR_URL + compteFournisseur.fournisseur_id, { headers: BASIC_HEADERS });
             compteFournisseur.fournisseur = fournisseur.data;
             return compteFournisseur;
