@@ -12,16 +12,16 @@ const jwt = require('jsonwebtoken');
 
 
 const payload = {
-    role : "admin", 
+    role : "admin",
     user_id : {
         id : 1,
     }
     };
-  
+
   const options = {
     expiresIn: '7d' // Définit l'expiration du JWT à une durée plus longue (7 jours dans cet exemple)
   };
-  
+
   const token = jwt.sign(payload, secretKey, options);
 
 request = request("http://localhost:4000");
@@ -32,9 +32,10 @@ describe('Facturiers routes', function() {
       request.get('/api/facturiers')
         .set('Authorization', `Bearer ${token}`)
         .end(function(err, res) {
+	  console.log(res.body, 'res.body')
           expect(err).to.be.null;
           expect(res).to.have.status(200);
-          expect(res.body).to.be.an('array');
+          expect(res.body.data).to.be.an('array');
           done();
         });
     });
@@ -45,8 +46,8 @@ describe('Facturiers routes', function() {
         .set('Authorization', `Bearer ${token}`)
         .end(function(err, res) {
             expect(res).to.have.status(200);
-
-        res.body.facture_id.should.be.equal(1);
+	console.log(res.body, 'res.body')
+        res.body.data.facture_id.should.be.equal(1);
         done();
         });
     });
@@ -63,7 +64,7 @@ describe('Decomptes routes', function() {
           .end(function(err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
-            expect(res.body).to.be.an('array');
+            expect(res.body.data).to.be.an('array');
             done();
           });
       });
@@ -78,7 +79,7 @@ describe('Decomptes routes', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.type.should.be.equal("Factures")
+            res.body.data.type.should.be.equal("Factures")
             done();
             });
         });
@@ -92,6 +93,7 @@ describe('objet routes', function() {
         request.get('/api/objet')
           .set('Authorization', `Bearer ${token}`)
           .end(function(err, res) {
+            console.log(res.body, 'res.body')
             expect(err).to.be.null;
             expect(res).to.have.status(200);
             expect(res.body).to.be.an('array');
@@ -139,8 +141,8 @@ describe('------- Factures routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.montant.should.be.equal(1)
-            res.body.libelle_id.should.be.equal(1)
+            res.body.data.montant.should.be.equal(1)
+            res.body.data.libelle_id.should.be.equal(1)
             done();
             });
         });
@@ -156,7 +158,7 @@ describe('------- Libelles routes -----------', function() {
           .end(function(err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
-            expect(res.body).to.be.an('array');
+            expect(res.body.data).to.be.an('array');
             done();
           });
       });
@@ -172,8 +174,8 @@ describe('------- Libelles routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.title.should.be.equal("Factures")
-           
+            res.body.data.title.should.be.equal("Factures")
+
             done();
             });
         });
@@ -189,7 +191,7 @@ describe('------- TVA routes -----------', function() {
           .end(function(err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
-            expect(res.body).to.be.an('array');
+            expect(res.body.data).to.be.an('array');
             done();
           });
       });
@@ -205,8 +207,8 @@ describe('------- TVA routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.tva_value.should.be.equal("21")
-           
+            res.body.data.tva_value.should.be.equal("21")
+
             done();
             });
         });
@@ -222,7 +224,7 @@ describe('------- Comments routes -----------', function() {
           .end(function(err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
-            expect(res.body).to.be.an('array');
+            expect(res.body.data).to.be.an('array');
             done();
           });
       });
@@ -238,13 +240,13 @@ describe('------- Comments routes -----------', function() {
             .send({
                 comments: 'test',
                 userId: 1,
-                facturier_id: 1, 
+                facturier_id: 1,
                 title : 'test',
             })
             .end(function(err, res) {
                 expect(err).to.be.null;
                 expect(res).to.have.status(200);
-                expect(res.body).to.be.an('object');
+                expect(res.body.data).to.be.an('object');
                 done();
             });
         });
@@ -260,7 +262,7 @@ describe('------- extraits routes -----------', function() {
           .end(function(err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
-            expect(res.body).to.be.an('array');
+            expect(res.body.data).to.be.an('array');
             done();
           });
       });
@@ -277,9 +279,9 @@ describe('------- extraits routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.num_extrait.should.be.equal(1)
-            res.body.montant.should.be.equal(1)
-           
+            res.body.data.num_extrait.should.be.equal(1)
+            res.body.data.montant.should.be.equal(1)
+
             done();
             });
         });
@@ -295,7 +297,7 @@ describe('------- logs routes -----------', function() {
           .end(function(err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(200);
-            expect(res.body).to.be.an('array');
+            expect(res.body.data).to.be.an('array');
             done();
           });
       });
@@ -311,13 +313,13 @@ describe('------- logs routes -----------', function() {
             .set('Authorization', `Bearer ${token}`)
             .send({
                 user_id: 1,
-                facturier_id: 1, 
+                facturier_id: 1,
                 description : 'Ajout d"un facturier',
             })
             .end(function(err, res) {
                 expect(err).to.be.null;
                 expect(res).to.have.status(200);
-                expect(res.body).to.be.an('object');
+                expect(res.body.data).to.be.an('object');
                 done();
             });
         });
@@ -349,9 +351,9 @@ describe('------- fournisseur routes -----------', function() {
             .end(function(err, res) {
                 expect(res).to.have.status(200);
 
-            res.body.name.should.be.equal("Geoffrey Brogniet")
-            res.body.num_fournisseur.should.be.equal(1)
-           
+            res.body.data.name.should.be.equal("Geoffrey Brogniet")
+            res.body.data.num_fournisseur.should.be.equal(1)
+
             done();
             });
         });
@@ -386,18 +388,10 @@ describe('------- clients routes -----------', function() {
 
             res.body.name.should.be.equal("Geoffrey")
             res.body.firstname.should.be.equal("Brogniet")
-           
+
             done();
             });
         });
     });
     }
 );
-
-
-
-
-
-
-
-
