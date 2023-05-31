@@ -184,7 +184,7 @@ const FacturierDatatable = () => {
     const fetchData = async () => {
         const response = await FacturierDataService.getAll().then (
             response => {
-                if (response.data.length > 0) {
+                if (response.data.data.length > 0) {
                     setFacturiers(response.data.data)
                 }
             }
