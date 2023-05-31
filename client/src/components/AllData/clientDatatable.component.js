@@ -174,6 +174,7 @@ const ClientDatatable = () => {
         <div>
             <Toast ref={toast} />
             <DataTable value={compteClient} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['client.name', 'numCompteClient', 'client.firstname', 'client.adresse_client', 'client.telephone_client', 'num_compte_banque', 'client.email_client', 'client.description', 'createdAt']} filters={filters1}
+            
                 paginator rows={rows} rowsPerPageOptions={[5, 10, 25, 50]} emptyMessage="Aucun client trouvé." currentPageReportTemplate="{first}-{last} sur {totalRecords}">
                 <Column field="name" header="Nom" sortable editor={(options) => textEditor(options)} filter ></Column>
                 <Column field="firstname" header="Prénom" sortable editor={(options) => textEditor(options)} filter ></Column>
@@ -188,6 +189,7 @@ const ClientDatatable = () => {
 
                 <Column rowEditor></Column>
             </DataTable>
+            {console.log(compteClient)}
         </div>
     );
 }

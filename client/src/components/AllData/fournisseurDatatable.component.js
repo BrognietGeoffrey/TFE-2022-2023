@@ -184,6 +184,7 @@ const FournisseurDatatable = () => {
 
                 <Column rowEditor></Column>
             </DataTable>
+            {console.log(compteFournisseur)}
         </div>
     );
 }
