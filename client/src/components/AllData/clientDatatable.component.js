@@ -53,7 +53,7 @@ const ClientDatatable = () => {
 
     const getCompteClient = () => {
         compteClientService.getAll().then((response) => {
-            setCompteClient(response.data);
+            setCompteClient(response.data.data);
             console.log(response, 'response.data');
         })
             .catch((error) => {

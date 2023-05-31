@@ -54,13 +54,13 @@ const Comment = () => {
     const getComments = () => {
         CommentService.getAll()
             .then((response) => {    
-                if (response.length === 0) {
+                if (response.data.length === 0) {
                     toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'No comment found', life: 3000 });
                     setComments([]);
                 }
                 else {
                   // trier par date de création
-                  const sortedComments = response.sort((a, b) => {
+                  const sortedComments = response.data.sort((a, b) => {
                     return new Date(b.createdAt) - new Date(a.createdAt); 
                   });
                   setComments(sortedComments);
