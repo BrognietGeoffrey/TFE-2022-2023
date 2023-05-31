@@ -176,12 +176,12 @@ const ClientDatatable = () => {
             <DataTable value={compteClient} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['client.name', 'numCompteClient', 'client.firstname', 'client.adresse_client', 'client.telephone_client', 'num_compte_banque', 'client.email_client', 'client.description', 'createdAt']} filters={filters1}
             
                 paginator rows={rows} rowsPerPageOptions={[5, 10, 25, 50]} emptyMessage="Aucun client trouvé." currentPageReportTemplate="{first}-{last} sur {totalRecords}">
-                <Column field="name" header="Nom" sortable editor={(options) => textEditor(options)} filter ></Column>
-                <Column field="firstname" header="Prénom" sortable editor={(options) => textEditor(options)} filter ></Column>
-                <Column field="email_client" header="Email" sortable editor={(options) => textEditor(options)} filter ></Column>
-                <Column field="adresse_client" header="Adresse" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="telephone_client" header="Téléphone" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="description" header="Description" sortable editor={(options) => textEditor(options)} filter></Column>
+                <Column field="client.name" header="Nom" sortable editor={(options) => textEditor(options)} filter ></Column>
+                <Column field="client.firstname" header="Prénom" sortable editor={(options) => textEditor(options)} filter ></Column>
+                <Column field="client.email_client" header="Email" sortable editor={(options) => textEditor(options)} filter ></Column>
+                <Column field="client.adresse_client" header="Adresse" sortable editor={(options) => textEditor(options)} filter></Column>
+                <Column field="client.telephone_client" header="Téléphone" sortable editor={(options) => textEditor(options)} filter></Column>
+                <Column field="client.description" header="Description" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="numCompteClient" header="Numéro de compte" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="num_compte_banque" header="N° de compte en banque" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="createdAt" header="Date de création" body={(rowData) => { return (<div>{new Date(rowData.createdAt).toLocaleDateString()}</div>) }} ></Column>

@@ -54,7 +54,7 @@ const FournisseurDatatable = () => {
     const getCompteFournisseur = () => {
         compteFournisseurService.getAll().then((response) => {
             setCompteFournisseur(response);
-            console.log(response.data.data, 'response.data');
+            console.log(response.data, 'response.data');
         })
         .catch((error) => {
             console.log(error);
@@ -171,12 +171,12 @@ const FournisseurDatatable = () => {
             <Toast ref={toast} />
             <DataTable value={compteFournisseur} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['fournisseur.name', 'numCompteFournisseur', , 'fournisseur.adresse_fournisseur', 'fournisseur.telephone_fournisseur','num_compte_banque', 'fournisseur.email_fournisseur', 'fournisseur.description', 'createdAt']} filters={filters1}
             rows={rows} paginator rowsPerPageOptions={[5, 10, 25, 50]} emptyMessage="Aucun compte fournisseur trouvé.">
-                <Column field="name" header="Nom" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="email_fournisseur" header="Email" sortable editor={(options) => textEditor(options)} filter ></Column>
-                <Column field="adresse_fournisseur" header="Adresse" sortable editor={(options) => textEditor(options)} filter> </Column>
-                <Column field="telephone_fournisseur" header="Téléphone" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="num_fournisseur" header="Numéro de fournisseur" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="description" header="Description" sortable editor={(options) => textEditor(options)} filter></Column>
+                <Column field="fournisseur.data.name" header="Nom" sortable editor={(options) => textEditor(options)} filter></Column>
+                <Column field="fournisseur.data.email_fournisseur" header="Email" sortable editor={(options) => textEditor(options)} filter ></Column>
+                <Column field="fournisseur.data.adresse_fournisseur" header="Adresse" sortable editor={(options) => textEditor(options)} filter> </Column>
+                <Column field="fournisseur.data.telephone_fournisseur" header="Téléphone" sortable editor={(options) => textEditor(options)} filter></Column>
+                <Column field="fournisseur.data.num_fournisseur" header="Numéro de fournisseur" sortable editor={(options) => textEditor(options)} filter></Column>
+                <Column field="fournisseur.data.description" header="Description" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="numCompteFournisseur" header="Numéro de compte" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="num_compte_banque" header="N° de compte en banque" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="createdAt" header="Date de création" body={(rowData) => { return (<div>{new Date(rowData.createdAt).toLocaleDateString()}</div>)}}></Column>
