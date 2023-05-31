@@ -172,7 +172,7 @@ const AddFacturier = () => {
 
     const getLibelleList = async () => {
         const libelleList = await LibelleDataService.getAll();
-        setLibelleList(libelleList.data.map(libelle => {
+        setLibelleList(libelleList.data.data.map(libelle => {
             return {
                 label: libelle.title,
                 // add tooltip to the label
@@ -198,7 +198,7 @@ const AddFacturier = () => {
 
     const getDecompteList = async () => {
         const decompteList = await DecompteDataService.getAll();
-        setDecompteList(decompteList.data.map(decompte => {
+        setDecompteList(decompteList.data.data.map(decompte => {
             return {
                 label: decompte.num_decompte,
                 value: decompte.decompte_id,
@@ -211,7 +211,7 @@ const AddFacturier = () => {
 
     const getExtraitList = async () => {
         const extraitList = await ExtraitDataService.getAll();
-        setExtraitList(extraitList.data.map(extrait => {
+        setExtraitList(extraitList.data.data.map(extrait => {
             return {
                 label: extrait.num_extrait,
                 value: extrait.extrait_id,
@@ -224,7 +224,7 @@ const AddFacturier = () => {
 
     const getTvaList = async () => {
         const tvaList = await tvaDataService.getAll();
-        setTvaList(tvaList.data.map(tva => {
+        setTvaList(tvaList.data.data.map(tva => {
             return {
                 label: tva.tva_value,
                 value: tva.tva_id,
@@ -240,15 +240,15 @@ const AddFacturier = () => {
         console.log(fournisseurList)
         setFournisseurList(fournisseurList.map(fournisseur => {
             return {
-                label: fournisseur.fournisseur.name,
+                label: fournisseur.fournisseur..data.name,
                 value: fournisseur.co_fournisseur_id,
                 numCompteFournisseur: fournisseur.numCompteFournisseur,
-                adresse_fournisseur: fournisseur.fournisseur.adresse_fournisseur,
-                telephone_fournisseur: fournisseur.fournisseur.telephone_fournisseur,
-                email_fournisseur: fournisseur.fournisseur.email_fournisseur,
+                adresse_fournisseur: fournisseur.fournisseur.data.adresse_fournisseur,
+                telephone_fournisseur: fournisseur.fournisseur.data.telephone_fournisseur,
+                email_fournisseur: fournisseur.fournisseur.data.email_fournisseur,
                 num_compte_banque: fournisseur.num_compte_banque,
                 fournisseur_id: fournisseur.fournisseur_id,
-                description: fournisseur.fournisseur.description,
+                description: fournisseur.fournisseur.data.description,
                 from: 'fournisseur'
 
 
