@@ -27,6 +27,9 @@ const FacturierDatatable = () => {
 
     const [loading, setLoading] = useState(true)
     const [importedCols, setImportedCols] = useState([{ field: '', header: 'Header' }]);
+    const [globalFilterValue1, setGlobalFilterValue1] = useState('');
+
+    const [filters1, setFilters1] = useState(null)
     const dt = useRef(null);
 
 
@@ -346,13 +349,62 @@ const FacturierDatatable = () => {
     const clientBodyTemplate = (rowData) => {
         return rowData.compte_client.client.name + ' ' + rowData.compte_client.client.firstname;
     }
+    const clearFilter1 = () => {
+        initFilters1();
+    }
+
+    const onGlobalFilterChange1 = (e) => {
+        const value = e.target.value;
+        let _filters1 = { ...filters1 };
+        _filters1['global'].value = value;
+
+        setFilters1(_filters1);
+        setGlobalFilterValue1(value);
+    }
+
+
+    const initFilters1 = () => {
+        setFilters1({
+          'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+          'facture.num_facture_lamy': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+          'compte_fournisseur.fournisseur.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+          'compte_fournisseur.fournisseur.num_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+          'compte_client.numCompteClient': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+          'compte_client.client.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+          'facture.objet.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+          'facture.facture_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+          'facture.libelle.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+          'decompte.num_decompte': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+          'facture.montant': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+          'facture.estpaye': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+          'facture.due_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+          'extrait.num_extrait': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+          'extrait.date_extrait': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+        });
+        setGlobalFilterValue1('');
+      };
+
+    const renderHeader1 = () => {
+        return (
+            <div className="flex justify-content-between" id="header">
+                <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
+                </span>
+            </div>
+        )
+    }
+
+    const header1 = renderHeader1();
 
 
 
     if (loading) {
         return <ProgressBar mode="indeterminate" style={{ height: '6px' }} />;
-
     }
+
+    
     else {
         return (
             
@@ -366,7 +418,8 @@ const FacturierDatatable = () => {
                      rowsPerPageOptions={[10,25,50]}
                      rowHover  loading={loading} dataKey="id" ref={dt} exportFilename={exportFileName}
                     emptyMessage="Aucunes données trouvées." scrollable header={header} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}>
+                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}
+                    globalFilterFields={'facture.num_facture_lamy,compte_fournisseur.fournisseur.name,compte_fournisseur.fournisseur.num_fournisseur,compte_client.numCompteClient,compte_client.client.name,facture.objet.title,facture.facture_date,facture.libelle.title,decompte.num_decompte,facture.montant,facture.estpaye,facture.due_date,extrait.num_extrait,extrait.date_extrait'}>
 
                     <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ backgroundColor: '#f8f9fa' }}  />
                     <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom"  />
