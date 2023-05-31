@@ -39,8 +39,8 @@ const UsersDatatable = () => {
 
     const getUsers = () => {
         userService.getAll().then((response) => {
-            setUsers(response.data);
-            console.log(response.data, 'response.data');
+            setUsers(response.data.data);
+            console.log(response.data.data, 'response.data');
         })
         .catch((error) => {
             console.log(error);

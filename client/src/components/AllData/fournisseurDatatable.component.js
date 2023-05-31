@@ -53,8 +53,8 @@ const FournisseurDatatable = () => {
 
     const getCompteFournisseur = () => {
         compteFournisseurService.getAll().then((response) => {
-            setCompteFournisseur(response);
-            console.log(response, 'response.data');
+            setCompteFournisseur(response.data);
+            console.log(response.data, 'response.data');
         })
         .catch((error) => {
             console.log(error);
