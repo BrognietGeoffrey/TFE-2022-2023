@@ -102,7 +102,7 @@ export const Analyse = () => {
       const response = await LogsService.getAll();
       setLogs(response.data.data);
       // dans l'ordre des dates décroissantes
-      const logsSorted = response.data..data.sort((a, b) => {
+      const logsSorted = response.data.data.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       }
       );
