@@ -240,7 +240,7 @@ const AddFacturier = () => {
         console.log(fournisseurList)
         setFournisseurList(fournisseurList.map(fournisseur => {
             return {
-                label: fournisseur.fournisseur..data.name,
+                label: fournisseur.fournisseur.data.name,
                 value: fournisseur.co_fournisseur_id,
                 numCompteFournisseur: fournisseur.numCompteFournisseur,
                 adresse_fournisseur: fournisseur.fournisseur.data.adresse_fournisseur,
