@@ -13,9 +13,8 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import {Chip} from 'primereact/chip';
 import { Tooltip } from 'primereact/tooltip';
-import { FileUpload } from 'primereact/fileupload';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import 'jspdf-autotable';
-import { jsPDF } from "jspdf";
 
 import FacturierDataService from "../../services/facturierService";
 import FactureDataService from "../../services/factureService";
