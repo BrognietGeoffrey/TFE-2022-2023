@@ -1,7 +1,7 @@
 // Controllers for compteClient
 const db = require("../models");
 const Op = db.Sequelize.Op;
-const { compteClients, Clients } = require("../models");
+const { compteClients } = require("../models");
 
 // Create and Save a new CompteClient
 const createCompteClient = (req, res) => {
@@ -15,7 +15,7 @@ const createCompteClient = (req, res) => {
     .then(data => {
         if (data) {
         res.status(409).send({
-            message: "This compteClient already exists"
+            message: "Le compte client existe déjà."
         });
         return;
         } else {
@@ -31,12 +31,15 @@ const createCompteClient = (req, res) => {
         // Save compteClient in the database
         compteClients.create(compteClient)
             .then(data => {
-            res.send(data);
+            res.send({
+                message: "Le compte client a été créé avec succès.",
+                data : data
+            });
             })
             .catch(err => {
             res.status(409).send({
                 message:
-                err.message || "Some error occurred while creating the compteClient."
+                err.message || "Malheureusement, une erreur s'est produite lors de la création du compte client."
             });
             });
         }
@@ -44,48 +47,28 @@ const createCompteClient = (req, res) => {
     .catch(err => {
         res.status(409).send({
             message:
-            err.message || "Some error occurred while creating the compteClient."
+            err.message || "Malheureusement, une erreur s'est produite lors de la création du compte client."
         });
     }
     );
 };
 
-// Retrieve all compteClients from the database.
-  // Swagger 
-  /* 
-    * @swagger
-    * /api/compteClients:
-    *   
-    *  get:
-    *   description: Use to request all compteClients
-    *  responses:
-    *  '200':
-    *  description: A successful response
-    * 
-    */
     
 const findAllComptesClients = (req, res) => {
-    // trouver tous les comptes clients et inclure les clients
-    compteClients.findAll({
-        include: [
-            {
-                model: Clients,
-                as: "client",
-            }]
-    })
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        res.status(200).send({
-        message:
-            err.message || "Some error occurred while retrieving compteClients."
+    compteClients.findAll()
+        .then(data => {
+        res.send({
+            message: "Liste des comptes clients trouvés avec succès.",
+            data : data
         });
-    });
-};
-
-
-
+        })
+        .catch(err => {
+        res.status(409).send({
+            message:
+            err.message || "Malheureusement, une erreur s'est produite lors de la récupération des comptes clients."
+        });
+        });
+}
 
 // Find a single CompteClient with an id
 const findOneCompteClient = (req, res) => {
@@ -93,11 +76,14 @@ const findOneCompteClient = (req, res) => {
 
     compteClients.findByPk(id)
         .then(data => {
-        res.send(data);
+        res.send({
+            message: "Compte client trouvé avec succès.",
+            data : data
+        });
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Error retrieving CompteClient with id=" + id
+        res.status(409).send({
+            message: "Malheureusement, une erreur s'est produite lors de la récupération du compte client avec l'id=" + id
         });
         });
 }
@@ -105,29 +91,29 @@ const findOneCompteClient = (req, res) => {
 // Update a CompteClient by the id in the request
 const updateCompteClient = (req, res) => {
     const id = req.params.id;
-
     compteClients.update(req.body, {
         where: { co_client_id: id }
     })
     .then(num => {
         if (num == 1) {
         res.send({
-            message: "CompteClient  was updated successfully."
+            message: "Le compte client a été mis à jour avec succès."
         });
         } else {
         res.send({
-            message: `Cannot update CompteClient with id=${id}. Maybe CompteClient was not found or req.body is empty!`
+            message: `Impossible de mettre à jour le compte client avec l'id=${id}.`
         });
         }
     })
     .catch(err => {
         res.status(409).send({
-        message: "Error updating CompteClient with id=" + id
+        message: "Malheureusement, une erreur s'est produite lors de la mise à jour du compte client avec l'id=" + id
         });
     }
     );
 };
 
+// Delete a CompteClient with the specified id in the request
 // Delete a CompteClient with the specified id in the request
 const deleteCompteClient = (req, res) => {
     const id = req.params.id;
