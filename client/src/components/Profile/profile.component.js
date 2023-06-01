@@ -1,16 +1,17 @@
 import React from 'react';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from 'primereact/button';
 import { Avatar } from 'primereact/avatar';
 import { Divider } from 'primereact/divider';
 import {Dialog } from 'primereact/dialog';
+import {Link } from 'react-router-dom';
 
-import Register from "../Register/register.component";
+import Register from "../components/Register/register.component";
 
-
-import FactureService from '../../services/factureService';
+import FactureService from '../services/factureService';
 import jwt_decode from "jwt-decode";
-import ClientService from "../../services/clientService";
+import ClientService from "../services/clientService";
+import CompteClientService from "../services/compteClientService";
 
 
 import './profile.css'
@@ -21,10 +22,24 @@ const Profile = () => {
   const [facturesNotPaid, setFacturesNotPaid] = React.useState([]);
   const [dataClient, setDataClient] = React.useState([]);
   const [displayDialogRegister, setDisplayDialogRegister] = React.useState(false);
+  const [displayDialogDelete, setDisplayDialogDelete] = React.useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+
 
   const openDialogRegister = () => {
     setDisplayDialogRegister(true);
   }
+
+  const openDialogDelete = () => {
+    setDisplayDialogDelete(true);
+  }
+
+  const openDialogContact = () => {
+    // go to contact page
+    <Link to="/contact" />
+  }
+
 
   const facturesData = () => {
     const dataClient = decoded.user_id.client_id;
@@ -60,6 +75,32 @@ useEffect(() => {
   useEffect(() => {
     facturesData();
   }, []);
+
+  const handleDelete = () => {
+    // Si c'est fait afficher un toast 
+    // Si c'est pas fait afficher un toast d'erreur
+
+    ClientService.delete(dataClient.client_id)
+    .then((response) => {
+      CompteClientService.delete(dataClient.client_id)
+      .then((response) => {
+        console.log(response.data);
+        clientData();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+
+
+    clientData();
+    setDisplayDialogDelete(false);
+};
 
 
   // Trouver les factures concernant le client connecté, et les séparer en deux tableaux, payées et non payées. Si le client n'a pas de factures, afficher un message
@@ -128,7 +169,7 @@ return (
         <div className="row" id="profilecard">
           <div className="col-md-4" style={{height : 'fit-content'}}>
             {/* changer le style si decoder.user est tel ou un tel */}
-            <div className="card mb-4">
+            <div className="card mb-4" id="card">
 
           <div className="p-text-center">
             <Avatar
@@ -144,9 +185,11 @@ return (
             <div className="p-d-flex p-justify-center p-mb-2" style={{ textAlign: 'center' }}>
               {decoded && decoded.role == "user" ? (
                 <span>
-              <Button label="Supprimer mes données" className="p-button-danger p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
-              <Button label="Contacter un membre du conseil de gérance" className="p-button-success p-ml-1" style={{ width: '100%' }} />
-              </span>
+              <Button label="Supprimer mes données" onClick={openDialogDelete} className="p-button-danger p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
+
+              <Link to="/contact">
+  <Button label="Contacter un membre du conseil de gérance" className="p-button-success p-ml-1" style={{ width: '100%' }} />
+</Link>              </span>
               ) : ( decoded && decoded.role == "admin" ? (
                  <Button label="Ajouter un utilisateur" onClick={openDialogRegister} className="p-button-success p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
 
@@ -161,7 +204,7 @@ return (
 
           </div>
           <div className="col-md-4">
-            <div className="card mb-4">
+            <div className="card mb-4" id="card">
             <div className="p-card-body">
             <div className="p-grid">
               <div className="p-col-3">
@@ -177,7 +220,7 @@ return (
                 <span className="p-text-bold">Email</span>
               </div>
               <div className="p-col-9">
-                <span className="p-text-muted">{dataClient.email_client}</span>
+                <span className="p-text-muted">{dataClient.email_client ? dataClient.email_client : "Pas d'email"}</span>
               </div>
             </div>
             <Divider />
@@ -186,7 +229,7 @@ return (
                 <span className="p-text-bold">Téléphone</span>
               </div>
               <div className="p-col-9">
-                <span className="p-text-muted">{dataClient.telephone_client}</span>
+                <span className="p-text-muted">{dataClient.telephone_client ? dataClient.telephone_client : "Pas de téléphone"}</span>
               </div>
             </div>
             
@@ -196,7 +239,7 @@ return (
                 <span className="p-text-bold">Adresse</span>
               </div>
               <div className="p-col-9">
-                <span className="p-text-muted">{dataClient.adresse_client}</span>
+                <span className="p-text-muted">{dataClient.adresse_client ? dataClient.adresse_client : "Pas d'adresse"}</span>
               </div>
             </div>
           </div>          
@@ -205,7 +248,7 @@ return (
           </div> 
           {/* Afficher le nombre de factures payées */}
           <div className="col-md-4" >
-            <div className="card mb-4" style={{ textAlign: 'center', fontWeight : 'bold' }}>
+            <div className="card mb-4" style={{ textAlign: 'center', fontWeight : 'bold' }} id="card">
             <div className="p-card-body">
             <div className="p-grid">
               <div className="p-col-3">
@@ -215,7 +258,7 @@ return (
             </div>
             </div>
             </div>
-            <div className="card mb-4" style={{ textAlign: 'center', fontWeight : 'bold' }}>
+            <div className="card mb-4" style={{ textAlign: 'center', fontWeight : 'bold' }} id="card">
             <div className="p-card-body">
             <div className="p-grid">
               <div className="p-col-3" >
@@ -225,7 +268,7 @@ return (
             </div>
             </div>
             </div>
-            <div className="card mb-4" id="topaid" style={{ textAlign: 'center', fontWeight : 'bold'}}>
+            <div className="card mb-4" id="topaid" style={{ textAlign: 'center', fontWeight : 'bold'}} id="card">
             <div className="p-card-body">
             <div className="p-grid">
               <div className="p-col-3">
@@ -244,7 +287,7 @@ return (
       ) : (
         <div className="col-md-4" style={{height : 'fit-content', position : 'relative', left : '50%', transform : 'translateX(-50%)'}}>
         {/* changer le style si decoder.user est tel ou un tel */}
-        <div className="card mb-4">
+        <div className="card mb-4" id="card">
 
       <div className="p-text-center">
         <Avatar
@@ -261,7 +304,7 @@ return (
           {decoded && decoded.role == "user" ? (
             <span>
           <Button label="Supprimer mes données" className="p-button-danger p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
-          <Button label="Contacter un membre du conseil de gérance" className="p-button-success p-ml-1" style={{ width: '100%' }} />
+          <Button label="Contacter un membre du conseil de gérance" className="p-button-success p-ml-1" style={{ width: '100%' }} onClick={openDialogContact} />
           </span>
           ) : ( decoded && decoded.role == "admin" ? (
              <Button label="Ajouter un utilisateur" onClick={openDialogRegister} className="p-button-success p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
@@ -291,6 +334,18 @@ return (
   <Register  />
 
 </Dialog>
+<Dialog header="Supprimer vos données" visible={displayDialogDelete} onHide={() => setDisplayDialogDelete(false)} maximizable style={{ width: '50vh', height:'70vh' }}>
+  <div className="container">
+      <div className="confirmation">
+        <p>Voulez-vous vraiment supprimer vos informations</p>
+        <p>Les informations que nous garderons seront juste votre nom et prénom</p>
+        <button onClick={handleDelete}>Confirmer la suppression</button>
+        <button onClick={() => setConfirmDelete(false)}>Annuler</button>
+      </div>
+    
+  </div>
+</Dialog>
+
 </div>
     
     </div>

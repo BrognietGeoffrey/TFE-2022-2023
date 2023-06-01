@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         num_compte_banque : {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
       
         description   : {   

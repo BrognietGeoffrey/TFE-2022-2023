@@ -28,6 +28,10 @@ class compteClientService {
     update(id, compteClient) {
         return axios.put(API_URL + id, compteClient, { headers: BASIC_HEADERS });
     }
+
+    delete(id) {
+        return axios.delete(API_URL + id, { headers: BASIC_HEADERS });
+    }
     
 }
 

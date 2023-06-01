@@ -27,7 +27,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         telephone_client: {
             type: Sequelize.BIGINT, 
-            allowNull: false,
+            allowNull: true,
             unique: true, 
             validate: {
                 isNumeric: true,

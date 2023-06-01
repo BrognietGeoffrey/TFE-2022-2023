@@ -104,26 +104,42 @@ const updateClient = (req, res) => {
 const deleteClient = (req, res) => {
     const id = req.params.id;
 
-    Clients.destroy({
-        where: { client_id: id }
-    })
-        .then(num => {
-        if (num == 1) {
-            res.send({
-            message: "Le client a été supprimé avec succès!"
-            });
-        } else {
-            res.send({
-            message: `Impossible de supprimer le client avec l'id=${id}.`
-            });
-        }
+    Clients.findByPk(id)
+        .then(client => {
+            if (!client) {
+                return res.status(404).json({
+                    message: `Client with id=${id} not found.`
+                });
+            }
+
+            // Supprimer les informations spécifiques du client
+            client.email_client = null;
+            client.adresse_client = null;
+            client.telephone_client = null;
+            client.description = null;
+
+            // Enregistrer les modifications dans la base de données
+            client.save()
+                .then(() => {
+                    res.status(200).json({
+                        message: "Les informations du client ont été supprimées avec succès.",
+                        deletedFields: ["email_client", "adresse_client", "telephone_client", "description"]
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        message: "Une erreur s'est produite lors de la suppression des informations du client.",
+                        error: err.message
+                    });
+                });
         })
         .catch(err => {
-        res.status(200).send({
-            message: "Impossible de supprimer le client avec l'id=" + id
+            res.status(500).json({
+                message: "Une erreur s'est produite lors de la suppression des informations du client.",
+                error: err.message
+            });
         });
-        });
-    }
+};
 
     const getClientByName = (req, res) => {
         const name = req.params.name;
@@ -138,7 +154,7 @@ const deleteClient = (req, res) => {
             })
             })
             .catch(err => {
-            res.status(200).send({
+            res.status(409).send({
                 message:
                 err.message || "Malheureusement, une erreur s'est produite lors de la récupération du client."
             });
