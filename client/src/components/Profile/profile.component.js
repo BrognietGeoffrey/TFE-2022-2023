@@ -6,12 +6,12 @@ import { Divider } from 'primereact/divider';
 import {Dialog } from 'primereact/dialog';
 import {Link } from 'react-router-dom';
 
-import Register from "../components/Register/register.component";
+import Register from "../Register/register.component";
 
-import FactureService from '../services/factureService';
+import FactureService from '../../services/factureService';
 import jwt_decode from "jwt-decode";
-import ClientService from "../services/clientService";
-import CompteClientService from "../services/compteClientService";
+import ClientService from "../../services/clientService";
+import CompteClientService from "../../services/compteClientService";
 
 
 import './profile.css'
