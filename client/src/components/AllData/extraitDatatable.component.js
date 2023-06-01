@@ -35,7 +35,7 @@ const AllData = () => {
     return (
         <div className="datatable-rowgroup-demo">
             <DataTable value={extraits} rowGroupMode="subheader" groupRowsBy="date_extrait"
-                sortMode="single" sortField="date_extrait" sortOrder={1} responsiveLayout="scroll"
+                sortMode="single" sortField="date_extrait" sortOrder={1} responsiveLayout="stack"
                 expandableRowGroups expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
               
                 rowGroupHeaderTemplate={headerTemplate} >

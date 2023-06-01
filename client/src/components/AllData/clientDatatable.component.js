@@ -173,19 +173,17 @@ const ClientDatatable = () => {
     return (
         <div>
             <Toast ref={toast} />
-            <DataTable value={compteClient} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['client.name', 'numCompteClient', 'client.firstname', 'client.adresse_client', 'client.telephone_client', 'num_compte_banque', 'client.email_client', 'client.description', 'createdAt']} filters={filters1}
-            
-                paginator rows={rows} rowsPerPageOptions={[5, 10, 25, 50]} emptyMessage="Aucun client trouvé." currentPageReportTemplate="{first}-{last} sur {totalRecords}">
+            <DataTable value={compteClient} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['client.name', 'numCompteClient', 'client.firstname', 'client.adresse_client', 'client.telephone_client','num_compte_banque', 'client.email_client', 'client.description', 'createdAt']} filters={filters1}
+                paginator rows={rows} rowsPerPageOptions={[5, 10, 25, 50]} emptyMessage="Aucun client trouvé." currentPageReportTemplate="{first}-{last} sur {totalRecords}" responsive>
                 <Column field="client.name" header="Nom" sortable editor={(options) => textEditor(options)} filter ></Column>
                 <Column field="client.firstname" header="Prénom" sortable editor={(options) => textEditor(options)} filter ></Column>
-                <Column field="client.email_client" header="Email" sortable editor={(options) => textEditor(options)} filter ></Column>
-                <Column field="client.adresse_client" header="Adresse" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="client.telephone_client" header="Téléphone" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="client.description" header="Description" sortable editor={(options) => textEditor(options)} filter></Column>
+                <Column field="client.email_client" header="Email" sortable editor={(options) => textEditor(options)} filter body={(rowData) => { return (<div>{rowData.client.email_client !== null ? rowData.client.email_client : <i>-Pas de donnéees- </i>}</div>)}}></Column>
+                <Column field="client.adresse_client" header="Adresse" sortable editor={(options) => textEditor(options)} filter body={(rowData) => { return (<div>{rowData.client.adresse_client !== null ? rowData.client.adresse_client : <i>-Pas de donnéees- </i>}</div>)}}></Column>
+                <Column field="client.telephone_client" header="Téléphone" sortable editor={(options) => textEditor(options)} filter body={(rowData => { return (<div>{rowData.client.telephone_client !== null ? rowData.client.telephone_client : <i>-Pas de donnéees- </i>}</div>) })}></Column>
+                <Column field="client.description" header="Description" sortable editor={(options) => textEditor(options)} filter body={(rowData) => { return (<div>{rowData.client.description !== null ? rowData.client.description : <i>-Pas de donnéees- </i>}</div>) }}></Column>
                 <Column field="numCompteClient" header="Numéro de compte" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="num_compte_banque" header="N° de compte en banque" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="createdAt" header="Date de création" body={(rowData) => { return (<div>{new Date(rowData.createdAt).toLocaleDateString()}</div>) }} ></Column>
-
+                <Column field="num_compte_banque" header="N° de compte en banque" sortable editor={(options) => textEditor(options)} filter body={(rowData) => { return (<div>{rowData.num_compte_banque !== null ? rowData.num_compte_banque : <i>-Pas de donnéees- </i>}</div>) }}></Column>
+                <Column field="createdAt" header="Date de création" body={(rowData) => { return (<div>{new Date(rowData.createdAt).toLocaleDateString()}</div>)}} ></Column>
 
                 <Column rowEditor></Column>
             </DataTable>

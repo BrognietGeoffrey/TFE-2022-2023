@@ -11,7 +11,7 @@ import { ProgressBar } from 'primereact/progressbar';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import {Chip} from 'primereact/chip';
+import { Chip } from 'primereact/chip';
 import { Tooltip } from 'primereact/tooltip';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import 'jspdf-autotable';
@@ -20,7 +20,7 @@ import FacturierDataService from "../../services/facturierService";
 import FactureDataService from "../../services/factureService";
 import ExtraitDataService from "../../services/extraitService";
 import LogsDataService from "../../services/logsService";
-import {Toast} from 'primereact/toast';
+import { Toast } from 'primereact/toast';
 
 const FacturierDatatable = () => {
 
@@ -44,11 +44,11 @@ const FacturierDatatable = () => {
         { field: 'facturier_id', header: 'ID' },
         { field: 'facturiers.facture.num_facture_lamy', header: 'Numéro de facture' },
         { field: 'facture.facture_date', header: 'Date de facture' },
-        {field : 'compte_fournisseur.fournisseur.name', header: 'Fournisseur'},
-        
+        { field: 'compte_fournisseur.fournisseur.name', header: 'Fournisseur' },
+
 
     ];
-    const exportColumns = cols.map(col => ({title: col.header, dataKey: col.field}));
+    const exportColumns = cols.map(col => ({ title: col.header, dataKey: col.field }));
 
 
     useEffect(() => {
@@ -71,22 +71,22 @@ const FacturierDatatable = () => {
     };
 
 
-    
+
 
     const onClick = (name, position, e, rowData) => {
         e.preventDefault();
-      
+
         if (name === 'displayExtrait') {
-          setExtrait(rowData);
+            setExtrait(rowData);
         }
-        
-      
+
+
         dialogFuncMap[name](true);
-      
+
         if (position) {
-          setPosition(position);
+            setPosition(position);
         }
-      };
+    };
 
     const onHide = (name) => {
         dialogFuncMap[`${name}`](false);
@@ -100,16 +100,16 @@ const FacturierDatatable = () => {
                 </div>
             );
         }
-       
+
     };
     const getExtraitList = async () => {
         const extraitList = await ExtraitDataService.getAll();
         setExtraitList(extraitList.data.data.map(extrait => {
             return {
                 num_extrait: extrait.num_extrait,
-                value: extrait.extrait_id, 
-                montant : extrait.montant,
-                date : extrait.date_extrait
+                value: extrait.extrait_id,
+                montant: extrait.montant,
+                date: extrait.date_extrait
             };
         }));
     };
@@ -142,8 +142,8 @@ const FacturierDatatable = () => {
                 let extraitId = response.data.extrait_id
                 console.log(extraitId);
                 const logData = {
-                    extrait_id : response.data.extrait_id,
-                    description : "Ajout d'un extrait",
+                    extrait_id: response.data.extrait_id,
+                    description: "Ajout d'un extrait",
                     // user_id : user.id
                 }
                 LogsDataService.create(logData)
@@ -154,17 +154,17 @@ const FacturierDatatable = () => {
                     extrait_id: extraitId,
                 }
                 FacturierDataService.update(extrait.facturier_id, data)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Facturier Updated', life: 3000 });
-                })
+                    .then(response => {
+                        toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Facturier Updated', life: 3000 });
+                    })
                 // mettre à jour le estpaye de la facture
                 var data = {
                     estpaye: true,
                 }
                 FactureDataService.update(extrait.facture.facture_id, data)
-                .then(response => {
-                    toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Facture Updated', life: 3000 });
-                })
+                    .then(response => {
+                        toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Facture Updated', life: 3000 });
+                    })
                 // Recharger les données du tableau
                 fetchData();
             })
@@ -178,13 +178,13 @@ const FacturierDatatable = () => {
     const changeStatus = (rowData) => {
         saveExtrait();
         // on récupére l'id de l'extrait qui vient de saveExtrait
-       
-        
+
+
     }
 
 
     const fetchData = async () => {
-        const response = await FacturierDataService.getAll().then (
+        const response = await FacturierDataService.getAll().then(
             response => {
                 if (response.data.data.length > 0) {
                     setFacturiers(response.data.data)
@@ -200,9 +200,9 @@ const FacturierDatatable = () => {
 
     }, []);
 
-        
+
     const formatDate = (value) => {
-   
+
         let date = new Date(value);
         return date.toLocaleDateString()
     }
@@ -236,7 +236,7 @@ const FacturierDatatable = () => {
         if (rowData.extrait === null) {
             return 'Pas d"extrait';
         }
-        
+
         const pathDate = rowData.extrait
         // Invert date
         const date = pathDate.date_extrait.split('-').reverse().join('/');
@@ -272,9 +272,9 @@ const FacturierDatatable = () => {
         else {
             return <Chip icon="pi pi-delete" className="mr-2 mb-2 custom-chip" label="Pas de date d'échéance">Pas de due date</Chip>;
         }
-            
-           
-        
+
+
+
     }
 
 
@@ -283,10 +283,10 @@ const FacturierDatatable = () => {
     }
 
     const tvaBalanceBodyTemplate = (rowData) => {
-       
-        const tva = rowData.facture.tva 
-        const montanttva = rowData.facture.montant + (rowData.facture.montant * tva.tva_value/100);
-        
+
+        const tva = rowData.facture.tva
+        const montanttva = rowData.facture.montant + (rowData.facture.montant * tva.tva_value / 100);
+
         return formatCurrency(montanttva);
     }
     const balanceFilterTemplate = (options) => {
@@ -300,29 +300,29 @@ const FacturierDatatable = () => {
             return <ProgressBar mode="indeterminate" style={{ height: '6px' }} />
         }
         else {
-        if (rowData.facture.estpaye === null) {
-            return <p>Il n'y pas de statut pour cette facture</p>
-        }
-        else if (rowData.facture.estpaye === true) {
-            return <Button label="Payée" className="p-button-success" icon="pi pi-check-circle" />;
-        }
-        else {
-            return <Button onClick={(e) => onClick('displayExtrait', 'center', e, rowData)} icon="pi pi-ban" className="p-button-danger" label="Non payée" tooltip='En cliquant sur ce bouton, vous pourrez ajouter l"extrait correspondant à la facture. Cela mettra à jour le statut de la facture en "payée".' tooltipOptions={{ position: 'top' }} />
+            if (rowData.facture.estpaye === null) {
+                return <p>Il n'y pas de statut pour cette facture</p>
+            }
+            else if (rowData.facture.estpaye === true) {
+                return <Button label="Payée" className="p-button-success" icon="pi pi-check-circle" />;
+            }
+            else {
+                return <Button onClick={(e) => onClick('displayExtrait', 'center', e, rowData)} icon="pi pi-ban" className="p-button-danger" label="Non payée" tooltip='En cliquant sur ce bouton, vous pourrez ajouter l"extrait correspondant à la facture. Cela mettra à jour le statut de la facture en "payée".' tooltipOptions={{ position: 'top' }} />
 
+            }
         }
     }
-    }
 
-    
+
     const numextraitBodyTemplate = (rowData) => {
         if (rowData.extrait === null) {
             return 'Pas d"extrait';
         }
         else {
-            return rowData.extrait.num_extrait 
+            return rowData.extrait.num_extrait
         }
     }
-      
+
     const statusFilterTemplate = (options) => {
         return <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select a Status" className="p-column-filter" showClear />;
     }
@@ -337,8 +337,8 @@ const FacturierDatatable = () => {
 
     const exportCSV = (selectionOnly) => {
         dt.current.exportCSV({ selectionOnly });
-      }
-      
+    }
+
 
 
     const clientBodyTemplate = (rowData) => {
@@ -360,39 +360,39 @@ const FacturierDatatable = () => {
 
     const initFilters1 = () => {
         setFilters1({
-          'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
-          'facture.num_facture_lamy': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-          'compte_fournisseur.fournisseur.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-          'compte_fournisseur.fournisseur.num_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-          'compte_client.numCompteClient': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-          'compte_client.client.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-          'facture.objet.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-          'facture.facture_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-          'facture.libelle.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-          'decompte.num_decompte': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-          'facture.montant': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-          'facture.estpaye': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-          'facture.due_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-          'extrait.num_extrait': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-          'extrait.date_extrait': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+            'facture.num_facture_lamy': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'compte_fournisseur.fournisseur.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'compte_fournisseur.fournisseur.num_fournisseur': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'compte_client.numCompteClient': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'compte_client.client.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'facture.objet.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'facture.facture_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'facture.libelle.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'decompte.num_decompte': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'facture.montant': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'facture.estpaye': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'facture.due_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            'extrait.num_extrait': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'extrait.date_extrait': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
         });
         setGlobalFilterValue1('');
-      };
+    };
 
     const renderHeader1 = () => {
         return (
             <div className="flex justify-content-between" id="header">
-                        <div className="flex align-items-center export-buttons">
-                        <Button type="button" icon="pi pi-file" onClick={() => exportCSV(false)} className="mr-2" tooltip="Exporter toutes les données" tooltipOptions={{ position: 'top' }} />
-                        <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
+                <div className="flex align-items-center export-buttons">
+                    <Button type="button" icon="pi pi-file" onClick={() => exportCSV(false)} className="mr-2" tooltip="Exporter toutes les données" tooltipOptions={{ position: 'top' }} />
+                    <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
 
-        </div>
+                </div>
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
                 </span>
             </div>
-            
+
         )
     }
 
@@ -404,165 +404,165 @@ const FacturierDatatable = () => {
         return <ProgressBar mode="indeterminate" style={{ height: '6px' }} />;
     }
 
-    
+
     else {
         return (
-            
-            <div className="container" id ="facturier-container">
-            <div className="facturierTable" >
-            <Tooltip target=".custom-chip-not-payed" content="Facture non payée" />
-            <Tooltip target=".custom-chip-wait" content="Facture en attente de paiement" />
-                <Toast ref={toastAddon} />
-                {facturiers && (
-                    <DataTable  value={facturiers} paginator  rows={10}
-                     rowsPerPageOptions={[10,25,50]}
-                     rowHover  loading={loading} dataKey="id" ref={dt} exportFilename={exportFileName}
-                    emptyMessage="Aucunes données trouvées." scrollable header={header1} columnResizeMode="expand"  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }} filters={filters1}
-                    globalFilterFields={['facture.num_facture_lamy','compte_fournisseur.fournisseur.name','compte_fournisseur.fournisseur.num_fournisseur','compte_client.numCompteClient','compte_client.client.name','facture.objet.title','facture.facture_date','facture.libelle.title','decompte.num_decompte','facture.montant','facture.estpaye','facture.due_date','extrait.num_extrait','extrait.date_extrait']}>
 
-                    <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ backgroundColor: '#f8f9fa' }}  />
-                    <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom"  />
-                         
-                    <Column field='compte_fournisseur.fournisseur.num_fournisseur' header="N° de fournisseur" sortable  filter filterPlaceholder='Rechercher par N°'></Column>
-                    <Column field='compte_client.numCompteClient' header="N° de client" sortable  filter filterPlaceholder='Rechercher par N°'></Column>
+            <div className="container" id="facturier-container">
+                <div className="facturierTable" >
+                    <Tooltip target=".custom-chip-not-payed" content="Facture non payée" />
+                    <Tooltip target=".custom-chip-wait" content="Facture en attente de paiement" />
+                    <Toast ref={toastAddon} />
+                    {facturiers && (
+                        <DataTable value={facturiers} paginator rows={10}
+                            rowsPerPageOptions={[10, 25, 50]}
+                            rowHover loading={loading} dataKey="id" ref={dt} exportFilename={exportFileName}
+                            emptyMessage="Aucunes données trouvées." header={header1} paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                            currentPageReportTemplate=" {first} - {last} sur {totalRecords} " style={{ borderRaduis: '20px' }} responsiveLayout="stack" breakpoint="600px" filters={filters1}
+                            globalFilterFields={['facture.num_facture_lamy', 'compte_fournisseur.fournisseur.name', 'compte_fournisseur.fournisseur.num_fournisseur', 'compte_client.numCompteClient', 'compte_client.client.name', 'facture.objet.title', 'facture.facture_date', 'facture.libelle.title', 'decompte.num_decompte', 'facture.montant', 'facture.estpaye', 'facture.due_date', 'extrait.num_extrait', 'extrait.date_extrait']}>
 
-                    <Column field='compte_client.client.name' header="Nom et prénom du client" sortable  filter filterPlaceholder='Rechercher par nom ou prénom' body={clientBodyTemplate}></Column>
+                            <Column field="facture.num_facture_lamy" header="N° de facture Lamy" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureLamyBodyTemplate} style={{ backgroundColor: '#f8f9fa' }} />
+                            <Column field='compte_fournisseur.fournisseur.name' header="Fournisseur" sortable filter filterPlaceholder="Rechercher par nom" />
 
-                    <Column field='facture.objet.title' header="Objet" sortable filter filterPlaceholder='Rechercher par objet...' ></Column>
-                    <Column field="facture.facture_date" header="Date de la facture" sortable filterField="date" dataType="date"  body={dateBodyFactureTemplate} filter filterElement={dateFilterTemplate} />
-                    <Column field="facture.num_facture" header="N° de facture" sortable filter filterPlaceholder="Rechercher par N°"  body={numfactureBodyTemplate}/>
-                    <Column field="facture.libelle.title" header="Libellé" sortable filter filterPlaceholder="Rechercher par libellé"  />
-                    <Column field="decompte.num_decompte" header="N° de décompte " sortable filter filterPlaceholder="Rechercher par N°"  body={numdecompteBodyTemplate}/>
-                    <Column field="facture.montant" header="Montant de la facture" sortable dataType="numeric"  body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
-                    <Column header="Montant avec TVA"  sortable dataType="numeric"  body={tvaBalanceBodyTemplate} filter filterElement={balanceFilterTemplate} sortField="facture.montant" />
-                    
-                    <Column field="facture.estpaye" header="Status" sortable   body={statusBodyTemplate} filter filterElement={statusFilterTemplate}/>
-                    <Column field="facture.due_date" header="Date d'échéance" sortable filterField="date" dataType="date"  body={dateBodyDueTemplate} filter filterElement={dateFilterTemplate} />
-                    <Column field="extrait.num_extrait" header="N° extrait" sortable filter filterPlaceholder="Rechercher par N°"  body={numextraitBodyTemplate}  />
-                    <Column field="extrait.date_extrait" header="Date extrait" sortable filterField="date" dataType="date"  body={dateBodyExtraitTemplate} filter filterElement={dateFilterTemplate} /> 
-                    
-                </DataTable> 
-                )}
-                <Dialog header="Ajouter un extrait" visible={displayExtrait} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtrait')} className="extraitDialog">
-                                <Button onClick={(e) => onClick('displayExtraitList', 'center', e)}  className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
-                                    Liste des extraits
-                                </Button>
-                                    <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitDialog">
-                                        <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive scrollable scrollHeight="200px" className="p-datatable-customers" dataKey="id" rowHover filterDisplay="menu" loading={loading} emptyMessage="Aucunes données trouvées." currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }} 
-                                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" search>
-                                            {console.log(extraitList)}
-                                            <Column field="label" header="N° de l'extrait" />
-                                            <Column field="date" header="Date de l'extrait" />
-                                            <Column field="montant" header="Montant de l'extrait" />
-                                        </DataTable>
-                                    </Dialog>
-                                <div class="section-three">
+                            <Column field='compte_fournisseur.fournisseur.num_fournisseur' header="N° de fournisseur" sortable filter filterPlaceholder='Rechercher par N°'></Column>
+                            <Column field='compte_client.numCompteClient' header="N° de client" sortable filter filterPlaceholder='Rechercher par N°'></Column>
 
-                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
-                                        <span className="p-float-label">
-                                            <InputText id="num_extrait" type="text" value={extrait.num_extrait} onChange={(e) => setExtrait({ ...extrait, num_extrait: e.target.value })} />
-                                            <label htmlFor="extrait">N° de l'extrait</label>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="section-three">
-                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
-                                        <span className="p-float-label">
-                                            <Calendar id="date_extrait" type="text" value={extrait.date_extrait} onChange={(e) => setExtrait({ ...extrait, date_extrait: e.target.value })} />
-                                            <label htmlFor="date_extrait">Date d'extrait</label>
-                                        </span>
-                                    </div>
-                                </div>     
-                                <div class="section-three">
-                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
-                                        <span className="p-float-label">
-                                            <InputText id="montant_extrait" type="text" value={extrait.montant} onChange={(e) => setExtrait({ ...extrait, montant: e.target.value })} />
-                                            <label htmlFor="montant_extrait">Montant d'extrait</label>
-                                        </span>
-                                    </div>
-                                </div>                             
-                            </Dialog>
-                <Dialog
-                    header={`Facture n° ${extrait.facture.num_facture}`}
-                    visible={displayExtrait}
-                    style={{ width: '50vw' }}
-                    onHide={() => onHide('displayExtrait')}
-                    footer={renderFooter}
-                    className='extraitDialog'
-                    tooltipOptions={{ position: 'right' }}
-                    tooltip='Liste des extraits'
+                            <Column field='compte_client.client.name' header="Nom et prénom du client" sortable filter filterPlaceholder='Rechercher par nom ou prénom' body={clientBodyTemplate}></Column>
+
+                            <Column field='facture.objet.title' header="Objet" sortable filter filterPlaceholder='Rechercher par objet...' ></Column>
+                            <Column field="facture.facture_date" header="Date de la facture" sortable filterField="date" dataType="date" body={dateBodyFactureTemplate} filter filterElement={dateFilterTemplate} />
+                            <Column field="facture.num_facture" header="N° de facture" sortable filter filterPlaceholder="Rechercher par N°" body={numfactureBodyTemplate} />
+                            <Column field="facture.libelle.title" header="Libellé" sortable filter filterPlaceholder="Rechercher par libellé" />
+                            <Column field="decompte.num_decompte" header="N° de décompte " sortable filter filterPlaceholder="Rechercher par N°" body={numdecompteBodyTemplate} />
+                            <Column field="facture.montant" header="Montant de la facture" sortable dataType="numeric" body={balanceBodyTemplate} filter filterElement={balanceFilterTemplate} />
+                            <Column header="Montant avec TVA" sortable dataType="numeric" body={tvaBalanceBodyTemplate} filter filterElement={balanceFilterTemplate} sortField="facture.montant" />
+
+                            <Column field="facture.estpaye" header="Status" sortable body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
+                            <Column field="facture.due_date" header="Date d'échéance" sortable filterField="date" dataType="date" body={dateBodyDueTemplate} filter filterElement={dateFilterTemplate} />
+                            <Column field="extrait.num_extrait" header="N° extrait" sortable filter filterPlaceholder="Rechercher par N°" body={numextraitBodyTemplate} />
+                            <Column field="extrait.date_extrait" header="Date extrait" sortable filterField="date" dataType="date" body={dateBodyExtraitTemplate} filter filterElement={dateFilterTemplate} />
+
+                        </DataTable>
+                    )}
+                    <Dialog header="Ajouter un extrait" visible={displayExtrait} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtrait')} className="extraitDialog">
+                        <Button onClick={(e) => onClick('displayExtraitList', 'center', e)} className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
+                            Liste des extraits
+                        </Button>
+                        <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitDialog">
+                            <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive scrollable scrollHeight="200px" className="p-datatable-customers" dataKey="id" rowHover filterDisplay="menu" loading={loading} emptyMessage="Aucunes données trouvées." currentPageReportTemplate=" {first} de {last} pour {totalRecords} données" responsiveLayout="scroll" style={{ borderRaduis: '20px' }}
+                                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" search>
+                                {console.log(extraitList)}
+                                <Column field="label" header="N° de l'extrait" />
+                                <Column field="date" header="Date de l'extrait" />
+                                <Column field="montant" header="Montant de l'extrait" />
+                            </DataTable>
+                        </Dialog>
+                        <div class="section-three">
+
+                            <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                <span className="p-inputgroup-addon">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </span>
+                                <span className="p-float-label">
+                                    <InputText id="num_extrait" type="text" value={extrait.num_extrait} onChange={(e) => setExtrait({ ...extrait, num_extrait: e.target.value })} />
+                                    <label htmlFor="extrait">N° de l'extrait</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="section-three">
+                            <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                <span className="p-inputgroup-addon">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </span>
+                                <span className="p-float-label">
+                                    <Calendar id="date_extrait" type="text" value={extrait.date_extrait} onChange={(e) => setExtrait({ ...extrait, date_extrait: e.target.value })} />
+                                    <label htmlFor="date_extrait">Date d'extrait</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="section-three">
+                            <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                <span className="p-inputgroup-addon">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </span>
+                                <span className="p-float-label">
+                                    <InputText id="montant_extrait" type="text" value={extrait.montant} onChange={(e) => setExtrait({ ...extrait, montant: e.target.value })} />
+                                    <label htmlFor="montant_extrait">Montant d'extrait</label>
+                                </span>
+                            </div>
+                        </div>
+                    </Dialog>
+                    <Dialog
+                        header={`Facture n° ${extrait.facture.num_facture}`}
+                        visible={displayExtrait}
+                        style={{ width: '50vw' }}
+                        onHide={() => onHide('displayExtrait')}
+                        footer={renderFooter}
+                        className='extraitDialog'
+                        tooltipOptions={{ position: 'right' }}
+                        tooltip='Liste des extraits'
 
                     >
-                    
-                                <Button onClick={(e) => onClick('displayExtraitList', 'center', e)}  className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
-                                    Liste des extraits
-                                </Button>
-                                    <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitDialog">
-                                        <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive>
-                                            <Column field="num_extrait" header="N° de l'extrait" />
-                                            <Column field="date" header="Date de l'extrait" />
-                                            <Column field="montant" header="Montant de l'extrait" />
-                                        </DataTable>
-                                    </Dialog>
-                                <div class="section-three">
-                                    {/* radio button pour indiquer si la facture est payé ou pas */}
-                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
-                                        <span className="p-float-label">
-                                            <InputText id="num_extrait" type="text" value={extrait.num_extrait} onChange={(e) => setExtrait({ ...extrait, num_extrait: e.target.value })} />
-                                            <label htmlFor="extrait">N° de l'extrait</label>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="section-three">
-                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
-                                        <span className="p-float-label">
-                                            <Calendar id="date_extrait" type="text" value={extrait.date_extrait} onChange={(e) => setExtrait({ ...extrait, date_extrait: e.target.value })} />
-                                            <label htmlFor="date_extrait">Date d'extrait</label>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="section-three">
-                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
-                                        <span className="p-inputgroup-addon">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </span>
-                                        <span className="p-float-label">
-                                            <InputText id="montant_extrait" type="text" value={extrait.montant} onChange={(e) => setExtrait({ ...extrait, montant: e.target.value })} />
-                                            <label htmlFor="montant_extrait">Montant d'extrait</label>
-                                        </span>
-                                    </div>
-                                </div>
-                            </Dialog>
+
+                        <Button onClick={(e) => onClick('displayExtraitList', 'center', e)} className="p-button-info" badge={extraitList.length} tooltip="Liste des extraits" tooltipOptions={{ position: 'right' }}>
+                            Liste des extraits
+                        </Button>
+                        <Dialog header="Liste des extraits" visible={displayExtraitList} style={{ width: '50vw' }} footer={renderFooter} onHide={() => onHide('displayExtraitList')} className="extraitDialog">
+                            <DataTable value={extraitList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive>
+                                <Column field="num_extrait" header="N° de l'extrait" />
+                                <Column field="date" header="Date de l'extrait" />
+                                <Column field="montant" header="Montant de l'extrait" />
+                            </DataTable>
+                        </Dialog>
+                        <div class="section-three">
+                            {/* radio button pour indiquer si la facture est payé ou pas */}
+                            <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                <span className="p-inputgroup-addon">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </span>
+                                <span className="p-float-label">
+                                    <InputText id="num_extrait" type="text" value={extrait.num_extrait} onChange={(e) => setExtrait({ ...extrait, num_extrait: e.target.value })} />
+                                    <label htmlFor="extrait">N° de l'extrait</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="section-three">
+                            <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                <span className="p-inputgroup-addon">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </span>
+                                <span className="p-float-label">
+                                    <Calendar id="date_extrait" type="text" value={extrait.date_extrait} onChange={(e) => setExtrait({ ...extrait, date_extrait: e.target.value })} />
+                                    <label htmlFor="date_extrait">Date d'extrait</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="section-three">
+                            <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                <span className="p-inputgroup-addon">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </span>
+                                <span className="p-float-label">
+                                    <InputText id="montant_extrait" type="text" value={extrait.montant} onChange={(e) => setExtrait({ ...extrait, montant: e.target.value })} />
+                                    <label htmlFor="montant_extrait">Montant d'extrait</label>
+                                </span>
+                            </div>
+                        </div>
+                    </Dialog>
 
 
-               
+
 
                 </div>
             </div>
         )
     }
 }
-    export default FacturierDatatable
+export default FacturierDatatable
 
 
 
 
 
-    
+
 
