@@ -34,18 +34,20 @@ const createFacture = (req, res) => {
             // Create a Facture
             const facture = {
                 num_facture: req.body.num_facture,
-                facture_date: req.body.facture_date,
+                facture_date: new Date(req.body.facture_date), // Convertir la date en objet Date
                 num_facture_lamy: req.body.num_facture_lamy,
-                // POur le montant, si il y a un point dans le montant, on le remplace par une virgule
                 montant: req.body.montant,
                 description: req.body.description,
                 estpaye: req.body.estpaye,
                 objet_id: req.body.objet_id,
                 libelle_id: req.body.libelle_id,
-                tva_id : req.body.tva_id, 
-                due_date : req.body.due_date,
-                facture_img : req.body.facture_img,
+                tva_id: req.body.tva_id,
+                due_date: new Date(req.body.due_date), // Convertir la date en objet Date
+                facture_img: req.body.facture_img
             };
+
+            facture.facture_date.setHours(facture.facture_date.getHours() + 2); // Ajouter 2 heures à la date
+            facture.due_date.setHours(facture.due_date.getHours() + 2)
 
             // Save Facture in the database
             Factures.create(facture)
