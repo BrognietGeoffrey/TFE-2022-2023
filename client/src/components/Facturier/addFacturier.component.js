@@ -992,8 +992,8 @@ const AddFacturier = () => {
             />
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', border: '1px solid #ced4da', borderRadius: '.25rem', width: '100%', flexWrap: 'wrap', padding: '1rem' }}>
                 <label className="upload-btn" style={{ marginBottom: '1rem' }}>
-                    
-                    <input type="file" onChange={handleFileChange} id ="file"/>
+
+                    <input type="file" onChange={handleFileChange} id="file" />
                 </label>
 
                 {loading && (
@@ -1006,7 +1006,7 @@ const AddFacturier = () => {
                         <div className="file-size">{fileInfo.fileSize}</div>
                     </div>
                 )}
-                                <Button type="button" label="Récupérer les données de la facture" onClick={handleFormSubmit} className="p-button-raised p-button-rounded" style={{ marginLeft: '1rem' }} />
+                <Button type="button" label="Récupérer les données de la facture" onClick={handleFormSubmit} className="p-button-raised p-button-rounded" style={{ marginLeft: '1rem' }} />
 
             </div>
 
@@ -1177,7 +1177,7 @@ const AddFacturier = () => {
                                 <Dropdown id="decompte" value={decompte.decompte} options={decompteList} onChange={(e) => setDecompte({ ...decompte, decompte: e.value })} placeholder="Choisir un décomptes" filter showClear />
                                 <label htmlFor="inputgroup">Décompte*</label>
                             </span>
-                            <Button onClick={(e) => onClick('displayDecompte', 'center', e)} icon="pi pi-plus" className="p-button-success" style={{minWidth:'fit-content'}} />
+                            <Button onClick={(e) => onClick('displayDecompte', 'center', e)} icon="pi pi-plus" className="p-button-success" style={{ minWidth: 'fit-content' }} />
 
                             <Dialog header="Ajout d'un décompte" className="decompteDialog" visible={displayDecompte} footer={renderFooter} onHide={() => onHide('displayDecompte')}>
                                 <Toast ref={toastAddon} />
@@ -1674,7 +1674,7 @@ const AddFacturier = () => {
                                 <Button onClick={(e) => onClick('displayTvaList', 'center', e)} className="p-button-info" badge={tvaList.length} tooltip="Liste des TVA's" tooltipOptions={{ position: 'right' }}>
                                     Liste des TVA
                                 </Button>
-                                <Dialog header="Liste des TVA" visible={displayTvaList}  footer={renderFooter} onHide={() => onHide('displayTvaList')} className="tvaDialog">
+                                <Dialog header="Liste des TVA" visible={displayTvaList} footer={renderFooter} onHide={() => onHide('displayTvaList')} className="tvaDialog">
                                     <DataTable value={tvaList} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} responsive filter editMode="row" onRowEditComplete={onRowEditComplete}>
                                         <Column field="label" header="Valeur de la TVA" sortable editor={(options) => textEditor(options)} />
                                         <Column field="tva_description" header="Description " sortable editor={(options) => textEditor(options)} />
@@ -1724,8 +1724,8 @@ const AddFacturier = () => {
 
             <div style={{ marginTop: "1em" }}>
 
-                <Button onClick={saveFacture} name="addFacture" disabled={checked1 ? false : true} style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", width: "50%" }} className="p-button-success">Ajouter la facture</Button>
-            </div>
+                <Button onClick={saveFacture} name="addFacture" disabled={!checked1 || !factures.libelle || !factures.date_facture || !factures.montant_facture || !factures.tva || !decompte.decompte || !factures.objet}
+                    style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", width: "50%" }} className="p-button-success">Ajouter la facture</Button>            </div>
         </div>
     );
 };
