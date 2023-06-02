@@ -4,6 +4,7 @@ import FacturierDataService from "../../services/facturierService";
 import viewServices from "../../services/viewServices";
 import ViewAnalyse from "./ViewAnalyse.component";
 import LogsService from "../../services/logsService";
+import axios from "axios";
 
 import CommentZone from './comment.component';
 import { Button } from 'primereact/button';
@@ -12,6 +13,8 @@ import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import { Chart } from 'primereact/chart';
+import EmailTemplate from '../Template/reportMail';
+
 
 export const Analyse = () => {
   const [facturier, setFacturier] = useState([]);
@@ -172,7 +175,7 @@ export const Analyse = () => {
             onClick={rowData.facture !== null ? () => handleShowDetails(rowData) : '/'}
             disabled={rowData.facture !== null ? false : true}
           >
-            {console.log(rowData.facture)}
+            {console.log(rowData)}
             {rowData.facture !== null && rowData.facture.num_facture !== null ? rowData.facture.num_facture : '/'}
           </Button>
         </span>
@@ -338,6 +341,49 @@ export const Analyse = () => {
       return factureDate >= monday;
     });
   };
+
+  const sendMailEveryDay = async () => {
+    const factureAddedToday = facturier.filter((bill) => {
+      console.log(bill)
+      const date = new Date();
+      const dateFacture = new Date(bill.createdAt);
+      return date.getDate() === dateFacture.getDate() && date.getMonth() === dateFacture.getMonth() && date.getFullYear() === dateFacture.getFullYear();
+    });
+    console.log(factureAddedToday);
+    const logsAddedToday = logs.filter((log) => {
+      const date = new Date();
+      const dateLog = new Date(log.createdAt);
+      return date.getDate() === dateLog.getDate() && date.getMonth() === dateLog.getMonth() && date.getFullYear() === dateLog.getFullYear();
+    });
+    console.log(logsAddedToday);
+
+    console.log(factureAddedToday);
+    axios.post('/api/send-email', {
+      to: 'jeanVives@outlook.be', // remplacer par la variable "to" une fois que vous aurez ajouté cette fonctionnalité
+      subject: "Activité du jour",
+      message: EmailTemplate(factureAddedToday.length, logsAddedToday.length, billNotPayed.length),
+    }).then((response) => {
+      console.log(response);
+      toast.current.show({ severity: 'success', summary: 'Succès', detail: 'Email envoyé', life: 3000 });
+    }).catch((error) => {
+      console.log(error);
+      toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Email non envoyé', life: 3000 });
+    });
+  };
+
+  // useEffect pour envoyer un email tous les jours à 18h
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const date = new Date();
+      const heure = date.getHours();
+      const minutes = date.getMinutes();
+      if (heure === 18 && minutes === 0) {
+        sendMailEveryDay();
+      }
+    }, 60000);
+    console.log("useEffect");
+    return () => clearInterval(interval);
+  }, [facturier]);
 
 
   useEffect(() => {
