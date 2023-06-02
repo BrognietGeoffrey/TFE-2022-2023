@@ -4,6 +4,7 @@ import { Card } from 'primereact/card';
 import { Toast } from 'primereact/toast';
 import jwt_decode from "jwt-decode";
 import './sendMail.css'
+import EmailTemplate from './Template/userMail';
 
 const SendEmail = () => {
   const [loading, setLoading] = useState(false);
@@ -42,7 +43,7 @@ const SendEmail = () => {
     axios.post('/api/send-email', {
       to: 'jeanVives@outlook.be', // remplacer par la variable "to" une fois que vous aurez ajouté cette fonctionnalité
       subject: finalSubject,
-      message: emailTemplate(finalSubject, message, userMail)
+      message: EmailTemplate(finalSubject, message, userMail)
     }).then((response) => {
       setLoading(false);
       console.log(response);
