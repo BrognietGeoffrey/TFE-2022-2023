@@ -33,23 +33,6 @@ const SendEmail = () => {
     setSelectedSubject(event.target.value);
   };
 
-  // template pour le message du mail (à modifier selon vos besoins)
-  const messageTemplate = 
-  `<!DOCTYPE html>
-  <html>
-    <head>
-      <meta charset="utf-8">
-      <title>${subject}</title>
-    </head>
-    <body>
-      <h2>Nouveau message de ${userMail}</h2>
-      <hr>
-      <p>${message}</p>
-    </body>
-  </html>`;
-
-    
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -59,7 +42,7 @@ const SendEmail = () => {
     axios.post('/api/send-email', {
       to: 'jeanVives@outlook.be', // remplacer par la variable "to" une fois que vous aurez ajouté cette fonctionnalité
       subject: finalSubject,
-      message: messageTemplate,
+      message: emailTemplate(finalSubject, message, userMail)
     }).then((response) => {
       setLoading(false);
       console.log(response);
