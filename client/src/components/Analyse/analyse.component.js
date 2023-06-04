@@ -450,15 +450,19 @@ export const Analyse = () => {
         <div className = "card" id="card">
           {/* graphique indiquant le nombre de facture a payé cette semaine ci, le nombre déjà payé et le nombre non payé */}
           <h3>Statuts des factures cette semaine</h3>
-          {billNotPayed && billNotPayed.length > 0 && (
-            console.log(weekFactures, "weekFactures"),
+          {weekFactures && weekFactures.length === 0 && (
+            <div>
+            <p> Aucune facture ajoutée cette semaine</p>
+          
+
+          
             <div>
               <Chart type="pie" data={
                 {
                   labels: ['Factures payées', 'Factures non payées'],
                   datasets: [
                     {
-                      data: [weekFactures.filter(bill => bill.facture.estpaye === true).length, weekFactures.filter(bill => bill.facture.estpaye === false).length],
+                      data: [weekFactures.filter(bill => bill.facture.estpaye === true).length > 0 ? weekFactures.filter(bill => bill.facture.estpaye === true).length : 0, weekFactures.filter(bill => bill.facture.estpaye === false).length > 0 ? weekFactures.filter(bill => bill.facture.estpaye === false).length : 0],
                       backgroundColor: [
                         '#42A5F5',
                         '#FFA726'
@@ -471,7 +475,11 @@ export const Analyse = () => {
                 }
               } />
             </div>
+            </div>
           )}
+       
+          
+          
         </div>
       </section>
       <section className="testimonials">
