@@ -367,7 +367,7 @@ const AddFacturier = () => {
                 });
                 console.log(response.data);
                 //   Ajouter dans le facturier
-                saveFacturier(response.data.facture_id)
+                saveFacturier(response.data.data.facture_id)
             })
             .catch(e => {
                 console.log(e);
