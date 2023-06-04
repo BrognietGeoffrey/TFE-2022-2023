@@ -9,6 +9,7 @@ import compteClientDataService from "../../services/compteClientService";
 import auhtService from "../../services/authService";
 import ClientDataService from '../../services/clientService';
 import logo from '../../images/logojv.png';
+import './register.css';
 
 function Register() {
   const toast = useRef(null);
@@ -153,7 +154,7 @@ function Register() {
           <div className="section-three">
             <span className="p-input-icon-right">
               <i className="pi pi-user" />
-              <InputText id="username" name="username" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+              <InputText id="username" name="username" placeholder="Nom d'utilisateur" value={username} onChange={(e) => setUsername(e.target.value)} />
             </span>
           </div>
 
@@ -168,7 +169,7 @@ function Register() {
           <div className="section-three">
             <span className="p-input-icon-right">
               <i className="pi pi-lock" />
-              <Password id="password" placeholder="Password" feedback={false} name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <Password id="password" placeholder="Password" feedback={false} name="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} />
             </span>
             </div>
             
@@ -176,7 +177,7 @@ function Register() {
             <div className="section-three">
             <span className="p-input-icon-right">
                 <i className="pi pi-lock" />
-                <Password id="confirmPassword" placeholder="Confirm Password" feedback={false} name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                <Password id="confirmPassword" placeholder="Confirmer mot de passe" feedback={false} name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
             </span>
             </div>
             </div>
@@ -196,13 +197,13 @@ function Register() {
                 <div className="section-three">
                   <span className="p-input-icon-right">
                     <i className="pi pi-user" />
-                    <InputText id="firstname" name="firstname" placeholder="Firstname" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
+                    <InputText id="firstname" name="firstname" placeholder="Prénom" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
                   </span>
                 </div>
                 <div className="section-three">
                   <span className="p-input-icon-right">
                     <i className="pi pi-user" />
-                    <InputText id="lastname" name="lastname" placeholder="Lastname" value={lastname} onChange={(e) => setLastname(e.target.value)} />
+                    <InputText id="lastname" name="lastname" placeholder="Nom" value={lastname} onChange={(e) => setLastname(e.target.value)} />
                   </span>
                 </div>
                 <div className="section-three">
@@ -216,7 +217,7 @@ function Register() {
                 <div className="section-three">
                   <span className="p-input-icon-right">
                     <i className="pi pi-home" />
-                    <InputText id="address" name="address" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                    <InputText id="address" name="address" placeholder="Adresse" value={address} onChange={(e) => setAddress(e.target.value)} />
                   </span>
                 </div>
                 <div className="section-three">
@@ -242,7 +243,7 @@ function Register() {
             )}
 
             <div className="section-three">
-            <Button label="Submit" onClick={registerUser} />
+            <Button label="Enregistrer" onClick={registerUser} />
             </div>
         </form>
       </div>

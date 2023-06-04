@@ -15,6 +15,7 @@ import { Chip } from 'primereact/chip';
 import { Tooltip } from 'primereact/tooltip';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import 'jspdf-autotable';
+import jwt_decode from "jwt-decode";
 
 import FacturierDataService from "../../services/facturierService";
 import FactureDataService from "../../services/factureService";
@@ -39,6 +40,8 @@ const FacturierDatatable = () => {
 
     const toastAddon = useRef(null);
     const [user, setUser] = useState(null);
+    const token = localStorage.getItem("access_token");
+    const decoded = jwt_decode(token);
 
     const cols = [
         { field: 'facturier_id', header: 'ID' },
@@ -139,11 +142,12 @@ const FacturierDatatable = () => {
                 });
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Extrait Added', life: 3000 });
                 getExtraitList();
-                let extraitId = response.data.extrait_id
+                let extraitId = response.data.data.extrait_id
                 console.log(extraitId);
                 const logData = {
-                    extrait_id: response.data.extrait_id,
+                    extrait_id: extraitId,
                     description: "Ajout d'un extrait",
+                    user_id: decoded.user_id.id
                     // user_id : user.id
                 }
                 LogsDataService.create(logData)

@@ -191,7 +191,7 @@ return (
   <Button label="Contacter un membre du conseil de gérance" className="p-button-success p-ml-1" style={{ width: '100%' }} />
 </Link>              </span>
               ) : ( decoded && decoded.role == "admin" ? (
-                 <Button label="Ajouter un utilisateur" onClick={openDialogRegister} className="p-button-success p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
+                 <Button label="Ajouter un utilisateur/client" onClick={openDialogRegister} className="p-button-success p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
 
               ) : (null
                          ))}
@@ -299,7 +299,7 @@ return (
         ><i className="pi pi-user" style={{ fontSize: '50px' }}></i></Avatar>
         
         <p className="p-text-muted p-mb-1" style={{ textAlign: 'center' }}>{decoded.role == "user" ? "Propriétaire/locataire" : "Membre du conseil de gérance"}</p>
-        <p className="p-text-muted" style={{ textAlign: 'center' }}>Membre depuis 2019</p>
+        <p className="p-text-muted" style={{ textAlign: 'center' }}>Membre depuis le {new Date(decoded.userInfo.createdAt).toLocaleDateString()}</p>
         <div className="p-d-flex p-justify-center p-mb-2" style={{ textAlign: 'center' }}>
           {decoded && decoded.role == "user" ? (
             <span>
@@ -307,7 +307,7 @@ return (
           <Button label="Contacter un membre du conseil de gérance" className="p-button-success p-ml-1" style={{ width: '100%' }} onClick={openDialogContact} />
           </span>
           ) : ( decoded && decoded.role == "admin" ? (
-             <Button label="Ajouter un utilisateur" onClick={openDialogRegister} className="p-button-success p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
+             <Button label="Ajouter un utilisateur/client" onClick={openDialogRegister} className="p-button-success p-ml-1" style={{ width: '100%', marginBottom: '10px' }} />
 
           ) : (null
                      ))}
@@ -329,7 +329,7 @@ return (
       </div>
     </section>
     <div className="p-grid" style={{}}>
-    <Dialog header="Ajouter un utilisateur" visible={displayDialogRegister} onHide={() => setDisplayDialogRegister(false)} maximizable style={{ width: '50vh', height:'70vh' }}>
+    <Dialog header="Ajouter un utilisateur/client" visible={displayDialogRegister} onHide={() => setDisplayDialogRegister(false)} maximizable style={{ width: '50vh', height:'70vh' }}>
 
   <Register  />
 
