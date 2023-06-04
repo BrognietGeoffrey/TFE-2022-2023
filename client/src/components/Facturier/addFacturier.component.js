@@ -445,10 +445,10 @@ const AddFacturier = () => {
                 const file = document.getElementById('file');
                 file.value = '';
 
-
+                console.log(response, 'facturier');
                 const logData = {
-                    facturier_id: response.data.facturier_id,
-                    facture_id: response.data.facture_id,
+                    facturier_id: response.data.data.facturier_id,
+                    facture_id: response.data.data.facture_id,
                     user_id: decoded.user_id.id,
                     description: "Ajout d'un facturier",
                 };
