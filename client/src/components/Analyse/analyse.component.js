@@ -13,6 +13,8 @@ import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import { Chart } from 'primereact/chart';
+import {Tooltip} from 'primereact/tooltip';
+import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 
 import EmailTemplate from '../Template/reportMail';
@@ -33,6 +35,7 @@ export const Analyse = () => {
   const [weekFactures, setWeekFactures] = useState([]);
   const [globalFilterValue1, setGlobalFilterValue1] = useState('');
   const [filters1, setFilters1] = useState(null)
+  const targetRef = useRef(null);
 
 
   const handleShowDetails = (rowData) => {
@@ -328,75 +331,27 @@ export const Analyse = () => {
   };
 
   const weekFacturation = () => {
-    const facture = facturier;
+    const facture = facturier; // Utilisez la variable d'état qui contient les données facturier
     const today = new Date();
-    const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (today.getDay() - 1));
-    monday.setHours(0, 0, 0, 0); // Réinitialise l'heure à minuit
+    const startOfTheWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (today.getDay() + 6) % 7);
+    console.log(startOfTheWeek);
+    const endOfTheWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (today.getDay() + 6) % 7 + 6);
+    console.log(endOfTheWeek);
 
     const weekFactures = facture.filter((facture) => {
-      const factureDate = new Date(facture.createdAt);
-      factureDate.setHours(0, 0, 0, 0); // Réinitialise l'heure à minuit
-      return factureDate >= monday;
-    });
-
+      const factureDate = new Date(facture.facture.createdAt);
+      return factureDate >= startOfTheWeek && factureDate <= endOfTheWeek;
+    }
+    );
     setWeekFactures(weekFactures);
+    console.log(weekFactures);
+  }
 
-    const factureToBePaid = facturier.filter((facture) => {
-      const factureDate = new Date(facture.facture.due_date);
-      factureDate.setHours(0, 0, 0, 0); // Réinitialise l'heure à minuit
-      return factureDate >= monday;
-    });
-  };
-
-  const sendMailEveryDay = async () => {
-    const factureAddedToday = facturier.filter((bill) => {
-      console.log(bill)
-      const date = new Date();
-      const dateFacture = new Date(bill.createdAt);
-      return date.getDate() === dateFacture.getDate() && date.getMonth() === dateFacture.getMonth() && date.getFullYear() === dateFacture.getFullYear();
-    });
-    console.log(factureAddedToday);
-    const logsAddedToday = logs.filter((log) => {
-      const date = new Date();
-      const dateLog = new Date(log.createdAt);
-      return date.getDate() === dateLog.getDate() && date.getMonth() === dateLog.getMonth() && date.getFullYear() === dateLog.getFullYear();
-    });
-    console.log(logsAddedToday);
-
-    console.log(factureAddedToday);
-    axios.post('/api/send-email', {
-      to: 'jeanVives@outlook.be', // remplacer par la variable "to" une fois que vous aurez ajouté cette fonctionnalité
-      subject: "Activité du jour",
-      message: EmailTemplate(factureAddedToday.length, logsAddedToday.length, billNotPayed.length),
-    }).then((response) => {
-      console.log(response);
-      toast.current.show({ severity: 'success', summary: 'Succès', detail: 'Email envoyé', life: 3000 });
-    }).catch((error) => {
-      console.log(error);
-      toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Email non envoyé', life: 3000 });
-    });
-  };
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     const date = new Date();
-  //     const heure = date.getHours();
-  //     const minutes = date.getMinutes();
-  //     if (heure === 13 && minutes === 30) {
-  //       sendMailEveryDay();
-  //     }
-  //   }, 60000);
-    
-  //   // Vérifier l'heure et les minutes toutes les minutes
-  //   sendMailEveryDay(); // Envoyer immédiatement l'e-mail si l'heure et les minutes correspondent
-  
-  //   return () => clearInterval(interval);
-  // }, [facturier]);
 
   useEffect(() => {
     previousWeekFacturation();
     weekFacturation();
-  }, [billPayed]);
+  }, [facturier]);
 
   const clearFilter1 = () => {
     initFilters1();
@@ -431,7 +386,7 @@ const renderHeader1 = () => {
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
-                <Tooltip target={targetRef} content="Pour rechercher une date, veuillez rechercher de cette manière Année-Mois-jour. Voici un exemple : 2023-01-01" position="left" />
+                <Tooltip target={targetRef} content="Il n'est possible que de rechercher par utilisateur" position="left" />
                 <span ref={targetRef} style={{marginLeft : "0.3em"}}><i className="pi pi-question-circle p-ml-2" style={{ fontSize: '1.5em' }}></i></span>
                 </span>
             </div>
@@ -501,7 +456,7 @@ const renderHeader1 = () => {
         <div className = "card" id="card">
           {/* graphique indiquant le nombre de facture a payé cette semaine ci, le nombre déjà payé et le nombre non payé */}
           <h3>Statuts des factures cette semaine</h3>
-          {weekFactures && weekFactures.length === 0 && (
+        
             <div>
             <p> Aucune facture ajoutée cette semaine</p>
           
@@ -527,7 +482,7 @@ const renderHeader1 = () => {
               } />
             </div>
             </div>
-          )}
+        
        
           
           
@@ -575,8 +530,8 @@ const renderHeader1 = () => {
           </p>
         </div>
         <div className = "card" id="card" >
-          <DataTable value={logs} paginator header={header1} rows={5} rowsPerPageOptions={[5, 10, 20]} emptyMessage="Aucun log pour le moment" style={{ height: "90%" }} header={header} className="p-datatable-sm p-datatable-gridlines"
-          filterDisplay="menu" globalFilterFields={['user.username', 'date', 'action', 'ajout']} responsive stripedRows filters={filters1} currentPageReportTemplate="{first}-{last} sur {totalRecords}">
+          <DataTable value={logs} paginator header={header1} rows={5} rowsPerPageOptions={[5, 10, 20]} emptyMessage="Aucun log pour le moment" style={{ height: "90%" }} 
+          filterDisplay="menu" globalFilterFields={['user.username', 'date', 'action', 'ajout']}  stripedRows filters={filters1} currentPageReportTemplate="{first}-{last} sur {totalRecords}">
             <Column field="user.username" header="Utilisateur" sortable></Column>
             <Column field="date" header="Date de création" body={dateBodyTemplate} sortable/>
             <Column field="action" header="Actions" body={actionBodyTemplate} sortable />
