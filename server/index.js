@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 
+require('./middleware/cronJobs');
 
 const mindee = require("mindee");
 const fs = require('fs');
