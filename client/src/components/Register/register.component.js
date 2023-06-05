@@ -144,7 +144,7 @@ function Register() {
     <div className="p-grid p-fluid" >
       <Toast ref={toast}  />
       
-      <div className="login" id="login" style={{overflow : 'hidden'}}>
+      <div className="login" id="login" style={{overflow : 'hidden'}} >
 
 
         <form  id="form" style={{maxHeight: '55vh', overflowY: 'auto'}} onSubmit={registerUser}>

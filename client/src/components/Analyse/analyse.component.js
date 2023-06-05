@@ -4,7 +4,6 @@ import FacturierDataService from "../../services/facturierService";
 import viewServices from "../../services/viewServices";
 import ViewAnalyse from "./ViewAnalyse.component";
 import LogsService from "../../services/logsService";
-import axios from "axios";
 
 import CommentZone from './comment.component';
 import { Button } from 'primereact/button';
@@ -17,7 +16,6 @@ import {Tooltip} from 'primereact/tooltip';
 import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 
-import EmailTemplate from '../Template/reportMail';
 
 
 export const Analyse = () => {

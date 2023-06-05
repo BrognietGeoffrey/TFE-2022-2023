@@ -217,6 +217,7 @@ const AddFacturier = () => {
                 value: extrait.extrait_id,
                 montant: extrait.montant,
                 date: extrait.date_extrait,
+                description: extrait.description,
                 from: 'extrait'
             };
         }));
@@ -571,6 +572,7 @@ const AddFacturier = () => {
             num_extrait: extrait.num_extrait,
             date_extrait: extrait.date_extrait,
             montant: extrait.montant,
+            description: extrait.description,
         };
         ExtraitDataService.create(data)
             .then(response => {
@@ -579,12 +581,14 @@ const AddFacturier = () => {
                     num_extrait: response.data.num_extrait,
                     date_extrait: response.data.date_extrait,
                     montant: response.data.montant,
+                    description: response.data.description,
                 });
                 setExtrait({
                     ...extrait,
                     num_extrait: "",
                     date_extrait: "",
                     montant: "",
+                    description: "",
                 });
                 toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Decompte Added', life: 3000 });
                 getExtraitList();
@@ -1111,7 +1115,9 @@ const AddFacturier = () => {
                         </div>
 
                     }
+
                 </div>
+
 
                 <div class="facture-section" style={{ marginTop: '1em' }}>
                     <div class="section-three no-hover">
@@ -1641,6 +1647,17 @@ const AddFacturier = () => {
                                         </span>
                                     </div>
                                 </div>
+                                <div class="section-three no-hover">
+                                    <div className="p-inputgroup" style={{ marginTop: '2em' }}>
+                                        <span className="p-inputgroup-addon">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </span>
+                                        <span className="p-float-label">
+                                            <InputText id="description_extrait" type="text" value={extrait.description} onChange={(e) => setExtrait({ ...extrait, description: e.target.value })} />
+                                            <label htmlFor="description">Description de l'extrait</label>
+                                        </span>
+                                    </div>
+                                </div>
                             </Dialog>
                         </div>
                     </div>
@@ -1664,6 +1681,8 @@ const AddFacturier = () => {
 
 
                             }
+
+
 
 
 
@@ -1724,11 +1743,18 @@ const AddFacturier = () => {
 
             <div style={{ marginTop: "1em" }}>
 
-                <Button onClick={saveFacture} name="addFacture" disabled={!checked1 || !factures.libelle || !factures.date_facture || !factures.montant_facture || !factures.tva || !decompte.decompte || !factures.objet}
-                    style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", width: "50%" }} className="p-button-success">Ajouter la facture</Button>            </div>
+                {result ? 
+                <Button  className="p-button-success" onClick={saveFacturier} disabled={!checked1} style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", width: "50%" }}>Ajouter la facture</Button>
+                :
+                <Button   onClick={saveFacturier} disabled={!checked1 || !factures.libelle || !factures.date_facture || !factures.montant_facture || !factures.tva || !decompte.decompte || !factures.objet} 
+                style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", width: "50%" }} className="p-button-success">Ajouter la facture</Button>
+                }
+                
+            </div>
         </div>
-    );
-};
+    )
+}
+
 export default AddFacturier;
 
 
