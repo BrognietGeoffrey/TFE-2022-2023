@@ -36,6 +36,28 @@
 
 }
 
+.confirmation {
+  text-align: center;
+}
+
+.confirmation p {
+  margin: 10px 0;
+}
+
+.confirmation button {
+  margin: 5px;
+  padding: 10px 20px;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.confirmation button:hover {
+  background-color: #c62828;
+}
+
 @media (max-width: 991.98px) {
   .col-md-4,
   .col-md-8 {

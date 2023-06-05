@@ -329,12 +329,12 @@ return (
       </div>
     </section>
     <div className="p-grid" style={{}}>
-    <Dialog header="Ajouter un utilisateur/client" visible={displayDialogRegister} onHide={() => setDisplayDialogRegister(false)} maximizable style={{ width: '50vh', height:'70vh' }}>
+    <Dialog header="Ajouter un utilisateur/client" visible={displayDialogRegister} onHide={() => setDisplayDialogRegister(false)} maximizable style={{ width: '50vh', height:'70vh', overflow : 'hidden' }}>
 
   <Register  />
 
 </Dialog>
-<Dialog header="Supprimer vos données" visible={displayDialogDelete} onHide={() => setDisplayDialogDelete(false)} maximizable style={{ width: '50vh', height:'70vh' }}>
+<Dialog header="Supprimer vos données" visible={displayDialogDelete} onHide={() => setDisplayDialogDelete(false)} maximizable style={{ width: '50vh', overflow : 'hidden' }}>
   <div className="container">
       <div className="confirmation">
         <p>Voulez-vous vraiment supprimer vos informations</p>
