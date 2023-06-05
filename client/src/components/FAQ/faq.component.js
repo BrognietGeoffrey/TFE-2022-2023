@@ -4,9 +4,14 @@ import "./faq.css";
 const Faq = () => {
   const [activeIndex, setActiveIndex] = useState(null);
 
-
   const onQuestionClick = (index) => {
-    setActiveIndex(index);
+    if (index === activeIndex) {
+      // Si la question est déjà ouverte, fermez-la en définissant l'index actif à null
+      setActiveIndex(null);
+    } else {
+      // Sinon, ouvrez la question en définissant l'index actif sur celui de la question cliquée
+      setActiveIndex(index);
+    }
   };
 
   const faqData = [
@@ -44,7 +49,7 @@ const Faq = () => {
     },
     {
       question : "J'ai oublié mon mot de passe, que dois-je faire ?",
-      answer : "Pas de soucis, vous pouvez cliquez sur le bouton 'Mot de passe oublié' dans la page de connexion. Vous recevrez un mail avec un lien pour réinitialiser votre mot de passe."
+      answer : "Malheureusement, la fonctionnalité pour re-créer un mot de passe n'est pas encore implémentée. Vous pouvez demander à un membre du conseil de gérance ou au président de l'immeuble de réinitialiser votre mot de passe. Vous devrez vous présenter avec une pièce d'identité afin de confirmer votre identité. Ce changement se fera par l'administrateur du site."
     },
     { question : "Quand sont les heures de permanence des membres du conseil de gérance ?",
       answer : "Les heures de permanence sont affichées dans la page de contact."
@@ -59,26 +64,22 @@ const Faq = () => {
     const active = index === activeIndex ? "active" : "";
 
     return (
-      <div>
-        
-        
-
       <div key={index} className={`question ${active}`}>
         <div className="question-header" onClick={() => onQuestionClick(index)}>
           <h3>{item.question}</h3>
           <span>{active === "active" ? "-" : "+"}</span>
         </div>
-        {active === "active" ? <div className="question-body">{item.answer}</div> : null
-  }
-       
-      </div>
+        {active === "active" ? <div className="question-body">{item.answer}</div> : null}
       </div>
     );
   });
 
-  return <div className="faq">
-    <h1 style = {{textAlign : "center", color: "red", fontSize: 50}}>FAQ</h1>
-    {renderedQuestions}</div>;
+  return (
+    <div className="faq">
+      <h1 style={{ textAlign: "center", color: "red", fontSize: 50 }}>FAQ</h1>
+      {renderedQuestions}
+    </div>
+  );
 };
 
 export default Faq;
