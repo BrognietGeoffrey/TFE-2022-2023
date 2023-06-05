@@ -1,24 +1,10 @@
 const cron = require('node-cron');
-const express = require("express");
-const app = express();
-
 const { sendEmailController } = require('./sendEmail');
 const { EmailTemplate } = require('./autoEmailReport');
-const findByIdFacture  = require('../controllers/facture.controller').getLastIdFacture;
 const db = require("../models");
 const {Factures, Logs } = require("../models");
 const Op = db.Sequelize.Op;
 
-// find all facture
-const findAllFacture = async () => {
-    try {
-        const factures = await Factures.findAll({
-        });
-        return factures;
-    } catch (error) {
-        console.log('Error:', error);
-    }
-};
 
 // trouver toutes les factures crée aujourd'hui
 const findAllFactureToday = async () => {
@@ -83,7 +69,7 @@ const runCronJob = async () => {
 
 
     const message = EmailTemplate(factures.length, logs.length, totalFactureUnpaid.length);
-    const task = cron.schedule('* 35 16 * * *', () => {
+    const task = cron.schedule('* 20 17 * * *', () => {
         const req = { body: { to: 'jeanVives@outlook.be', subject: 'Rapport journalier', message: message } };
         const res = {
           status: (statusCode) => ({

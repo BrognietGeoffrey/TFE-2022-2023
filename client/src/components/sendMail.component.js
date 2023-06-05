@@ -43,7 +43,10 @@ const SendEmail = () => {
     axios.post('/api/send-email', {
       to: 'jeanVives@outlook.be', // remplacer par la variable "to" une fois que vous aurez ajouté cette fonctionnalité
       subject: finalSubject,
-      message: EmailTemplate(finalSubject, message, userMail)
+      message: EmailTemplate(finalSubject, message, userMail),
+      headers: {
+        'X-Priority': '1'
+      }
     }).then((response) => {
       setLoading(false);
       console.log(response);
