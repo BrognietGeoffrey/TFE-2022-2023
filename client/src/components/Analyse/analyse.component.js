@@ -377,7 +377,7 @@ export const Analyse = () => {
       const date = new Date();
       const heure = date.getHours();
       const minutes = date.getMinutes();
-      if (heure === 18 && minutes === 0) {
+      if (heure === 13 && minutes === 30) {
         sendMailEveryDay();
       }
     }, 60000);
