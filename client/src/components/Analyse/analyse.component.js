@@ -13,6 +13,8 @@ import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import { Chart } from 'primereact/chart';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+
 import EmailTemplate from '../Template/reportMail';
 
 
@@ -29,6 +31,8 @@ export const Analyse = () => {
   const [expandedRows, setExpandedRows] = useState(null);
   const [previousWeekFactures, setPreviousWeekFactures] = useState([]);
   const [weekFactures, setWeekFactures] = useState([]);
+  const [globalFilterValue1, setGlobalFilterValue1] = useState('');
+  const [filters1, setFilters1] = useState(null)
 
 
   const handleShowDetails = (rowData) => {
@@ -57,6 +61,8 @@ export const Analyse = () => {
   useEffect(() => {
     retrieveFacturier();
     retrieveView();
+    initFilters1();
+
   }, []);
 
 
@@ -371,26 +377,70 @@ export const Analyse = () => {
     });
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const date = new Date();
-      const heure = date.getHours();
-      const minutes = date.getMinutes();
-      if (heure === 13 && minutes === 30) {
-        sendMailEveryDay();
-      }
-    }, 60000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const date = new Date();
+  //     const heure = date.getHours();
+  //     const minutes = date.getMinutes();
+  //     if (heure === 13 && minutes === 30) {
+  //       sendMailEveryDay();
+  //     }
+  //   }, 60000);
     
-    // Vérifier l'heure et les minutes toutes les minutes
-    sendMailEveryDay(); // Envoyer immédiatement l'e-mail si l'heure et les minutes correspondent
+  //   // Vérifier l'heure et les minutes toutes les minutes
+  //   sendMailEveryDay(); // Envoyer immédiatement l'e-mail si l'heure et les minutes correspondent
   
-    return () => clearInterval(interval);
-  }, [facturier]);
+  //   return () => clearInterval(interval);
+  // }, [facturier]);
 
   useEffect(() => {
     previousWeekFacturation();
     weekFacturation();
   }, [billPayed]);
+
+  const clearFilter1 = () => {
+    initFilters1();
+}
+
+const onGlobalFilterChange1 = (e) => {
+    const value = e.target.value;
+    let _filters1 = { ...filters1 };
+    _filters1['global'].value = value;
+
+    setFilters1(_filters1);
+    setGlobalFilterValue1(value);
+}
+
+
+const initFilters1 = () => {
+    setFilters1({
+        'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+        'user.username': { value: null, matchMode: FilterMatchMode.CONTAINS },
+        'date': { value: null, matchMode: FilterMatchMode.CONTAINS },
+        'ajout' : { value: null, matchMode: FilterMatchMode.CONTAINS },
+        'action' : { value: null, matchMode: FilterMatchMode.CONTAINS },
+
+    });
+    setGlobalFilterValue1('');
+}
+
+const renderHeader1 = () => {
+    return (
+        <div className="flex justify-content-between" id="header">
+            <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
+            <span className="p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
+                <Tooltip target={targetRef} content="Pour rechercher une date, veuillez rechercher de cette manière Année-Mois-jour. Voici un exemple : 2023-01-01" position="left" />
+                <span ref={targetRef} style={{marginLeft : "0.3em"}}><i className="pi pi-question-circle p-ml-2" style={{ fontSize: '1.5em' }}></i></span>
+                </span>
+            </div>
+        )
+    }
+
+    const header1 = renderHeader1();
+
+
 
   return (
     <div className="container" id="analyse">
@@ -525,9 +575,10 @@ export const Analyse = () => {
           </p>
         </div>
         <div className = "card" id="card" >
-          <DataTable value={logs} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} emptyMessage="Aucun log pour le moment" style={{ height: "90%" }} header={header} className="p-datatable-sm p-datatable-gridlines">
+          <DataTable value={logs} paginator header={header1} rows={5} rowsPerPageOptions={[5, 10, 20]} emptyMessage="Aucun log pour le moment" style={{ height: "90%" }} header={header} className="p-datatable-sm p-datatable-gridlines"
+          filterDisplay="menu" globalFilterFields={['user.username', 'date', 'action', 'ajout']} responsive stripedRows filters={filters1} currentPageReportTemplate="{first}-{last} sur {totalRecords}">
             <Column field="user.username" header="Utilisateur" sortable></Column>
-            <Column field="date" header="Date" body={dateBodyTemplate} sortable/>
+            <Column field="date" header="Date de création" body={dateBodyTemplate} sortable/>
             <Column field="action" header="Actions" body={actionBodyTemplate} sortable />
             <Column field="ajout" header="Où" body={ajoutBodyTemplate} sortable/>
           </DataTable>
