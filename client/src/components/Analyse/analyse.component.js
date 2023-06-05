@@ -371,7 +371,6 @@ export const Analyse = () => {
     });
   };
 
-  // useEffect pour envoyer un email tous les jours à 18h
   useEffect(() => {
     const interval = setInterval(() => {
       const date = new Date();
@@ -381,10 +380,12 @@ export const Analyse = () => {
         sendMailEveryDay();
       }
     }, 60000);
-    console.log("useEffect");
+    
+    // Vérifier l'heure et les minutes toutes les minutes
+    sendMailEveryDay(); // Envoyer immédiatement l'e-mail si l'heure et les minutes correspondent
+  
     return () => clearInterval(interval);
   }, [facturier]);
-
 
   useEffect(() => {
     previousWeekFacturation();
@@ -524,11 +525,11 @@ export const Analyse = () => {
           </p>
         </div>
         <div className = "card" id="card" >
-          <DataTable value={logs} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} emptyMessage="Aucun log pour le moment" style={{ height: "90%" }}>
-            <Column field="user.username" header="Utilisateur" />
-            <Column field="date" header="Date" body={dateBodyTemplate} />
-            <Column field="action" header="Actions" body={actionBodyTemplate} />
-            <Column field="ajout" header="Où" body={ajoutBodyTemplate} />
+          <DataTable value={logs} paginator rows={5} rowsPerPageOptions={[5, 10, 20]} emptyMessage="Aucun log pour le moment" style={{ height: "90%" }} header={header} className="p-datatable-sm p-datatable-gridlines">
+            <Column field="user.username" header="Utilisateur" sortable></Column>
+            <Column field="date" header="Date" body={dateBodyTemplate} sortable/>
+            <Column field="action" header="Actions" body={actionBodyTemplate} sortable />
+            <Column field="ajout" header="Où" body={ajoutBodyTemplate} sortable/>
           </DataTable>
           <Dialog
             header="Détails de la ligne de tableau sélectionnée"
