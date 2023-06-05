@@ -31,6 +31,8 @@ const FacturierDatatable = () => {
 
     const [filters1, setFilters1] = useState(null)
     const dt = useRef(null);
+    const targetRef = useRef(null);
+
 
 
     const [facturiers, setFacturiers] = useState([]);

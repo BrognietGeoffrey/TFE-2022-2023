@@ -16,6 +16,8 @@ const UsersDatatable = () => {
     const [filters1, setFilters1] = useState(null)
     const [rows, setRows] = useState(10);
     const toast = react.useRef(null);
+    const targetRef = useRef(null);
+
 
     useEffect(() => {
       const handleResize = () => {
