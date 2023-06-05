@@ -394,6 +394,10 @@ const FacturierDatatable = () => {
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
+                    <Tooltip target={targetRef} content="Pour rechercher une date, veuillez rechercher de cette manière Année-Mois-jour. Voici un exemple : 2023-01-01" position="left" />
+
+
+<span ref={targetRef} style={{marginLeft : "0.3em"}}><i className="pi pi-question-circle p-ml-2" style={{ fontSize: '1.5em' }}></i></span>
                 </span>
             </div>
 

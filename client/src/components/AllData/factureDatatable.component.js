@@ -7,7 +7,7 @@ import { Toast } from 'primereact/toast';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
-
+import {Tooltip } from 'primereact/tooltip';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import factureService from '../../services/factureService';
 import ObjetService from '../../services/objetService';
@@ -232,10 +232,11 @@ const FactuerDatatable = () => {
             'montant': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             // Objet doit être trié via son title 
             'objet.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-
-
-            'country.name': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-
+            // Libelle doit être trié via son title
+            'libelle.title': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'createdAt': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'due_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'facture_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
         });
         setGlobalFilterValue1('');
     }
@@ -247,6 +248,10 @@ const FactuerDatatable = () => {
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
+                    <Tooltip target={targetRef} content="Pour rechercher une date, veuillez rechercher de cette manière Année-Mois-jour. Voici un exemple : 2023-01-01" position="left" />
+
+
+<span ref={targetRef} style={{marginLeft : "0.3em"}}><i className="pi pi-question-circle p-ml-2" style={{ fontSize: '1.5em' }}></i></span>
                 </span>
             </div>
         )
@@ -266,7 +271,7 @@ const FactuerDatatable = () => {
     return (
         <div>
             <Toast ref={toast} />
-            <DataTable value={facture} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['tva.tva_value', 'objet.title', 'libelle.title', 'estpaye', 'num_facture', 'num_facture_lamy', 'montant']} filters={filters1}
+            <DataTable value={facture} editMode="row" header={header1} onRowEditComplete={onRowEditComplete} filterDisplay="menu" globalFilterFields={['tva.tva_value', 'objet.title', 'libelle.title', 'estpaye', 'num_facture', 'num_facture_lamy', 'montant', 'createdAt', 'due_date', 'facture_date']} filters={filters1}
                 paginator rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive" emptyMessage="Aucune facture trouvée." currentPageReportTemplate=" {first}-{last} sur {totalRecords}" rows={rows}
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown">
                 <Column field="num_facture" header="Numéro de facture" editor={(options) => numberEditor(options)} sortable filter></Column>
@@ -279,6 +284,7 @@ const FactuerDatatable = () => {
                 <Column field="objet_id" header="Objet" sortable editor={(options) => dropdownEditorObjet(options)} body={(rowData) => rowData.objet.title} filter></Column>
                 <Column field="libelle_id" header="Libelle" sortable editor={(options) => dropdownEditorLibelle(options)} body={(rowData) => rowData.libelle.title} filter></Column>
                 <Column field="tva_id" header="TVA" sortable editor={(options) => dropdownEditorTva(options)} body={(rowData) => rowData.tva.tva_value} filter></Column>
+                <Column field="createdAt" header="Date de création" sortable body={(rowData) => new Date(rowData.createdAt).toLocaleDateString()} filter></Column>
                 <Column rowEditor ></Column>
             </DataTable>
         </div>
