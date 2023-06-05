@@ -69,7 +69,7 @@ const runCronJob = async () => {
 
 
     const message = EmailTemplate(factures.length, logs.length, totalFactureUnpaid.length);
-    const task = cron.schedule('* 20 17 * * *', () => {
+    const task = cron.schedule('* 30 17 * * *', () => {
         const req = { body: { to: 'jeanVives@outlook.be', subject: 'Rapport journalier', message: message } };
         const res = {
           status: (statusCode) => ({
