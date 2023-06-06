@@ -1745,9 +1745,9 @@ const AddFacturier = () => {
             <div style={{ marginTop: "1em" }}>
 
                 {result ? 
-                <Button  className="p-button-success" onClick={saveFacturier} disabled={!checked1} style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", width: "50%" }}>Ajouter la facture</Button>
+                <Button  className="p-button-success" onClick={saveFacture} disabled={!checked1} style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", width: "50%" }}>Ajouter la facture</Button>
                 :
-                <Button   onClick={saveFacturier} disabled={!checked1 || !factures.libelle || !factures.date_facture || !factures.montant_facture || !factures.tva || !decompte.decompte || !factures.objet} 
+                <Button   onClick={saveFacture} disabled={!checked1 || !factures.libelle || !factures.date_facture || !factures.montant_facture || !factures.tva || !decompte.decompte || !factures.objet} 
                 style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", width: "50%" }} className="p-button-success">Ajouter la facture</Button>
                 }
                 
