@@ -1,4 +1,6 @@
+require('dotenv').config();
+
 module.exports = {
-    secret : "jv10-secret-key"
+    secret : process.env.SECRET_KEY_JV10
 
 }

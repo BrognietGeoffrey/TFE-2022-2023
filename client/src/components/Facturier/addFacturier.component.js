@@ -405,7 +405,7 @@ const AddFacturier = () => {
                     co_client_id: response.data.client_id,
                     facture_img: response.data.facture_img,
                 });
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Facturier Added', life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Succès', detail: 'Facturier Added', life: 3000 });
                 //vide les champs du formulaire
 
                 setFactures({
@@ -487,20 +487,21 @@ const AddFacturier = () => {
                     ...libelles,
                     title: "",
                 });
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Libelle Added', life: 3000 });
-
                 getLibelleList();
+
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Libelle ajouté', life: 3000 });
+
                 const logData = {
-                    libelle_id: response.data.id,
+                    libelle_id: response.data.data.id,
                     description: "Ajout d'un libelle",
                     user_id: decoded.user_id.id
                 }
                 LogsDataService.create(logData)
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Log ajouté', life: 3000 });
 
             })
             .catch(e => {
-                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Libelle not added', life: 3000 });
+                toastAddon.current.show({ severity: 'error', summary: 'Erreur', detail: 'Malheureusement, une erreur s\'est produite', life: 3000 });
             });
     };
     // fonction qui va ajouter un objet dans la base de donnée
@@ -519,18 +520,18 @@ const AddFacturier = () => {
                     title: "",
                 });
 
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Objet Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Objet ajouté', life: 3000 });
                 getObjetList();
                 const logData = {
-                    objet_id: response.data.id,
+                    objet_id: response.data.data.id,
                     description: "Ajout d'un objet",
                     user_id: decoded.user_id.id,
                 }
                 LogsDataService.create(logData)
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Log ajouté', life: 3000 });
             })
             .catch(e => {
-                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Objet not added', life: 3000 });
+                toastAddon.current.show({ severity: 'error', summary: 'Erreur', detail:'Malheureusement, une erreur s\'est produite', life: 3000 });
             });
     };
 
@@ -551,19 +552,19 @@ const AddFacturier = () => {
                     type: "",
                     num_decompte: "",
                 });
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Decompte Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Decompte ajouté', life: 3000 });
                 getDecompteList();
                 const logData = {
-                    decompte_id: response.data.decompte_id,
+                    decompte_id: response.data.data.decompte_id,
                     description: "Ajout d'un decompte",
                     user_id: decoded.user_id.id,
 
                 }
                 LogsDataService.create(logData)
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Log ajouté', life: 3000 });
             })
             .catch(e => {
-                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Decompte not added', life: 3000 });
+                toastAddon.current.show({ severity: 'error', summary: 'Erreur', detail: 'Malheureusement, une erreur s\'est produite', life: 3000 });
             });
     };
 
@@ -590,20 +591,20 @@ const AddFacturier = () => {
                     montant: "",
                     description: "",
                 });
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Decompte Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Extrait ajouté', life: 3000 });
                 getExtraitList();
                 const logData = {
-                    extrait_id: response.data.extrait_id,
+                    extrait_id: response.data.data.extrait_id,
                     description: "Ajout d'un extrait",
                     user_id: decoded.user_id.id,
 
                 }
                 console.log(logData);
                 LogsDataService.create(logData)
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Log ajouté', life: 3000 });
             })
             .catch(e => {
-                toastAddon.current.show({ severity: 'ERROR', summary: 'ERROR', detail: 'Extrait not Added', life: 3000 });
+                toastAddon.current.show({ severity: 'ERROR', summary: 'ERROR', detail: 'Malheureusement, une erreur s\'est produite', life: 3000 });
             });
     };
 
@@ -634,22 +635,22 @@ const AddFacturier = () => {
                     description: response.data.description,
                 });
                 console.log(response.data.fournisseur_id);
-                setFournisseurId(response.data.fournisseur_id + 1);
+                setFournisseurId(response.data.data.fournisseur_id + 1);
 
-                saveCompteFournisseur(response.data.fournisseur_id);
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Fournisseur Added', life: 3000 });
+                saveCompteFournisseur(response.data.data.fournisseur_id);
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Fournisseur ajouté', life: 3000 });
                 const logData = {
-                    fournisseur_id: response.data.fournisseur_id,
+                    fournisseur_id: response.data.data.fournisseur_id,
                     description: "Ajout d'un fournisseur",
                     user_id: decoded.user_id.id,
 
                 }
                 LogsDataService.create(logData)
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Log ajouté', life: 3000 });
 
             })
             .catch(e => {
-                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Fournisseur not added', life: 3000 });
+                toastAddon.current.show({ severity: 'error', summary: 'Erreur', detail:'Malheureusement, une erreur s\'est produite', life: 3000 });
             });
     };
     // fonction qui crée le facturier dans la base de donnée grâce au dernier id de facture récupéré
@@ -668,7 +669,7 @@ const AddFacturier = () => {
                     num_compte_banque: response.data.num_compte_banque,
                     numCompteFournisseur: response.data.numCompteFournisseur,
                 });
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Fournisseur Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Le compte fournisseur a été ajouté', life: 3000 });
                 getFournisseurList();
                 //vide les champs du formulaire
                 setCompteFournisseur({
@@ -687,7 +688,7 @@ const AddFacturier = () => {
                 });
             })
             .catch(e => {
-                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Compte Fournisseur not added', life: 3000 });
+                toastAddon.current.show({ severity: 'error', summary: 'Erreur', detail: 'Malheureusement, une erreur s\'est produite', life: 3000 });
             });
     };
 
@@ -713,7 +714,7 @@ const AddFacturier = () => {
                     description: response.data.description
                 });
 
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Client Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Ajouté ! ', detail: 'Le client a été ajouté', life: 3000 });
                 setClientId(response.data.client_id + 1);
                 savecompteClient(response.data.client_id);
                 const logData = {
@@ -723,10 +724,10 @@ const AddFacturier = () => {
 
                 }
                 LogsDataService.create(logData)
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Ajouté !', detail: 'Log ajouté', life: 3000 });
             })
             .catch(e => {
-                toast.current.show({ severity: 'error', summary: 'Error', detail: 'Client not added', life: 3000 });
+                toast.current.show({ severity: 'error', summary: 'Erreur', detail: 'Malheureusement, une erreur s\'est produite', life: 3000 });
             });
     };
     // fonction qui crée le facturier dans la base de donnée grâce au dernier id de facture récupéré
@@ -749,7 +750,7 @@ const AddFacturier = () => {
                     num_compte_banque: response.data.num_compte_banque,
                     description: response.data.description
                 });
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Compte Client Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Ajouté !', detail: 'Le compte client a été ajouté', life: 3000 });
                 //vide les champs du formulaire
 
                 setClient({
@@ -777,7 +778,7 @@ const AddFacturier = () => {
 
             })
             .catch(e => {
-                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'compte_client not added', life: 3000 });
+                toastAddon.current.show({ severity: 'error', summary: 'Erreur', detail: 'Malheureusement, une erreur s\'est produite', life: 3000 });
             });
     };
 
@@ -801,23 +802,23 @@ const AddFacturier = () => {
                 });
 
                 getTvaList();
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Tva Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Tva ajoutée', life: 3000 });
 
                 // mettre à jour la liste des tva
 
 
                 const logData = {
-                    tva_id: response.data.tva_id,
+                    tva_id: response.data.data.tva_id,
                     description: "Ajout d'une tva",
                     user_id: decoded.user_id.id,
 
                 }
                 LogsDataService.create(logData)
-                toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+                toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Log ajouté', life: 3000 });
                 // refresh the list 
             })
             .catch(e => {
-                toastAddon.current.show({ severity: 'error', summary: 'Error', detail: 'Tva not added', life: 3000 });
+                toastAddon.current.show({ severity: 'error', summary: 'Erreur', detail: 'Malheureusement, une erreur s\'est produite', life: 3000 });
             });
     };
 
@@ -896,10 +897,10 @@ const AddFacturier = () => {
                 default:
                     break;
             }
-            toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: `${e.data.from} Updated`, life: 3000 });
-            toastAddon.current.show({ severity: 'success', summary: 'Successful', detail: 'Log Added', life: 3000 });
+            toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: `${e.data.from} Updated`, life: 3000 });
+            toastAddon.current.show({ severity: 'success', summary: 'Succès', detail: 'Log Added', life: 3000 });
         } catch (error) {
-            toastAddon.current.show({ severity: 'error', summary: 'Error', detail: `${e.data.from} not updated`, life: 3000 });
+            toastAddon.current.show({ severity: 'error', summary: 'Erreur', detail: `${e.data.from} not updated`, life: 3000 });
         }
     };
 

@@ -454,19 +454,14 @@ const renderHeader1 = () => {
         <div className = "card" id="card">
           {/* graphique indiquant le nombre de facture a payé cette semaine ci, le nombre déjà payé et le nombre non payé */}
           <h3>Statuts des factures cette semaine</h3>
-        
-            <div>
-            <p> Aucune facture ajoutée cette semaine</p>
-          
-
-          
+          {weekFactures && weekFactures.length > 0 ? (
             <div>
               <Chart type="pie" data={
                 {
                   labels: ['Factures payées', 'Factures non payées'],
                   datasets: [
                     {
-                      data: [weekFactures.filter(bill => bill.facture.estpaye === true).length > 0 ? weekFactures.filter(bill => bill.facture.estpaye === true).length : 0, weekFactures.filter(bill => bill.facture.estpaye === false).length > 0 ? weekFactures.filter(bill => bill.facture.estpaye === false).length : 0],
+                      data: [weekFactures.filter(bill => bill.facture.payed === true).length, weekFactures.filter(bill => bill.facture.payed === false).length],
                       backgroundColor: [
                         '#42A5F5',
                         '#FFA726'
@@ -475,12 +470,18 @@ const renderHeader1 = () => {
                         '#64B5F6',
                         '#FFB74D'
                       ]
-                    }],
+                    }]
                 }
               } />
+
             </div>
+          ) : (
+            <div>
+              <p>Aucune facture ajoutée cette semaine</p>
             </div>
-        
+          )}
+
+
        
           
           
@@ -531,9 +532,9 @@ const renderHeader1 = () => {
           <DataTable value={logs} paginator header={header1} rows={5} rowsPerPageOptions={[5, 10, 20]} emptyMessage="Aucun log pour le moment" style={{ height: "90%" }} 
           filterDisplay="menu" globalFilterFields={['user.username', 'date', 'action', 'ajout']}  stripedRows filters={filters1} currentPageReportTemplate="{first}-{last} sur {totalRecords}">
             <Column field="user.username" header="Utilisateur" sortable></Column>
-            <Column field="date" header="Date de création" body={dateBodyTemplate} sortable/>
-            <Column field="action" header="Actions" body={actionBodyTemplate} sortable />
-            <Column field="ajout" header="Où" body={ajoutBodyTemplate} sortable/>
+            <Column field="date" header="Date de création" body={dateBodyTemplate} />
+            <Column field="action" header="Actions" body={actionBodyTemplate}  />
+            <Column field="ajout" header="Où" body={ajoutBodyTemplate} />
           </DataTable>
           <Dialog
             header="Détails de la ligne de tableau sélectionnée"

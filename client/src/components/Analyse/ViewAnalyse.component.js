@@ -12,6 +12,8 @@ import viewServices from '../../services/viewServices';
 // import './analyse.css';
 export const CustomViewForm = () => {
     const [table, setTable] = useState(null);
+    const [open, setOpen] = useState(false);
+
     const [tables, setTables] = useState([
         { label: 'Facture', value: 'factures' },
         { label: 'Client', value: 'clients' },
@@ -40,6 +42,7 @@ export const CustomViewForm = () => {
     const [valueDate2, setValueDate2] = useState(null);
     const [valueQuery, setValueQuery] = useState(null);
     const [viewName, setViewName] = useState("");
+    const [viewDescription, setViewDescription] = useState("");
     const [responseView, setResponseView] = useState(null);
     const [allViews, setAllViews] = useState([]);
     const [displayAllViews, setDisplayAllViews] = useState(false);
@@ -48,15 +51,11 @@ export const CustomViewForm = () => {
         'displayAllViews': setDisplayAllViews,
     };
 
-    const onClick = (name, position, e) => {
-        e.preventDefault(); // add this line to prevent the default behavior
 
-        dialogFuncMap[`${name}`](true);
-
-        if (position) {
-            setPosition(position);
-        }
+    const onClick = () => {
+        setOpen(!open);
     };
+
 
 
     const handleTableChange = (e) => {
@@ -143,6 +142,7 @@ export const CustomViewForm = () => {
         const columnObj = columns.find((c) => c.value === column);
         const attributeForRequest = columnObj.valueQuery || columnObj.value;
         const view_name = viewName;
+        const description = viewDescription;
         let value, joins;
         if (operator === 'BETWEEN') {
             if (columnObj.type === 'date') {
@@ -172,7 +172,7 @@ export const CustomViewForm = () => {
             value
         }];
         const joinsArray = joins ? joins : [];
-        viewServices.createView(table, filters, joinsArray, view_name)
+        viewServices.createView(table, filters, joinsArray, view_name, description)
             .then((response) => {
                 console.log(response);
                 setResponseView(response.data.view);
@@ -197,6 +197,7 @@ export const CustomViewForm = () => {
         setValueQuery(null);
         setViewName("");
         setResponseView(null);
+        setViewDescription("");
     };
     const [selectedView, setSelectedView] = useState(null);
 
@@ -209,8 +210,16 @@ export const CustomViewForm = () => {
     const viewTemplate = (rowData) => {
         return (
             <>
-                <Button icon={selectedView === rowData ? 'pi pi-minus' : 'pi pi-plus'} onClick={() => setSelectedView(rowData)} />
-                <span style={{ paddingLeft: 10 }}>{rowData.viewname}</span>
+                <Button
+                    icon={selectedView === rowData ? 'pi pi-minus' : 'pi pi-plus'}
+                    onClick={() => {
+                        if (selectedView === rowData) {
+                            setSelectedView(null); // Ferme ce qui a été ouvert
+                        } else {
+                            setSelectedView(rowData); // Ouvre l'élément correspondant
+                        }
+                    }}
+                />                <span style={{ paddingLeft: 10 }}>{rowData.viewname}</span>
             </>
         );
     };
@@ -234,211 +243,244 @@ export const CustomViewForm = () => {
 
         <div style={{ width: '100%', marginTop: '20px' }}>
 
-                        <div>
-                            <InputText
-                                value={viewName}
-                                onChange={(e) => setViewName(e.target.value)}
-                                placeholder="Nom de la vue"
-                                tooltip="Veuillez d'abord indiquer le nom de la vue (attention a bien choisir un nom qui permet de recconnaitre la vue facilement)"
-                                tooltipOptions={{ position: 'top' }}
-                                style={{ width: '100%', marginTop: '-10px', marginBottom: '10px' }} />
-                        </div>
-                        <div>
+            <div>
+                <InputText
+                    value={viewName}
+                    onChange={(e) => setViewName(e.target.value)}
+                    placeholder="Nom de la vue"
+                    tooltip="Veuillez d'abord indiquer le nom de la vue (attention a bien choisir un nom qui permet de recconnaitre la vue facilement)"
+                    tooltipOptions={{ position: 'top' }}
+                    style={{ width: '100%', marginTop: '-10px', marginBottom: '10px' }} />
+            </div>
+            <div>
+                <InputText
+                    value={viewDescription}
+                    onChange={(e) => setViewDescription(e.target.value)}
+                    placeholder="Description de la vue"
+                    tooltip="Veuillez d'abord indiquer la description de la vue (attention a bien choisir une description qui permet de recconnaitre la vue facilement)"
+                    tooltipOptions={{ position: 'top' }}
+                    style={{ width: '100%', marginBottom: '10px' }} />
 
-                            <Dropdown
-                                value={table}
-                                options={tables}
-                                onChange={handleTableChange}
-                                placeholder="Sélectionnez une table"
-                                tooltip="La table ici représente les données sur lesquelles vous voulez faire votre vue"
-                                tooltipOptions={{ position: 'top' }}
-                                style={{ width: '100%', marginBottom: '10px' }} />
+            </div>
+            <div>
 
-                        </div>
-                        <div>
-                            <Dropdown
-                                value={column}
-                                options={columns}
-                                onChange={(e) => setColumn(e.value)}
-                                placeholder="Que voulez-vous trier ?"
-                                tooltip="Ici, vous choisissez les données qui seront triées"
-                                tooltipOptions={{ position: 'top' }}
-                                style={{ width: '100%', marginBottom: '10px' }} />
+                <Dropdown
+                    value={table}
+                    options={tables}
+                    onChange={handleTableChange}
+                    placeholder="Sélectionnez une table"
+                    tooltip="La table ici représente les données sur lesquelles vous voulez faire votre vue"
+                    tooltipOptions={{ position: 'top' }}
+                    style={{ width: '100%', marginBottom: '10px' }} />
 
-                        </div>
-                        <div>
-                            {/* si la colonne est de type number, on affiche les opérateurs de type 1 et 2, si non, on affiche juste les 1 */}
-                            {columns.length > 0 && column && (columns.find((c) => c.value === column).type === 'date' || columns.find((c) => c.value === column).type === 'number') && (
+            </div>
+            <div>
+                <Dropdown
+                    value={column}
+                    options={columns}
+                    onChange={(e) => setColumn(e.value)}
+                    placeholder="Que voulez-vous trier ?"
+                    tooltip="Ici, vous choisissez les données qui seront triées"
+                    tooltipOptions={{ position: 'top' }}
+                    style={{ width: '100%', marginBottom: '10px' }} />
 
-                                // console.log les opérateurs de type 1 et 2
-                                <Dropdown
-                                    value={operator}
-                                    options={operators.filter((o) => o.type === 1 || o.type === 2 || o.type === 3)}
-                                    onChange={(e) => setOperator(e.value)}
-                                    placeholder="Sélectionnez un opérateur"
-                                    tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
-                                    tooltipOptions={{ position: 'top' }}
-                                    style={{ width: '100%', marginBottom: '10px' }} />
-                            )}
-                            {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'boolean' && (
-                                <Dropdown
-                                    value={operator}
-                                    options={operators.filter((o) => o.type === 0)}
-                                    onChange={(e) => setOperator(e.value)}
-                                    placeholder="Sélectionnez un opérateur"
-                                    tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
-                                    tooltipOptions={{ position: 'top' }}
-                                    style={{ width: '100%', marginBottom: '10px' }} />
+            </div>
+            <div>
+                {/* si la colonne est de type number, on affiche les opérateurs de type 1 et 2, si non, on affiche juste les 1 */}
+                {columns.length > 0 && column && (columns.find((c) => c.value === column).type === 'date' || columns.find((c) => c.value === column).type === 'number') && (
 
-                            )}
-                            {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'string' && (
-                                <Dropdown
-                                    value={operator}
-                                    options={operators.filter((o) => o.type === 3)}
-                                    onChange={(e) => setOperator(e.value)}
-                                    placeholder="Sélectionnez un opérateur"
-                                    tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
-                                    tooltipOptions={{ position: 'top' }}
-                                    style={{ width: '100%', marginBottom: '10px' }} />
-                            )}
-                        </div>
+                    // console.log les opérateurs de type 1 et 2
+                    <Dropdown
+                        value={operator}
+                        options={operators.filter((o) => o.type === 1 || o.type === 2 || o.type === 3)}
+                        onChange={(e) => setOperator(e.value)}
+                        placeholder="Sélectionnez un opérateur"
+                        tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
+                        tooltipOptions={{ position: 'top' }}
+                        style={{ width: '100%', marginBottom: '10px' }} />
+                )}
+                {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'boolean' && (
+                    <Dropdown
+                        value={operator}
+                        options={operators.filter((o) => o.type === 0)}
+                        onChange={(e) => setOperator(e.value)}
+                        placeholder="Sélectionnez un opérateur"
+                        tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
+                        tooltipOptions={{ position: 'top' }}
+                        style={{ width: '100%', marginBottom: '10px' }} />
 
-                        {/* selon le type de la colonne, on affiche un composant différent */}
-                        {columns.find((c) => c.value === column)?.type === 'number' && (
-                            <>
-                                <InputNumber
-                                    value={valueParam1}
-                                    onChange={(e) => setValueParam1(e.value)}
-                                    placeholder="Valeur"
-                                    tooltip="Veuillez indiquer une valeur"
-                                    tooltipOptions={{ position: 'top' }}
-                                    style={{ width: '100%', marginBottom: '10px' }}
-                                />
-                                {operator === 'BETWEEN' && (
-                                    <InputNumber
-                                        value={valueParam2}
-                                        onChange={(e) => setValueParam2(e.value)}
-                                        placeholder="Valeur"
-                                        tooltip="Veuillez indiquer la seconde valeur"
-                                        tooltipOptions={{ position: 'top' }}
-                                        style={{ width: '100%', marginBottom: '10px' }} />
+                )}
+                {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'string' && (
+                    <Dropdown
+                        value={operator}
+                        options={operators.filter((o) => o.type === 3)}
+                        onChange={(e) => setOperator(e.value)}
+                        placeholder="Sélectionnez un opérateur"
+                        tooltip="Ici, vous choisissez l'opérateur qui permettra de trier les données"
+                        tooltipOptions={{ position: 'top' }}
+                        style={{ width: '100%', marginBottom: '10px' }} />
+                )}
+            </div>
 
-                                )}
-                            </>
-                        )}
-                        {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'date' && (
-                            // si l'opérateur est compris entre, on affiche deux calendriers
-                            operator === 'BETWEEN' ? (
-                                <div>
-                                    <Calendar
-                                        value={valueDate1}
-                                        onChange={(e) => setValueDate1(e.value)}
-                                        placeholder="Valeur"
-                                        tooltip='Veuillez indiquer la date'
+            {/* selon le type de la colonne, on affiche un composant différent */}
+            {columns.find((c) => c.value === column)?.type === 'number' && (
+                <>
+                    <InputNumber
+                        value={valueParam1}
+                        onChange={(e) => setValueParam1(e.value)}
+                        placeholder="Valeur"
+                        tooltip="Veuillez indiquer une valeur"
+                        tooltipOptions={{ position: 'top' }}
+                        style={{ width: '100%', marginBottom: '10px' }}
+                    />
+                    {operator === 'BETWEEN' && (
+                        <InputNumber
+                            value={valueParam2}
+                            onChange={(e) => setValueParam2(e.value)}
+                            placeholder="Valeur"
+                            tooltip="Veuillez indiquer la seconde valeur"
+                            tooltipOptions={{ position: 'top' }}
+                            style={{ width: '100%', marginBottom: '10px' }} />
 
-                                        showIcon
-                                        style={{ width: '100%', marginBottom: '10px' }} />
-                                    <Calendar
-                                        value={valueDate2}
-                                        onChange={(e) => setValueDate2(e.value)}
-                                        placeholder="Valeur"
-                                        showIcon
-                                        style={{ width: '100%', marginBottom: '10px' }}
-                                        tooltip='Veuillez indiquer la seconde date' />
+                    )}
+                </>
+            )}
+            {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'date' && (
+                // si l'opérateur est compris entre, on affiche deux calendriers
+                operator === 'BETWEEN' ? (
+                    <div>
+                        <Calendar
+                            value={valueDate1}
+                            onChange={(e) => setValueDate1(e.value)}
+                            placeholder="Valeur"
+                            tooltip='Veuillez indiquer la date'
 
-                                </div>
-                            ) : (
-                                <div>
-                                    <Calendar
-                                        value={valueDate1}
-                                        onChange={(e) => setValueDate1(e.value)}
-                                        placeholder="Valeur"
-                                        showIcon
-                                        style={{ width: '100%', marginBottom: '10px' }}
-                                        tooltip='Veuillez indiquer la date'
-                                        tooltipOptions={{ position: 'top' }} />
-                                </div>
-                            )
-                        )}
-                        {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'string' && (
-                            <div>
-                                <InputText
-                                    value={valueQuery}
-                                    onChange={(e) => setValueParam1(e.target.value)}
-                                    placeholder="Valeur"
-                                    tooltip='Veuillez indiquer une valeur'
-                                    tooltipOptions={{ position: 'top' }}
-                                    style={{ width: '100%', marginBottom: '10px' }} />
-                            </div>
-                        )}
-                        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                        <Button label="Créer la vue" onClick={submitView} id="buttonViewAnalyse" style={{ width: '100%', marginBottom: '10p' }} disabled={valueParam1 === ''} />
+                            showIcon
+                            style={{ width: '100%', marginBottom: '10px' }} />
+                        <Calendar
+                            value={valueDate2}
+                            onChange={(e) => setValueDate2(e.value)}
+                            placeholder="Valeur"
+                            showIcon
+                            style={{ width: '100%', marginBottom: '10px' }}
+                            tooltip='Veuillez indiquer la seconde date' />
+
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", marginTop: "0.5em" }}>
-                        <Button id="buttonViewAnalyse" label="Voir les vues créées" onClick={getAllViews} style={{ backgroundColor: "#f0ad4e", color: "white" }}><Badge value={allViews.length} severity="info" /></Button>
+                ) : (
+                    <div>
+                        <Calendar
+                            value={valueDate1}
+                            onChange={(e) => setValueDate1(e.value)}
+                            placeholder="Valeur"
+                            showIcon
+                            style={{ width: '100%', marginBottom: '10px' }}
+                            tooltip='Veuillez indiquer la date'
+                            tooltipOptions={{ position: 'top' }} />
                     </div>
-                                {/* afficher la liste des vues */}
+                )
+            )}
+            {columns.length > 0 && column && columns.find((c) => c.value === column).type === 'string' && (
+                <div>
+                    <InputText
+                        value={valueQuery}
+                        onChange={(e) => setValueParam1(e.target.value)}
+                        placeholder="Valeur"
+                        tooltip='Veuillez indiquer une valeur'
+                        tooltipOptions={{ position: 'top' }}
+                        style={{ width: '100%', marginBottom: '10px' }} />
+                </div>
+            )}
+            <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                <Button label="Créer la vue" onClick={submitView} id="buttonViewAnalyse" style={{ width: '100%', marginBottom: '10p' }} disabled={valueParam1 === ''} />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", marginTop: "0.5em" }}>
+                <Button id="buttonViewAnalyse" label="Voir les vues créées" onClick={getAllViews} style={{ backgroundColor: "#f0ad4e", color: "white" }}><Badge value={allViews.length} severity="info" /></Button>
+            </div>
+            {/* afficher la liste des vues */}
             <Dialog header="Liste des vues" visible={displayAllViews} style={{ width: '70%' }} footer={null} onHide={() => onHide('displayAllViews')}>
-                <DataTable value={allViews} selection={selectedView} onSelectionChange={(e) => setSelectedView(e.value)}>
-                    <Column header="Nom de la vue" body={viewTemplate} style={{ width: '20%' }}></Column>
-                    <Column header="Données" body={(rowData) => {
-                        if (selectedView === rowData) {
-                            // si la table de rowData est factures, on affiche les données de factures
-                            if (rowData.table === 'factures') {
+                <DataTable
+                    className="table-container"
+                    value={allViews}
+                    selection={selectedView}
+                    onSelectionChange={(e) => setSelectedView(e.value)}
+                >
+                    <Column
+                        className="table-header"
+                        header="Nom de la vue"
+                        body={viewTemplate}
+
+                    ></Column>
+                    <Column
+                        className="table-header"
+                        header="Description"
+                        field="description"
+                    ></Column>
+                    <Column
+                        className="table-header"
+                        header="Données"
+                        body={(rowData) => {
+                            if (selectedView === rowData) {
+                                if (rowData.table === 'factures') {
+                                    return (
+                                        <DataTable className="data-table" value={rowData.data}>
+                                            <Column field="facture_date" header="Date" bodyStyle={(rowData) => { return { backgroundColor: rowData.facture_date === null ? '#f0ad4e' : 'white' } }}></Column>
+                                            <Column field="montant" header="Montant"></Column>
+                                        </DataTable>
+                                    );
+                                } else if (rowData.table === 'clients') {
+                                    return (
+                                        <DataTable className="data-table" value={rowData.data}>
+                                            <Column field="name" header="Nom"></Column>
+                                            <Column field="firstname" header="Prénom"></Column>
+                                        </DataTable>
+                                    );
+                                } else if (rowData.table === '(facturiers') {
+                                    return (
+                                        <DataTable className="data-table" value={rowData.data}>
+                                            <Column field="facturier_id" header="Id du facturier"></Column>
+                                            <Column field="facture_id" header="ID de la facture"></Column>
+                                        </DataTable>
+                                    );
+                                } else if (rowData.table = "tvas") {
+                                    return (
+                                        <DataTable className="data-table" value={rowData.data}>
+                                            <Column field="num_facture" header="N° de la facture"></Column>
+                                            <Column field="montant" header="Montant de la facture"></Column>
+                                        </DataTable>
+                                    );
+                                }
+                            }
+
+                            if (rowData.data.length > 0) {
                                 return (
-                                    <DataTable value={rowData.data}>
-                                        <Column field="facture_date" header="Date"></Column>
-                                        <Column field="montant" header="Montant"></Column>
-                                    </DataTable>
+                                    <div className="data-table-sub">
+                                        Il y a {rowData.data.length} données pour cette view
+                                        <Button
+                                            className="button-delete p-button-danger p-button-sm"
+                                            icon="pi pi-trash"
+                                            onClick={() => handleDelete(rowData)}
+                                            style={{ position: 'absolute', right: '10px' }}
+
+                                        />
+                                    </div>
                                 );
                             }
-                            else if (rowData.table === 'clients') {
-                                return (
-                                    <DataTable value={rowData.data}>
-                                        <Column field="name" header="Nom"></Column>
-                                        <Column field="firstname" header="Prénom"></Column>
-                                    </DataTable>
-                                );
-                            }
-                            else if (rowData.table === '(facturiers') {
-                                return (
-                                    <DataTable value={rowData.data}>
-                                        <Column field="facturier_id" header="Id du facturier"></Column>
-                                        <Column field="facture_id" header="ID de la facture"></Column>
-                                    </DataTable>
-                                );
-                            }
-                            else if (rowData.table = "tvas") {
-                                return (
-                                    <DataTable value={rowData.data}>
-                                        <Column field="num_facture" header="N° de la facture"></Column>
-                                        <Column field="montant" header="Montant de la facture"></Column>
-                                    </DataTable>
-                                );
-                            }
-                        }
-                        // si rowData.data a une longueur supérieure à 0, on affiche les données de rowData.data
-                        if (rowData.data.length > 0) {
                             return (
-                                <div>
-                                    Il y a {rowData.data.length} données pour cette view
-                                    <Button icon="pi pi-trash" className="p-button-danger p-button-sm" style={{ marginLeft: '1rem' }} onClick={() => handleDelete(rowData)} />
+                                <div className="no-data-message">
+                                    Il n'y a pas de données
+                                    <Button
+                                        className="button-delete p-button-danger p-button-sm"
+                                        icon="pi pi-trash"
+                                        onClick={() => handleDelete(rowData)}
+                                        style={{ marginLeft: '10px' }}
+                                    />
                                 </div>
                             );
-                        }
-                        return (
-
-                            <div>Il n'y a pas de données
-                                <Button icon="pi pi-trash" className="p-button-danger p-button-sm" style={{ marginLeft: '1rem' }} onClick={() => handleDelete(rowData)} />
-
-                            </div>
-
-                        );
-
-                    }}></Column>
+                        }}
+                    ></Column>
                 </DataTable>
             </Dialog>
-                    </div>                  
+        </div>
     );
 };
 
