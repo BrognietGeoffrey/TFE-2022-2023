@@ -64,7 +64,7 @@ const App = () => {
             window.location.reload();
         }
     }
-    setInterval(checkTimeSession, 300000);
+    setInterval(checkTimeSession, 600000);
 
     if (isLoggedIn()) {  
         console.log(user)  
