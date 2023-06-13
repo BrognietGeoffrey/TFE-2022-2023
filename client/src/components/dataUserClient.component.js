@@ -181,7 +181,7 @@ const DataUserClient = () => {
                             <Column field="facture.montant" header="Montant HTVA" body = {rowData => { return <span>{rowData.facture.montant} €</span>}} sortable></Column>
                             <Column field="facture.montant_tva" header="Montant TVA" body = {rowData => { return <span>{rowData.facture.montant * rowData.facture.tva.tva_value / 100} €</span>}} sortable></Column>
                             <Column field="facture.estpaye" header="Status de la facture" body = {statusFactureTemplate}></Column>
-                            <Column field="facture.description" header="Description" sortable></Column>
+                            <Column field="facture.objet.title" header="Objet" sortable></Column>
                             <Column field="facture.facture_date" header="Date de la facture" body={dateBodyTemplate} sortable></Column>
                             <Column field="facture.due_date" header="Date d'échéance" body = {dueDateBodyTemplate} sortable></Column>
 

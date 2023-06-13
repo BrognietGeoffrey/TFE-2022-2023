@@ -426,6 +426,11 @@ const renderHeader1 = () => {
         <div className = "card" id="card">
           {/* Nombre total de facture et en dessous, nombre qui indique combien de nouvelle facture cette semaine-ci */}
           <h3>Total de facture ajoutées</h3>
+          {weekFactures.length === 0 && previousWeekFactures.length === 0 && (
+            <div>
+              <p className="text-center">Aucune facture ajoutée la semaine dernière ni cette semaine</p>
+            </div>
+          )}
           {billNotPayed && billNotPayed.length > 0 && (
             <div>
               <Chart type="doughnut" data={
@@ -455,12 +460,14 @@ const renderHeader1 = () => {
           {/* graphique indiquant le nombre de facture a payé cette semaine ci, le nombre déjà payé et le nombre non payé */}
           <h3>Statuts des factures cette semaine</h3>
         
-            <div>
-            <p> Aucune facture ajoutée cette semaine</p>
-          
+          {weekFactures.length === 0 && (
+                <div>
+                  <p className="p-m-0">Aucune facture ajoutée cette semaine</p>
+                </div>
+              )}
+              {weekFactures && weekFactures.length > 0 && (
+               
 
-          
-            <div>
               <Chart type="pie" data={
                 {
                   labels: ['Factures payées', 'Factures non payées'],
@@ -478,12 +485,8 @@ const renderHeader1 = () => {
                     }],
                 }
               } />
-            </div>
-            </div>
         
-       
-          
-          
+              )}
         </div>
       </section>
       <section className="testimonials">
@@ -512,6 +515,10 @@ const renderHeader1 = () => {
                   ]
                 }
               } />
+            </div>
+          ) || (
+            <div>
+              <p> Aucune facture ajoutée cette année</p>
             </div>
           )}
         </div>
@@ -587,6 +594,18 @@ const renderHeader1 = () => {
               <div>
                 <p><b>Montant de la TVA : </b>{selectedLog.tva.tva_value}%</p>
                 <p><b>Description : </b>{selectedLog.tva.tva_description}</p>
+              </div>
+            )}
+            {selectedLog && selectedLog.libelle && (
+              <div>
+                <p><b>N° de libellé : </b>{selectedLog.libelle.id}</p>
+                <p><b>Libellé : </b>{selectedLog.libelle.title}</p>
+              </div>
+            )}
+            {selectedLog && selectedLog.objet && (
+              <div>
+                <p><b>N° d'objet : </b>{selectedLog.objet.id}</p>
+                <p><b>Objet : </b>{selectedLog.objet.title}</p>
               </div>
             )}
           </Dialog>

@@ -22,7 +22,7 @@ const Comment = () => {
   const [factureNum, setFactureNum] = useState('');
   const [facturierId, setFacturierId] = useState('');
   const toast = useRef(null);
-  const [checked1, setChecked1] = useState(true);
+  const [checked1, setChecked1] = useState(false);
   const [comments, setComments] = useState([]);
 
   const token = localStorage.getItem('access_token');
@@ -36,7 +36,7 @@ const Comment = () => {
           toast.current.show({ severity: 'error', summary: 'Error Message', detail: 'No facturier found', life: 3000 });
           setFacturierIdList([]);
         } else {
-          setFacturierIdList(response.data);
+          setFacturierIdList(response.data.data);
         }
       })
       .catch((error) => {
@@ -214,7 +214,7 @@ comments.map((comment) => (
         <>
           <div className="comment-content">
             <div className="comment-header">
-              <h3 className="comment-title">{comment.title}</h3>
+            <h3 className="comment-title" style={{ marginRight : '1em' }}>{comment.title}</h3>
               <p className="comment-meta">
                 Par {comment.user.username} - il y a{" "}
                 {createdSinceComment(comment.createdAt)}
@@ -245,7 +245,7 @@ comments.map((comment) => (
           </div>
           <div className="comment-content">
             <div className="comment-header">
-              <h3 className="comment-title">{comment.title}</h3>
+            <h3 className="comment-title" style={{ marginRight : '1em' }}>{comment.title}</h3>
               <p className="comment-meta">
                 Par {comment.user.username} - il y a{" "}
                 {createdSinceComment(comment.createdAt)}

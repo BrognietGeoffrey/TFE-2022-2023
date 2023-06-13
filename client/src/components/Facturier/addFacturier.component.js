@@ -405,7 +405,7 @@ const AddFacturier = () => {
                     co_client_id: response.data.client_id,
                     facture_img: response.data.facture_img,
                 });
-                toast.current.show({ severity: 'success', summary: 'Succès', detail: 'Facturier Added', life: 3000 });
+                toast.current.show({ severity: 'success', summary: 'Succès', detail:' Facturier ajouté', life: 3000 });
                 //vide les champs du formulaire
 
                 setFactures({
@@ -1259,7 +1259,7 @@ const AddFacturier = () => {
                             </span>
                             <Button onClick={(e) => onClick('displayObjets', 'center', e)} icon="pi pi-plus" className="p-button-success" />
 
-                            <Dialog header="Ajout d'un objet" className="objetDialog" visible={displayObjets} footer={renderFooter} onHide={() => onHide('displayObjets')} style={{ width: '90%' }}>
+                            <Dialog header="Ajout d'un objet" className="objetDialog" visible={displayObjets} footer={renderFooter} onHide={() => onHide('displayObjets')} style={{ width: '50%' }}>
                                 <Toast ref={toastAddon} />
                                 <Button onClick={(e) => onClick('displayObjetList', 'center', e)} className="p-button-info" tooltip="Liste des objets existants" tooltipOptions={{ position: 'right' }} badge={objetList.length}>
                                     List des objets existants
