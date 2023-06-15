@@ -83,7 +83,7 @@ const FournisseurDatatable = () => {
             num_compte_banque: e.newData.num_compte_banque,
         }
         // si au moins une data de data a été modifié alors on fait appel à la fonction update
-        if (e.data.name != e.newData["fournisseur.data.name"] || e.data.email_fournisseur != e.newData["fournisseur.data.email_fournisseur"] || e.data.adresse_fournisseur != e.newData["fournisseur.data.adresse_fournisseur"] || e.data.telephone_fournisseur != e.newData["fournisseur.data.telephone_fournisseur"] || e.data.num_fournisseur != e.newData["fournisseur.data.num_fournisseur"] || e.data.description != e.newData["fournisseur.data.description"]) {
+        if (e.previousData.name != e.newData["fournisseur.data.name"] || e.previousData.email_fournisseur != e.newData["fournisseur.data.email_fournisseur"] || e.previousData.adresse_fournisseur != e.newData["fournisseur.data.adresse_fournisseur"] || e.previousData.telephone_fournisseur != e.newData["fournisseur.data.telephone_fournisseur"] || e.previousData.num_fournisseur != e.newData["fournisseur.data.num_fournisseur"] || e.previousData.description != e.newData["fournisseur.data.description"]) {
         fournisseurService.update(e.data.fournisseur_id, data)
         console.log(e)
         .then((response) => {   
