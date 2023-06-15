@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
-
+// ajout de dotenv
+require('dotenv').config();
 const sendEmailController = (req, res) => {
     const { to, subject, message } = req.body;
 
