@@ -144,6 +144,7 @@ const DataUserClient = () => {
             'facture.estpaye': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             'facture.facture_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             'facture.due_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            'facture.objet.title' : { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
         });
         setGlobalFilterValue1('');
     }
@@ -174,7 +175,7 @@ const DataUserClient = () => {
             <div className="p-grid">
                 <div className="facture-section" >
                     <Card title="Factures" className="data-user section-three" id="card">
-                    <DataTable  value={factures} header={header1} filterDisplay="menu" globalFilterFields={['facture.num_facture', 'facture.montant', 'facture.facture_date', 'facture.due_date']} filters={filters1}
+                    <DataTable  value={factures} header={header1} filterDisplay="menu" globalFilterFields={['facture.num_facture', 'facture.montant', 'facture.facture_date', 'facture.due_date', 'facture.objet.title']} filters={filters1}
                paginator rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive" emptyMessage="Aucune facture trouvée." currentPageReportTemplate=" {first}-{last} sur {totalRecords}" rows={rows}
                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown">
                             <Column field="facture.num_facture" header="N° de facture" sortable></Column>

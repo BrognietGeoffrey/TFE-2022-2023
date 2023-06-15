@@ -15,7 +15,7 @@ class tvaService {
         return axios.post(API_URL, tva, { headers: BASIC_HEADERS });
     }
 
-    update(id, tva) {
+    updateTva(id, tva) {
         return axios.put(API_URL + id, tva, { headers: BASIC_HEADERS });
     }
     
