@@ -96,7 +96,9 @@ const ClientDatatable = () => {
             )
             .catch((error) => {
                 console.log(error);
+                if (e.data.previousData.name != e.newData["client.name"] || e.data.previousData.firstname != e.newData["client.firstname"] || e.data.previousData.email_client != e.newData["client.email_client"] || e.data.previousData.adresse_client != e.newData["client.adresse_client"] || e.data.previousData.telephone_client != e.newData["client.telephone_client"] || e.data.previousData.description != e.newData["client.description"]) {
                 toast.current.show({ severity: 'error', summary: 'Modification non effectuée', detail: error.response.data.message, life: 3000 });
+                }
             }
             );
         if (e.data.numCompteClient != e.newData.numCompteClient || e.data.num_compte_banque != e.newData.num_compte_banque) {
