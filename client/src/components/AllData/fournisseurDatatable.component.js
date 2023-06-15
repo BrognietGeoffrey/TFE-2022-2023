@@ -68,6 +68,8 @@ const FournisseurDatatable = () => {
         initFilters1();
     }, []);
 
+
+
     const onRowEditComplete = (e) => {
         console.log(e)
         const data = {
@@ -83,9 +85,7 @@ const FournisseurDatatable = () => {
             num_compte_banque: e.newData.num_compte_banque,
         }
         // si au moins une data de data a été modifié alors on fait appel à la fonction update
-        if (e.previousData.name != e.newData["fournisseur.data.name"] || e.previousData.email_fournisseur != e.newData["fournisseur.data.email_fournisseur"] || e.previousData.adresse_fournisseur != e.newData["fournisseur.data.adresse_fournisseur"] || e.previousData.telephone_fournisseur != e.newData["fournisseur.data.telephone_fournisseur"] || e.previousData.num_fournisseur != e.newData["fournisseur.data.num_fournisseur"] || e.previousData.description != e.newData["fournisseur.data.description"]) {
         fournisseurService.update(e.data.fournisseur_id, data)
-        console.log(e)
         .then((response) => {   
             console.log(response.data);
             toast.current.show({ severity: 'success', summary: 'Modification effectuée', detail: 'Fournisseur modifié', life: 3000 });
@@ -94,9 +94,10 @@ const FournisseurDatatable = () => {
         )
         .catch((error) => {
             console.log(error);
-            toast.current.show({ severity: 'error', summary: 'Modification non effectuée', detail: error.response.data.message, life: 3000 });
-        }
-        );}
+            if (e.data.name != e.newData["fournisseur.data.name"] || e.data.email_fournisseur != e.newData["fournisseur.data.email_fournisseur"] || e.data.adresse_fournisseur != e.newData["fournisseur.data.adresse_fournisseur"] || e.data.telephone_fournisseur != e.newData["fournisseur.data.telephone_fournisseur"] || e.data.num_fournisseur != e.newData["fournisseur.data.num_fournisseur"] || e.data.description != e.newData["fournisseur.data.description"]) {
+                toast.current.show({ severity: 'error', summary: 'Modification non effectuée', detail: error.response.data.message, life: 3000 });
+            }        }
+        );
         if (e.data.numCompteFournisseur != e.newData.numCompteFournisseur || e.data.num_compte_banque != e.newData.num_compte_banque) {
         compteFournisseurService.update(e.data.compte_fournisseur_id, dataCompteClient)
         .then((response) => {
