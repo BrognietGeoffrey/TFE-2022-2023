@@ -79,7 +79,7 @@ const FactuerDatatable = () => {
         TvaService.getAll().then((response) => {
             setTva(response.data);
             // List avec label and value
-            const tvaList = response.data.map((tva) => {
+            const tvaList = response.data.data.map((tva) => {
                 return {
                     label: tva.tva_value,
                     value: tva.tva_id
@@ -98,7 +98,7 @@ const FactuerDatatable = () => {
         libelleService.getAll().then((response) => {
             setLibelle(response.data);
             // List avec label and value
-            const libelleList = response.data.map((libelle) => {
+            const libelleList = response.data.data.map((libelle) => {
                 return {
                     label: libelle.title,
                     value: libelle.id

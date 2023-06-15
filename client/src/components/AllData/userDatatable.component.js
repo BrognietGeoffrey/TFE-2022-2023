@@ -133,7 +133,7 @@ const UsersDatatable = () => {
                 paginator rows={rows} rowsPerPageOptions={[5, 10, 25, 50]} stripedRows>
                 <Column field="user.username" header="Nom d'utilisateur" sortable editor={(options) => textEditor(options)} filter></Column>
                 <Column field="user.email" header="Email" sortable editor={(options) => textEditor(options)} filter></Column>
-                <Column field="role.name" header="Role" sortable editor={(options) => textEditor(options)} filter></Column>
+                <Column field="role.name" header="Role" sortable  filter></Column>
                 <Column field="user.createdAt" header="Date de création" body={(rowData) => {
                     return (
                         <div>

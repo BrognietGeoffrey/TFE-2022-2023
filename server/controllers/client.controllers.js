@@ -94,7 +94,7 @@ const updateClient = (req, res) => {
         }
         })
         .catch(err => {
-        res.status(200).send({
+        res.status(409).send({
             message: "Erreur lors de la mise à jour du client avec l'id=" + id
         });
         });
