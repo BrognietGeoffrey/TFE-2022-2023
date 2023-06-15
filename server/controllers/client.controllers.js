@@ -88,7 +88,7 @@ const updateClient = (req, res) => {
             message: "Le client a été mis à jour avec succès."
             });
         } else {
-            res.send({
+            res.status(409).send({
             message: `Impossible de mettre à jour le client avec l'id=${id}.`
             });
         }
