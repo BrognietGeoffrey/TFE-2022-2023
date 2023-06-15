@@ -829,7 +829,7 @@ const AddFacturier = () => {
                 case 'libelle':
                     apiData = { id: e.data.value, title: e.newData.label };
                     await LibelleDataService.update(e.data.value, apiData);
-                    logData = { libelle_id: e.data.libelle_id, description: "Modification d'un libelle", user_id: decoded.user_id.id };
+                    logData = { libelle_id : apiData.id, description: "Modification d'un libelle", user_id: decoded.user_id.id };
                     await LogsDataService.create(logData);
                     getLibelleList();
                     break;
@@ -837,7 +837,7 @@ const AddFacturier = () => {
                 case 'objet':
                     apiData = { id: e.data.value, title: e.newData.label };
                     await ObjetDataService.update(e.data.value, apiData);
-                    logData = { objet_id: e.data.objet_id, description: "Modification d'un objet", user_id: decoded.user_id.id };
+                    logData = { objet_id: apiData.id, description: "Modification d'un objet", user_id: decoded.user_id.id };
                     await LogsDataService.create(logData);
                     getObjetList();
                     setShowAlert(false);
@@ -846,7 +846,7 @@ const AddFacturier = () => {
                 case 'decompte':
                     apiData = { decompte_id: e.data.value, num_decompte: e.newData.label, type: e.newData.type };
                     await DecompteDataService.update(e.data.value, apiData);
-                    logData = { decompte_id: e.data.decompte_id, description: "Modification d'un decompte", user_id: decoded.user_id.id };
+                    logData = { decompte_id: apiData.decompte_id, description: "Modification d'un decompte", user_id: decoded.user_id.id };
                     await LogsDataService.create(logData);
                     getDecompteList();
                     setShowAlert(false);
@@ -892,6 +892,19 @@ const AddFacturier = () => {
                     getClientList();
                     setShowAlert(false);
                     break;
+                case 'tva':
+                        console.log(e)
+                        const tvaData = {
+                            tva_value: e.newData.label,
+                            tva_description: e.newData.tva_description
+                        };
+                        await tvaDataService.updateTva(e.data.value, tvaData);
+                        logData = { tva_id: e.data.value, description: "Modification d'une tva", user_id: decoded.user_id.id };
+                        await LogsDataService.create(logData);
+                        getTvaList();
+                        setShowAlert(false);
+    
+                        break;
 
 
                 default:
