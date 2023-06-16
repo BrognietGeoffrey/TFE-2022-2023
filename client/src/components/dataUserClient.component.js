@@ -10,6 +10,8 @@ import { Button } from 'primereact/button';
 import {InputText} from 'primereact/inputtext';
 import { Badge } from 'primereact/badge';
 import { Tooltip } from 'primereact/tooltip';
+import 'jspdf-autotable';
+
 
 
 
@@ -22,6 +24,7 @@ const DataUserClient = () => {
     const decoded = jwt_decode(token);
     const [loading, setLoading] = useState(true);
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
+    const dt = useRef(null);
 
     const [filters1, setFilters1] = useState(null)
     const [rows, setRows] = useState(10);
@@ -144,15 +147,28 @@ const DataUserClient = () => {
             'facture.estpaye': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             'facture.facture_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             'facture.due_date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            'facture.objet.title' : { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
         });
         setGlobalFilterValue1('');
     }
-
+    const exportFileName = `Liste_facture_${decoded.userInfo.user.username}-${new Date().toLocaleDateString('fr-BE', { year: 'numeric', month: 'numeric', day: 'numeric' })}`;
+    console.log(decoded)
+    const exportColumns = [
+        { field: 'facture.num_facture', header: 'N° de facture' },
+        { field: 'facture.montant', header: 'Montant HTVA' },
+        { field: 'facture.estpaye', header: 'Status de la facture' },
+        { field: 'facture.objet.title', header: 'Objet' },
+        { field: 'facture.facture_date', header: 'Date de la facture' },
+        { field: 'facture.due_date', header: 'Date d\'échéance' }
+      ];
+    const exportCSV = (selectionOnly) => {
+        dt.current.exportCSV({ selectionOnly });
+    }
     const renderHeader1 = () => {
         return (
             <div className="flex justify-content-between" id="header">
                 <Button type="button" icon="pi pi-filter-slash" label="Vider les filtres" className="p-button-outlined" onClick={clearFilter1} />
+                <Button type="button" icon="pi pi-file" onClick={() => exportCSV(false)} className="mr-2" tooltip="Exporter toutes les données" tooltipOptions={{ position: 'top' }} />
+
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Rechercher..." />
@@ -169,16 +185,18 @@ const DataUserClient = () => {
     const header1 = renderHeader1();
 
 
+
+
     return (
         <div className="container" style={{ marginTop: '2em', maxWidth: 'fit-content' }} >
             {/* Double Card, one with the data from factures and other with a responsive mail sender */}
             <div className="p-grid">
                 <div className="facture-section" >
                     <Card title="Factures" className="data-user section-three" id="card">
-                    <DataTable  value={factures} header={header1} filterDisplay="menu" globalFilterFields={['facture.num_facture', 'facture.montant', 'facture.facture_date', 'facture.due_date', 'facture.objet.title']} filters={filters1}
+                    <DataTable  value={factures} header={header1} filterDisplay="menu" globalFilterFields={['facture.num_facture', 'facture.montant', 'facture.facture_date', 'facture.due_date']} filters={filters1}
                paginator rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive" emptyMessage="Aucune facture trouvée." currentPageReportTemplate=" {first}-{last} sur {totalRecords}" rows={rows}
-               paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown">
-                            <Column field="facture.num_facture" header="N° de facture" sortable></Column>
+               paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" ref={dt} exportFilename={exportFileName}>
+                            <Column field="facture.num_facture" header="N° de facture" sortable exportField='facture.num_facture'></Column>
                             <Column field="facture.montant" header="Montant HTVA" body = {rowData => { return <span>{rowData.facture.montant} €</span>}} sortable></Column>
                             <Column field="facture.montant_tva" header="Montant TVA" body = {rowData => { return <span>{rowData.facture.montant * rowData.facture.tva.tva_value / 100} €</span>}} sortable></Column>
                             <Column field="facture.estpaye" header="Status de la facture" body = {statusFactureTemplate}></Column>
